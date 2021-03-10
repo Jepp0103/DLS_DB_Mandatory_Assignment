@@ -1,9 +1,4 @@
 -- MySQL Workbench Forward Engineering
-#DROP DATABASE IF EXISTS role_call_system;
-#CREATE DATABASE role_call_system;
-
-#USE role_call_system;
-
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -16,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema role_call_db
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `role_call_db` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `role_call_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE `role_call_db` ;
 
 -- -----------------------------------------------------
