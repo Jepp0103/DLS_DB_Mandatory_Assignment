@@ -128,7 +128,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`address`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `roll_call_db`.`address` (
+CREATE TABLE IF NOT EXISTS `get_gps_coordinates_student_teacherroll_call_db`.`address` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `city_id` INT UNSIGNED NOT NULL,
   `street_name` VARCHAR(45) NOT NULL,
