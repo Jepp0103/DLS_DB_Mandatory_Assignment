@@ -304,20 +304,21 @@ ENGINE = InnoDB;
 USE `roll_call_db` ;
 
 -- -----------------------------------------------------
--- Placeholder table for view `roll_call_db`.`get_gps_coordinates`
+-- Placeholder table for view `roll_call_db`.`get_gps_coordinates_student_teacher`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `roll_call_db`.`get_gps_coordinates` (`latitude` INT, `longitude` INT, `concat(t.forename + " " + t.surname)` INT, `concat(s.forename + " " + s.surname)` INT);
+CREATE TABLE IF NOT EXISTS `roll_call_db`.`get_gps_coordinates_student_teacher` (`latitude` INT, `longitude` INT, `teacher` INT, `student` INT);
 
 -- -----------------------------------------------------
--- View `roll_call_db`.`get_gps_coordinates`
+-- View `roll_call_db`.`get_gps_coordinates_student_teacher`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `roll_call_db`.`get_gps_coordinates`;
+DROP TABLE IF EXISTS `roll_call_db`.`get_gps_coordinates_student_teacher`;
 USE `roll_call_db`;
-CREATE  OR REPLACE VIEW `get_gps_coordinates` AS 
-	SELECT latitude, longitude, concat(t.forename + " " + t.surname), concat(s.forename + " " + s.surname)
-	FROM gps_coordinates g
-	JOIN Teacher t ON g.id = t.gps_coordinates_id
-	JOIN Student s ON g.id = g.gps_coordinates_id;
+CREATE OR REPLACE VIEW `get_gps_coordinates_student_teacher` AS
+SELECT latitude, longitude, concat(t.forename + " " + t.surname) AS teacher, concat(s.forename + " " + s.surname) AS student
+FROM gps_coordinates g
+    JOIN teacher t ON g.id = t.gps_coordinates_id
+    JOIN student s ON g.id = s.gps_id
+GROUP BY latitude, longitude;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -336,6 +337,10 @@ INSERT INTO `campus` (`address_id`, `faculty_id`, `name`) VALUES ('2', '1', 'Lyg
 
 INSERT INTO `class` (`name`, `faculty_id`) VALUES ('SD21W1', '1');
 INSERT INTO `class` (`name`, `faculty_id`) VALUES ('SD21W2', '1');
+
+INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('55.70392118', '12.537521047');
+INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('60.70392118', '22.537521047');
+INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('34.70392118', '90.537521047');
 
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Abul@stud.kea.dk', 'SD21W1', '1', 'Abul', 'Kasem Mohammed Omar Sharif', '11111111');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Albert-Ioan@stud.kea.dk', 'SD21W1', '1', 'Albert-Ioan', 'Dánilá', '11111113');
@@ -363,9 +368,8 @@ INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `foren
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Théo@stud.kea.dk', 'SD21W1', '1', 'Théo', 'Mathieu Maillard', '11111151');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Wajid@stud.kea.dk', 'SD21W1', '1', 'Wajid', 'Ahmad', '11111154');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Yewon@stud.kea.dk', 'SD21W1', '1', 'Yewon', 'Seo', '11111155');
-select * from gps_coordinates;
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Aisha@stud.kea.dk', 'SD21W2', '1',  1, 'Aisha', 'Abdikadir Noor Rooble', '11111155');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Alexander@stud.kea.dk', 'SD21W2', 2, '1', 'Alexander', 'Jørgensen', '11111156');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Alexander@stud.kea.dk', 'SD21W2', '1', 2, 'Alexander', 'Jørgensen', '11111156');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Alin@stud.kea.dk', 'SD21W2', '1', 3, 'Alin', 'Plamadeala', '11111157');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Alper@stud.kea.dk', 'SD21W2', '1', 2, 'Alper', 'Altay', '11111158');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Andreas@stud.kea.dk', 'SD21W2', '1', 1, 'Andreas', 'Dan Petersen', '11111159');
@@ -386,18 +390,13 @@ INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_i
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Radu-Mihai@stud.kea.dk', 'SD21W2', '1', 'Radu-Mihai', 'Onescu', '11111174');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Stefani@stud.kea.dk', 'SD21W2', '1', 'Stefani', 'Dimitrova Dimitrova', '11111175');
 INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Tomas@kea.dk', 1, 'Tomas', 'Pesek', '22222222');
-INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Andrea@kea.dk', 'Andrea', 'Corradini', '44444444');
-INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Morten@kea.dk', 'Morten', 'Christiansen', '77777777');
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Andrea@kea.dk', 3, 'Andrea', 'Corradini', '44444444');
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Morten@kea.dk', 2, 'Morten', 'Christiansen', '77777777');
 INSERT INTO `classroom` (`campus_id`, `name`) VALUES ('1', 'B235');
 INSERT INTO `classroom` (`campus_id`, `name`) VALUES ('1', 'B219 ');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Databases for developers', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Testing', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Development of large systems', '10');
-
-INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('55.70392118', '12.537521047');
-INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('60.70392118', '22.537521047');
-INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('34.70392118', '90.537521047');
-
 
 INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '1', 'DB lecture', '2021-03-15 08:15:00', '08:15:00', '13:30:00', '0', '0');
 INSERT INTO `teacher_has_lecture` (`teacher_email_address`, `lecture_id`) VALUES ('Tomas@kea.dk', '1');
