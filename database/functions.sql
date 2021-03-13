@@ -22,5 +22,4 @@ BEGIN
 										JOIN course c ON l.course_id = c.id
 										WHERE c.id = arg_course_id)/amountOfAttendances;
 	RETURN (studentLectureAttendanceRate);
-
 END$$
