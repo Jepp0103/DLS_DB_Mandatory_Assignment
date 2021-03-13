@@ -55,6 +55,6 @@ SELECT count(is_attending) FROM attendance_record ar
     
 SELECT count(*) FROM lecture l
 										JOIN course c ON l.course_id = c.id
-										WHERE c.id = arg_course_id)/amountOfAttendances
+										WHERE c.id = arg_course_id)/amountOfAttendances;
     
 #-------------------------------------------------------------------------------
