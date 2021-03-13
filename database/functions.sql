@@ -2,11 +2,12 @@
 #for that student and that course. If course is null then get the attendance rate for the 
 #student across all lectures regardless of course.
 DELIMITER $$
-CREATE FUNCTION getStudentLectureAttendanceRate(
-	arg_student_id VARCHAR(100),
-    arg_course_id INT
+CREATE FUNCTION getStudentAttendanceRate(
+	forename VARCHAR(20),
+    surname VARCHAR(20),
+    course_name VARCHAR(20)
 )
-RETURNS DECIMAL
+RETURNS INT(11)
 DETERMINISTIC
 BEGIN
 	DECLARE studentLectureAttendanceRate DECIMAL;
@@ -23,5 +24,3 @@ BEGIN
 	RETURN (studentLectureAttendanceRate);
 
 END$$
-
-SELECT getStudentLectureAttendanceRate(
