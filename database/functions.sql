@@ -3,7 +3,7 @@
 #student across all lectures regardless of course.
 DELIMITER $$
 CREATE FUNCTION getStudentLectureAttendanceRate(
-	arg_student_id INT,
+	arg_student_id VARCHAR(100),
     arg_course_id INT
 )
 RETURNS DECIMAL
@@ -15,13 +15,13 @@ BEGIN
     SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
 								JOIN lecture l ON ar.lecture_id = l.id
 								JOIN course c ON l.course_id = c.id
-								WHERE is_attending = 1 AND c.id = arg_course_id);
+								WHERE is_attending = 1 AND student_id = arg_student_id AND c.id = arg_course_id);
     
-	#SET studentLectureAttendanceRate = (SELECT count(*) FROM lecture l
-	#										JOIN course c ON 
-	#										WHERE )/amountOfAttendances;
-
+	SET studentLectureAttendanceRate = (SELECT count(*) FROM lecture l
+										JOIN course c ON l.course_id = c.id
+										WHERE c.id = arg_course_id)/amountOfAttendances;
+	RETURN (studentLectureAttendanceRate);
 
 END$$
 
-#COUNT(registred_at);
+SELECT getStudentLectureAttendanceRate(

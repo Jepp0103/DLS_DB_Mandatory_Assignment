@@ -398,7 +398,14 @@ INSERT INTO `course` (`name`, `ects`) VALUES ('Databases for developers', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Testing', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Development of large systems', '10');
 
+#Adding extra lectures to attendance rate for function
 INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '1', 'DB lecture', '2021-03-15 08:15:00', '08:15:00', '13:30:00', '0', '0');
+INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '2', 'DB lecture 2', '2021-03-17 08:15:00', '08:15:00', '13:30:00', '0', '0');
+INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '3', 'DB lecture 3', '2021-03-18 08:15:00', '08:15:00', '13:30:00', '0', '0');
+INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '4', 'DB lecture 4', '2021-03-19 08:15:00', '08:15:00', '13:30:00', '0', '0');
+INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '4', 'DB lecture 5', '2021-03-20 08:15:00', '08:15:00', '13:30:00', '0', '0');
+
+
 INSERT INTO `teacher_has_lecture` (`teacher_email_address`, `lecture_id`) VALUES ('Tomas@kea.dk', '1');
 INSERT INTO `class_lecture` (`class_id`, `lecture_id`) VALUES ('SD21W1', '1');
 
@@ -429,7 +436,17 @@ INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `re
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Wajid@stud.kea.dk', 1, 0, '2021-03-15 08:25:00');
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Yewon@stud.kea.dk', 1, 1, '2021-03-15 08:25:00');
 
-INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '2', 'DB lecture 2', '2021-03-17 08:15:00', '08:15:00', '13:30:00', '0', '0');
+
+#Extra attendances for Jeppe to test function
+INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Jeppe@stud.kea.dk', 1, 0, '2021-06-15 08:25:00');
+INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Jeppe@stud.kea.dk', 2, 1, '2021-04-15 08:25:00');
+INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Jeppe@stud.kea.dk', 3, 0, '2021-02-15 08:25:00');
+INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Jeppe@stud.kea.dk', 4, 1, '2021-01-15 08:25:00');
+INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Jeppe@stud.kea.dk', 5, 1, '2021-07-15 08:25:00');
+
+
+
+
 INSERT INTO `teacher_has_lecture` (`teacher_email_address`, `lecture_id`) VALUES ('Tomas@kea.dk', '2');
 INSERT INTO `class_lecture` (`class_id`, `lecture_id`) VALUES ('SD21W2', '2');
 
