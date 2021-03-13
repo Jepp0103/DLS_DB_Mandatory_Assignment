@@ -301,24 +301,6 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher_has_lecture` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-USE `roll_call_db` ;
-
--- -----------------------------------------------------
--- Placeholder table for view `roll_call_db`.`get_gps_coordinates_student_teacher`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `roll_call_db`.`get_gps_coordinates_student_teacher` (`latitude` INT, `longitude` INT, `teacher` INT, `student` INT);
-
--- -----------------------------------------------------
--- View `roll_call_db`.`get_gps_coordinates_student_teacher`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `roll_call_db`.`get_gps_coordinates_student_teacher`;
-USE `roll_call_db`;
-CREATE OR REPLACE VIEW `get_gps_coordinates_student_teacher` AS
-SELECT latitude, longitude, concat(t.forename + " " + t.surname) AS teacher, concat(s.forename + " " + s.surname) AS student
-FROM gps_coordinates g
-    JOIN teacher t ON g.id = t.gps_coordinates_id
-    JOIN student s ON g.id = s.gps_id
-GROUP BY latitude, longitude;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -368,35 +350,37 @@ INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `foren
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Théo@stud.kea.dk', 'SD21W1', '1', 'Théo', 'Mathieu Maillard', '11111151');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Wajid@stud.kea.dk', 'SD21W1', '1', 'Wajid', 'Ahmad', '11111154');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Yewon@stud.kea.dk', 'SD21W1', '1', 'Yewon', 'Seo', '11111155');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Aisha@stud.kea.dk', 'SD21W2', '1',  1, 'Aisha', 'Abdikadir Noor Rooble', '11111155');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Alexander@stud.kea.dk', 'SD21W2', '1', 2, 'Alexander', 'Jørgensen', '11111156');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Alin@stud.kea.dk', 'SD21W2', '1', 3, 'Alin', 'Plamadeala', '11111157');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Alper@stud.kea.dk', 'SD21W2', '1', 2, 'Alper', 'Altay', '11111158');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Andreas@stud.kea.dk', 'SD21W2', '1', 1, 'Andreas', 'Dan Petersen', '11111159');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Anton@stud.kea.dk', 'SD21W2', '1', 3, 'Anton', 'Hulbæk Haastrup', '11111160');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('August@stud.kea.dk', 'SD21W2', '1', 1, 'August', 'Hejberg', '11111161');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Bénédict@stud.kea.dk', 'SD21W2', '1', 2, 'Bénédict', 'Paul J Marien', '11111162');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Botond@stud.kea.dk', 'SD21W2', '1', 1, 'Botond', 'Zoltan Horvath', '11111163');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Cristina@stud.kea.dk', 'SD21W2', '1', 2, 'Cristina', 'Doroftei', '11111164');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Gheorghe@stud.kea.dk', 'SD21W2', '1', 1, 'Gheorghe', 'Marian Mocanu', '11111165');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Jacob@stud.kea.dk', 'SD21W2', '1', 2, 'Jacob', 'Ibrahem Jabr', '11111166');
+
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Aisha@stud.kea.dk', 'SD21W2', '1', 'Aisha', 'Abdikadir Noor Rooble', '11111155');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Alexander@stud.kea.dk', 'SD21W2', '1', 'Alexander', 'Jørgensen', '11111156');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Alin@stud.kea.dk', 'SD21W2', '1', 'Alin', 'Plamadeala', '11111157');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Alper@stud.kea.dk', 'SD21W2', '1', 'Alper', 'Altay', '11111158');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Andreas@stud.kea.dk', 'SD21W2', '1', 'Andreas', 'Dan Petersen', '11111159');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Anton@stud.kea.dk', 'SD21W2', '1', 'Anton', 'Hulbæk Haastrup', '11111160');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('August@stud.kea.dk', 'SD21W2', '1', 'August', 'Hejberg', '11111161');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Bénédict@stud.kea.dk', 'SD21W2', '1', 'Bénédict', 'Paul J Marien', '11111162');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Botond@stud.kea.dk', 'SD21W2', '1', 'Botond', 'Zoltan Horvath', '11111163');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Cristina@stud.kea.dk', 'SD21W2', '1', 'Cristina', 'Doroftei', '11111164');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Gheorghe@stud.kea.dk', 'SD21W2', '1', 'Gheorghe', 'Marian Mocanu', '11111165');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Jacob@stud.kea.dk', 'SD21W2', '1', 'Jacob', 'Ibrahem Jabr', '11111166');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Krisztian@stud.kea.dk', 'SD21W2', '1', 'Krisztian', 'Szabo', '11111167');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Mads2@stud.kea.dk', 'SD21W2', '1', 1, 'Mads', 'Rune Frederiksen', '11111168');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Mads2@stud.kea.dk', 'SD21W2', '1', 'Mads', 'Rune Frederiksen', '11111168');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Mathias@stud.kea.dk', 'SD21W2', '1', 'Mathias', 'Møller Feldt', '11111169');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Max@stud.kea.dk', 'SD21W2', '1',  2, 'Max', 'Michael Campbell', '11111170');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Max@stud.kea.dk', 'SD21W2', '1', 'Max', 'Michael Campbell', '11111170');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Oliver2@stud.kea.dk', 'SD21W2', '1', 'Oliver', 'Kramer Petersen', '11111171');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Osvald@stud.kea.dk', 'SD21W2', '1', 'Osvald', 'Fernández Vega Minddal', '11111172');
-INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Pedro@stud.kea.dk', 'SD21W2', '1', 3, 'Pedro', 'Miguel Cravide Palma', '11111173');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Pedro@stud.kea.dk', 'SD21W2', '1', 'Pedro', 'Miguel Cravide Palma', '11111173');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Radu-Mihai@stud.kea.dk', 'SD21W2', '1', 'Radu-Mihai', 'Onescu', '11111174');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Stefani@stud.kea.dk', 'SD21W2', '1', 'Stefani', 'Dimitrova Dimitrova', '11111175');
-INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Tomas@kea.dk', 1, 'Tomas', 'Pesek', '22222222');
-INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Andrea@kea.dk', 3, 'Andrea', 'Corradini', '44444444');
-INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Morten@kea.dk', 2, 'Morten', 'Christiansen', '77777777');
+INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Tomas@kea.dk', 'Tomas', 'Pesek', '22222222');
+INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Andrea@kea.dk', 'Andrea', 'Corradini', '44444444');
+INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Morten@kea.dk', 'Morten', 'Christiansen', '77777777');
 INSERT INTO `classroom` (`campus_id`, `name`) VALUES ('1', 'B235');
 INSERT INTO `classroom` (`campus_id`, `name`) VALUES ('1', 'B219 ');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Databases for developers', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Testing', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Development of large systems', '10');
+INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('55.70392118', '12.537521047');
 
 INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '1', 'DB lecture', '2021-03-15 08:15:00', '08:15:00', '13:30:00', '0', '0');
 INSERT INTO `teacher_has_lecture` (`teacher_email_address`, `lecture_id`) VALUES ('Tomas@kea.dk', '1');
