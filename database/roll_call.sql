@@ -324,6 +324,10 @@ INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('55.70392118', '
 INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('60.70392118', '22.537521047');
 INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('34.70392118', '90.537521047');
 
+INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('55.70392118', '12.537521047');
+INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('60.70392118', '22.537521047');
+INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('34.70392118', '90.537521047');
+
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Abul@stud.kea.dk', 'SD21W1', '1', 'Abul', 'Kasem Mohammed Omar Sharif', '11111111');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Albert-Ioan@stud.kea.dk', 'SD21W1', '1', 'Albert-Ioan', 'Dánilá', '11111113');
 INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `forename`, `surname`, `phone_number`) VALUES ('Anders@stud.kea.dk', 'SD21W1', '1', 'Anders', 'Genderskov Binder', '11111114');
@@ -380,7 +384,6 @@ INSERT INTO `classroom` (`campus_id`, `name`) VALUES ('1', 'B219 ');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Databases for developers', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Testing', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Development of large systems', '10');
-INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('55.70392118', '12.537521047');
 
 INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '1', 'DB lecture', '2021-03-15 08:15:00', '08:15:00', '13:30:00', '0', '0');
 INSERT INTO `teacher_has_lecture` (`teacher_email_address`, `lecture_id`) VALUES ('Tomas@kea.dk', '1');
