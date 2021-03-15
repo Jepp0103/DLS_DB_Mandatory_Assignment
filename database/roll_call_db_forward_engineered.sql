@@ -2,7 +2,7 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
 -- Schema roll_call_db
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`faculty` (
   `network_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_faculty_network1_idx` (`network_id` ASC) VISIBLE,
+  INDEX `fk_faculty_network1_idx` (`network_id` ASC),
   CONSTRAINT `fk_faculty_network`
     FOREIGN KEY (`network_id`)
     REFERENCES `roll_call_db`.`network` (`id`)
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class` (
   `name` VARCHAR(45) NOT NULL,
   `faculty_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`name`, `faculty_id`),
-  INDEX `fk_faculty_id_idx` (`faculty_id` ASC) VISIBLE,
+  INDEX `fk_faculty_id_idx` (`faculty_id` ASC),
   CONSTRAINT `fk_class_faculty`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`student` (
   `surname` VARCHAR(45) BINARY NOT NULL,
   `phone_number` VARCHAR(10) NULL,
   PRIMARY KEY (`email_address`),
-  INDEX `fk_student_class1_idx` (`class_name` ASC, `class_faculty_id` ASC) VISIBLE,
-  INDEX `fk_student_network1_idx` (`network_id` ASC) VISIBLE,
-  INDEX `fk_student_gps_coordinates_idx` (`gps_id` ASC) VISIBLE,
+  INDEX `fk_student_class1_idx` (`class_name` ASC, `class_faculty_id` ASC),
+  INDEX `fk_student_network1_idx` (`network_id` ASC),
+  INDEX `fk_student_gps_coordinates_idx` (`gps_id` ASC),
   CONSTRAINT `fk_student_class`
     FOREIGN KEY (`class_name` , `class_faculty_id`)
     REFERENCES `roll_call_db`.`class` (`name` , `faculty_id`)
@@ -133,10 +133,10 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`address` (
   `city_id` INT UNSIGNED NOT NULL,
   `street_name` VARCHAR(45) NOT NULL,
   `street_number` INT NOT NULL,
-  `registered_on` DATETIME(3) NOT NULL,
+  `registered_on` DATETIME NOT NULL,
   `additional_details` MEDIUMTEXT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_address_city_idx` (`city_id` ASC) VISIBLE,
+  INDEX `fk_address_city_idx` (`city_id` ASC),
   CONSTRAINT `fk_address_city`
     FOREIGN KEY (`city_id`)
     REFERENCES `roll_call_db`.`city` (`id`)
@@ -154,8 +154,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`campus` (
   `faculty_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_campus_faculty_idx` (`faculty_id` ASC) VISIBLE,
-  INDEX `fk_campus_address1_idx` (`address_id` ASC) VISIBLE,
+  INDEX `fk_campus_faculty_idx` (`faculty_id` ASC),
+  INDEX `fk_campus_address1_idx` (`address_id` ASC),
   CONSTRAINT `fk_campus_faculty`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`classroom` (
   `campus_id` INT UNSIGNED NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_classroom_campus_idx` (`campus_id` ASC) VISIBLE,
+  INDEX `fk_classroom_campus_idx` (`campus_id` ASC),
   CONSTRAINT `fk_classroom_campus`
     FOREIGN KEY (`campus_id`)
     REFERENCES `roll_call_db`.`campus` (`id`)
@@ -194,15 +194,15 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`lecture` (
   `course_id` INT UNSIGNED NOT NULL,
   `classroom_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `date` DATETIME(3) NOT NULL,
+  `date` DATETIME NOT NULL,
   `time_start` TIME NOT NULL,
   `time_end` TIME NOT NULL,
   `time_zone` INT NOT NULL,
   `length` INT NOT NULL,
   `code` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_lecture_course_idx` (`course_id` ASC) VISIBLE,
-  INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC) VISIBLE,
+  INDEX `fk_lecture_course_idx` (`course_id` ASC),
+  INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC),
   CONSTRAINT `fk_lecture_course`
     FOREIGN KEY (`course_id`)
     REFERENCES `roll_call_db`.`course` (`id`)
@@ -223,9 +223,9 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`attendance_record` (
   `student_id` VARCHAR(100) NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   `is_attending` TINYINT NOT NULL,
-  `registred_at` DATETIME(3) NOT NULL,
-  INDEX `fk_ar_student_idx` (`student_id` ASC) VISIBLE,
-  INDEX `fk_ar_lecture_idx` (`lecture_id` ASC) VISIBLE,
+  `registred_at` DATETIME NOT NULL,
+  INDEX `fk_ar_student_idx` (`student_id` ASC),
+  INDEX `fk_ar_lecture_idx` (`lecture_id` ASC),
   PRIMARY KEY (`student_id`, `lecture_id`),
   CONSTRAINT `fk_ar_student`
     FOREIGN KEY (`student_id`)
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher` (
   `surname` VARCHAR(45) NOT NULL,
   `phone_number` VARCHAR(10) NULL,
   PRIMARY KEY (`email_address`),
-  INDEX `fk_teacher_gps_coordinates1_idx` (`gps_coordinates_id` ASC) VISIBLE,
+  INDEX `fk_teacher_gps_coordinates1_idx` (`gps_coordinates_id` ASC),
   CONSTRAINT `fk_teacher_gps_coordinates`
     FOREIGN KEY (`gps_coordinates_id`)
     REFERENCES `roll_call_db`.`gps_coordinates` (`id`)
@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class_lecture` (
   `class_id` VARCHAR(45) NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`class_id`, `lecture_id`),
-  INDEX `fk_cl_lecture_idx` (`lecture_id` ASC) VISIBLE,
+  INDEX `fk_cl_lecture_idx` (`lecture_id` ASC),
   CONSTRAINT `fk_cl_class`
     FOREIGN KEY (`class_id`)
     REFERENCES `roll_call_db`.`class` (`name`)
@@ -287,8 +287,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher_has_lecture` (
   `teacher_email_address` VARCHAR(100) NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`teacher_email_address`, `lecture_id`),
-  INDEX `fk_teacher_has_lecture_lecture1_idx` (`lecture_id` ASC) VISIBLE,
-  INDEX `fk_teacher_has_lecture_teacher1_idx` (`teacher_email_address` ASC) VISIBLE,
+  INDEX `fk_teacher_has_lecture_lecture1_idx` (`lecture_id` ASC),
+  INDEX `fk_teacher_has_lecture_teacher1_idx` (`teacher_email_address` ASC),
   CONSTRAINT `fk_teacher_has_lecture_teacher1`
     FOREIGN KEY (`teacher_email_address`)
     REFERENCES `roll_call_db`.`teacher` (`email_address`)
@@ -422,6 +422,22 @@ INSERT INTO `course` (`name`, `ects`) VALUES ('Databases for developers', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Testing', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Development of large systems', '10');
 INSERT INTO `gps_coordinates` (`latitude`, `longitude`) VALUES ('55.70392118', '12.537521047');
+
+#Test data for coordinates student views
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Karl@stud.kea.dk', 'SD21w1', '1', 1, 'Karl', 'Johnson', '11111121');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Line@stud.kea.dk', 'SD21w1', '1', 2, 'Line', 'Sørensen', '11111123');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Magnus@stud.kea.dk', 'SD21w1', '1', 2, 'Magnus', 'Andersen', '11111124');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Martinj@stud.kea.dk', 'SD21w1', '1', 3, 'Martin', 'Jorgensen', '11111126');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Cecilie@stud.kea.dk', 'SD21w1', '1', 2, 'Cecilie', 'Christensen', '11111128');
+INSERT INTO `student` (`email_address`, `class_name`, `class_faculty_id`, `gps_id`, `forename`, `surname`, `phone_number`) VALUES ('Ole@stud.kea.dk', 'SD21w1', '1', 3, 'Ole', 'Olsen', '11111129');
+
+#Test data for teacher coordinate views
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Ejner@kea.dk', 1, 'Ejner', 'Hansen', '22222292');
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Kaj@kea.dk', 2, 'Kaj', 'Sørensen', '44444434');
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Sven@kea.dk', 3, 'Sven', 'Olsen', '77777787');
+
+
+
 
 INSERT INTO `lecture` (`course_id`, `classroom_id`, `name`, `date`, `time_start`, `time_end`, `time_zone`, `length`) VALUES ('1', '1', 'DB lecture', '2021-03-15 08:15:00', '08:15:00', '13:30:00', '0', '0');
 INSERT INTO `teacher_has_lecture` (`teacher_email_address`, `lecture_id`) VALUES ('Tomas@kea.dk', '1');
@@ -590,3 +606,37 @@ INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `re
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Pedro@stud.kea.dk', 5, 1, '2021-03-19 08:25:00');
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES ('Radu-Mihai@stud.kea.dk', 5, 1, '2021-03-19 08:25:00');
 -- end attached script 'test_data'
+-- begin attached script 'functions.sql'
+#THE FUNCTION
+DROP FUNCTION IF EXISTS getStudentLectureAttendanceRate;
+DELIMITER $$
+CREATE FUNCTION getStudentLectureAttendanceRate(
+	arg_student_id VARCHAR(100),
+    arg_course_id INT
+)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	DECLARE studentLectureAttendanceRate INT;
+	DECLARE amountOfAttendances INT;
+	DECLARE amountOfLecturesForCourse INT;
+	DECLARE class VARCHAR(100);
+    
+    SET @classname =(SELECT student.class_name FROM student WHERE student.email_address=arg_student_id);
+
+    
+    SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
+								JOIN lecture l ON ar.lecture_id = l.id
+								JOIN course c ON l.course_id = c.id
+								WHERE is_attending = 1 AND student_id = arg_student_id AND c.id LIKE IF(arg_course_id>0,arg_course_id,"%"));
+    
+	SET amountOfLecturesForCourse = (SELECT count(*) FROM lecture l
+										JOIN course c ON l.course_id = c.id JOIN class_lecture AS cl ON l.id = cl.lecture_id
+										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id=@classname);
+    
+	SET studentLectureAttendanceRate = amountOfAttendances/amountOfLecturesForCourse*100;
+                                        
+	RETURN (studentLectureAttendanceRate);
+END$$
+
+-- end attached script 'functions.sql'
