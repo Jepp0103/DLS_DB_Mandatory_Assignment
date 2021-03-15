@@ -333,6 +333,17 @@ CREATE OR REPLACE VIEW `get_gps_coordinates_teacher` AS
 SELECT latitude, longitude, concat(t.forename, " ", t.surname) as teacher
 FROM gps_coordinates g
     JOIN teacher t ON g.id = t.gps_coordinates_id;
+USE `roll_call_db`;
+
+DELIMITER $$
+USE `roll_call_db`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `roll_call_db`.`student_BEFORE_INSERT` BEFORE INSERT ON `student` FOR EACH ROW
+BEGIN
+	SET NEW.email_address = LOWER(NEW.email_address);
+END$$
+
+
+DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
