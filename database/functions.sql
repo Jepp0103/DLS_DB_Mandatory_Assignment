@@ -1,4 +1,4 @@
-#THE FUNCTION
+#Attendance rate function
 DROP FUNCTION IF EXISTS getStudentLectureAttendanceRate;
 DELIMITER $$
 CREATE FUNCTION getStudentLectureAttendanceRate(
@@ -29,3 +29,34 @@ BEGIN
                                         
 	RETURN (studentLectureAttendanceRate);
 END$$
+
+#Participation rate function
+DROP FUNCTION IF EXISTS getLectureParticipationRate;
+DELIMITER $$
+CREATE FUNCTION getLectureParticipationRate(
+    lecture_id_arg INT,
+    course_id_arg INT
+)
+RETURNS INT
+
+DETERMINISTIC
+BEGIN
+	DECLARE lectureParticipationRate INT;
+	DECLARE amountOfParticipators INT;
+    DECLARE amountOfTotalAttendances INT;
+    
+    SET amountOfParticipators = (SELECT COUNT(*) FROM attendance_record ar
+		JOIN lecture l on ar.lecture_id = l.id
+        WHERE l.id = lecture_id_arg AND l.course_id = course_id_arg AND is_attending = 1);
+    
+	SET amountOfTotalAttendances = (SELECT COUNT(*) FROM attendance_record ar
+		JOIN lecture l on ar.lecture_id = l.id
+        WHERE l.id = lecture_id_arg AND l.course_id = course_id_arg);
+    
+    
+	SET lectureParticipationRate = amountOfParticipators/amountOfTotalAttendances*100;
+                                        
+	RETURN (lectureParticipationRate);
+END$$
+
+select * from lecture;
