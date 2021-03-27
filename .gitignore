@@ -105,3 +105,6 @@ dist
 
 # MySQL Workbench Backup files
 *.mwb.bak
+
+### IntelliJ IDEA ###
+.idea
