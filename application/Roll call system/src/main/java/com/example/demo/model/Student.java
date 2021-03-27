@@ -18,14 +18,12 @@ public class Student {
     private int id;
     @Column(name="email_address")
     private String email_address;
-    @Column(name="class_name")
-    private String class_name;
-    @Column(name="class_faculty")
-    private int class_faculty;
+    @Column(name="class_id")
+    private int class_id;
     @Column(name="network_id")
     private int network_id;
-    @Column(name="gps_id")
-    private int gps_id;
+    @Column(name="gps_coordinates_id")
+    private int gps_coordinates_id;
     @Column(name="forename")
     private String forename;
     @Column(name="surname")
@@ -52,21 +50,12 @@ public class Student {
     }
 
     @JsonProperty
-    public String getClass_name() {
-        return class_name;
+    public int getClass_id() {
+        return class_id;
     }
 
-    public void setClass_name(String class_name) {
-        this.class_name = class_name;
-    }
-
-    @JsonIgnore
-    public int getClass_faculty() {
-        return class_faculty;
-    }
-
-    public void setClass_faculty(int class_faculty) {
-        this.class_faculty = class_faculty;
+    public void setClass_id(int class_id) {
+        this.class_id = class_id;
     }
 
     @JsonIgnore
@@ -79,12 +68,12 @@ public class Student {
     }
 
     @JsonIgnore
-    public int getGps_id() {
-        return gps_id;
+    public int getGps_coordinates_id() {
+        return gps_coordinates_id;
     }
 
-    public void setGps_id(int gps_id) {
-        this.gps_id = gps_id;
+    public void setGps_coordinates_id(int gps_coordinates_id) {
+        this.gps_coordinates_id = gps_coordinates_id;
     }
 
     @JsonProperty

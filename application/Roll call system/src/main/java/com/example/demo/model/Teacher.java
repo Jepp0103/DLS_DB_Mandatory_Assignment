@@ -19,7 +19,7 @@ public class Teacher {
     @Column(name="email_address")
     private String email_address;
     @Column(name="gps_coordinates_id")
-    private int gps_coordinates_id;
+    private Integer gps_coordinates_id;
     @Column(name="forename")
     private String forename;
     @Column(name="surname")
@@ -36,11 +36,11 @@ public class Teacher {
         this.email_address = email_address;
     }
     @JsonIgnore
-    public int getGps_coordinates_id() {
+    public Integer getGps_coordinates_id() {
         return gps_coordinates_id;
     }
 
-    public void setGps_coordinates_id(int gps_coordinates_id) {
+    public void setGps_coordinates_id(Inte  ger gps_coordinates_id) {
         this.gps_coordinates_id = gps_coordinates_id;
     }
     @JsonProperty
