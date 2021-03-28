@@ -40,7 +40,7 @@ public class Teacher {
         return gps_coordinates_id;
     }
 
-    public void setGps_coordinates_id(Inte  ger gps_coordinates_id) {
+    public void setGps_coordinates_id(Integer gps_coordinates_id) {
         this.gps_coordinates_id = gps_coordinates_id;
     }
     @JsonProperty

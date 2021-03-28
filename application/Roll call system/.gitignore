@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Application property file
+/Roll call system/src/main/resources/application
