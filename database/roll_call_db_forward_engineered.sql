@@ -371,6 +371,20 @@ INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES ('55.703
 INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES ('60.70392118', '22.537521047',7.55555);
 INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES ('34.70392118', '90.537521047',7.55555);
 
+#Test data for coordinates student views
+INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Karl@stud.kea.dk', 1, 1, 'Karl', 'Johnson', '11111121');
+INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Line@stud.kea.dk', 1, 2, 'Line', 'Sørensen', '11111123');
+INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Magnus@stud.kea.dk', 1, 2, 'Magnus', 'Andersen', '11111124');
+INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Martinj@stud.kea.dk', 2, 3, 'Martin', 'Jorgensen', '11111126');
+INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Cecilie@stud.kea.dk', 2, 2, 'Cecilie', 'Christensen', '11111128');
+INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Ole@stud.kea.dk', 1, 3, 'Ole', 'Olsen', '11111129');
+
+#Test data for teacher coordinate views
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Ejner@kea.dk', 1, 'Ejner', 'Hansen', '22222292');
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Kaj@kea.dk', 2, 'Kaj', 'Sørensen', '44444434');
+INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Sven@kea.dk', 3, 'Sven', 'Olsen', '77777787');
+
+
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Abul@stud.kea.dk', '1', 'Abul', 'Kasem Mohammed Omar Sharif', '11111111');
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Albert-Ioan@stud.kea.dk', '1', 'Albert-Ioan', 'Dánilá', '11111113');
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Anders@stud.kea.dk', '1', 'Anders', 'Genderskov Binder', '11111114');
@@ -597,7 +611,7 @@ INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `re
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (47, 5, 1, '2021-03-19 08:25:00');
 -- end attached script 'test_data'
 -- begin attached script 'functions.sql'
-#THE FUNCTION
+#Attendance rate function
 DROP FUNCTION IF EXISTS getStudentLectureAttendanceRate;
 DELIMITER $$
 CREATE FUNCTION getStudentLectureAttendanceRate(
@@ -629,4 +643,31 @@ BEGIN
 	RETURN (studentLectureAttendanceRate);
 END$$
 
+#Participation rate function
+DROP FUNCTION IF EXISTS getLectureParticipationRate;
+DELIMITER $$
+CREATE FUNCTION getLectureParticipationRate(
+    lecture_id_arg INT
+)
+RETURNS INT
+
+DETERMINISTIC
+BEGIN
+	DECLARE lectureParticipationRate INT;
+	DECLARE amountOfParticipators INT;
+    DECLARE amountOfTotalAttendances INT;
+    
+    SET amountOfParticipators = (SELECT COUNT(*) FROM attendance_record ar
+		JOIN lecture l on ar.lecture_id = l.id
+        WHERE l.id = lecture_id_arg AND is_attending = 1);
+    
+	SET amountOfTotalAttendances = (SELECT COUNT(*) FROM attendance_record ar
+		JOIN lecture l on ar.lecture_id = l.id
+        WHERE l.id = lecture_id_arg);
+    
+    
+	SET lectureParticipationRate = amountOfParticipators/amountOfTotalAttendances*100;
+                                        
+	RETURN (lectureParticipationRate);
+END$$
 -- end attached script 'functions.sql'
