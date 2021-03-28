@@ -58,5 +58,3 @@ BEGIN
                                         
 	RETURN (lectureParticipationRate);
 END$$
-
-select * from lecture;
