@@ -3,12 +3,11 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 
@@ -19,10 +18,17 @@ public class Lecture {
     @Id
     @Column(name="id")
     private int id;
-    @Column(name="course_id")
-    private int course_id;
-    @Column(name="classroom_id")
-    private int classroom_id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Course course_id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "classroom_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Classroom classroom_id; //Currently some problems with this field when trying to access: api/lecturesAndRelatedCourses
+
     @Column(name="name")
     private String name;
     @Column(name="date")
@@ -48,20 +54,20 @@ public class Lecture {
     }
 
     @JsonIgnore
-    public int getCourse_id() {
+    public Course getCourse_id() {
         return course_id;
     }
 
-    public void setCourse_id(int course_id) {
+    public void setCourse_id(Course course_id) {
         this.course_id = course_id;
     }
 
     @JsonIgnore
-    public int getClassroom_id() {
+    public Classroom getClassroom_id() {
         return classroom_id;
     }
 
-    public void setClassroom_id(int classroom_id) {
+    public void setClassroom_id(Classroom classroom_id) {
         this.classroom_id = classroom_id;
     }
 

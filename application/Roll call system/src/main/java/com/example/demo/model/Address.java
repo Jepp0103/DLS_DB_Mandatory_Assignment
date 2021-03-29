@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
@@ -17,8 +14,14 @@ public class Address {
     @Id
     @Column(name="id")
     private int id;
-    @Column(name="city_id")
-    private int city_id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city_id; //Can't use int but have to use object
+
+//    @Column(name="city_id")
+//    private int city_id;
+
     @Column(name="street_name")
     private String street_name;
     @Column(name="street_number")
@@ -26,21 +29,21 @@ public class Address {
     @Column(name="registred_on")
     private Date registred_on;
 
-    @JsonIgnore
-    public int getId() {
-        return id;
-    }
+//    @JsonIgnore
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @JsonIgnore
-    public int getCity_id() {
+    public City getCity_id() {
         return city_id;
     }
 
-    public void setCity_id(int city_id) {
+    public void setCity_id(City city_id) {
         this.city_id = city_id;
     }
 

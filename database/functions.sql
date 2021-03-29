@@ -2,7 +2,7 @@
 DROP FUNCTION IF EXISTS getStudentLectureAttendanceRate;
 DELIMITER $$
 CREATE FUNCTION getStudentLectureAttendanceRate(
-	arg_student_id VARCHAR(100),
+	arg_student_id INT,
     arg_course_id INT
 )
 RETURNS INT
@@ -11,9 +11,9 @@ BEGIN
 	DECLARE studentLectureAttendanceRate INT;
 	DECLARE amountOfAttendances INT;
 	DECLARE amountOfLecturesForCourse INT;
-	DECLARE class VARCHAR(100);
+	DECLARE chosen_class_id INT;
     
-    SET @classname =(SELECT student.class_name FROM student WHERE student.email_address=arg_student_id);
+    SET chosen_class_id =(SELECT student.class_id FROM student WHERE student.id=arg_student_id);
 
     
     SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
@@ -23,7 +23,7 @@ BEGIN
     
 	SET amountOfLecturesForCourse = (SELECT count(*) FROM lecture l
 										JOIN course c ON l.course_id = c.id JOIN class_lecture AS cl ON l.id = cl.lecture_id
-										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id=@classname);
+										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id=chosen_class_id);
     
 	SET studentLectureAttendanceRate = amountOfAttendances/amountOfLecturesForCourse*100;
                                         
@@ -58,4 +58,5 @@ BEGIN
 	RETURN (lectureParticipationRate);
 END$$
 
-select * from lecture;
+select c.name as course_name, c.id, l.id, l.name as lector_name from lecture l
+	join course c on l.course_id = c.id;
