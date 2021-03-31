@@ -57,6 +57,3 @@ BEGIN
                                         
 	RETURN (lectureParticipationRate);
 END$$
-
-select c.name as course_name, c.id, l.id, l.name as lector_name from lecture l
-	join course c on l.course_id = c.id;

@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name="attendance_record")
 public class AttendanceRecord {
     @Id
-    @Column(name="id")
+    @Column(name="id") //Shouldn't we have a primary key for ID in db here as well? We don't have that atm.
     private int id;
     @Column(name="student_id")
     private int student_id;

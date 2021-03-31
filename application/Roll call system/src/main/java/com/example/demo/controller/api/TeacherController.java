@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
-public class TeacherApiController {
+public class TeacherController {
     @Autowired
     private TeacherRepository teacherRepository;
 

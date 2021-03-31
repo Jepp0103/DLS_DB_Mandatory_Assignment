@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
-public class AddressApiController {
+public class AddressController {
     @Autowired
     private AddressRepository addressRepository;
 

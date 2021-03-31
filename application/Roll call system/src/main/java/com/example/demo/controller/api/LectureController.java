@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
-public class LectureApiController {
+public class LectureController {
     @Autowired
     private LectureRepository lectureRepository;
 
