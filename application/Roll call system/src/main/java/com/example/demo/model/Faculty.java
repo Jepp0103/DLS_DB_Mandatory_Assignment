@@ -16,8 +16,24 @@ public class Faculty {
     @Id
     @Column(name="id")
     private int id;
-    @Column(name="network_id")
-    private int network_id;
     @Column(name="name")
     private String name;
+
+    @JsonIgnore
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @JsonProperty
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
