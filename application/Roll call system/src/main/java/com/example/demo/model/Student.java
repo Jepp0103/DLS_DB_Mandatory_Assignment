@@ -21,9 +21,9 @@ public class Student {
     @Column(name="class_id")
     private int class_id;
     @Column(name="network_id")
-    private int network_id;
+    private Integer network_id;
     @Column(name="gps_coordinates_id")
-    private int gps_coordinates_id;
+    private Integer gps_coordinates_id;
     @Column(name="forename")
     private String forename;
     @Column(name="surname")
@@ -59,16 +59,16 @@ public class Student {
     }
 
     @JsonIgnore
-    public int getNetwork_id() {
+    public Integer getNetwork_id() {
         return network_id;
     }
 
-    public void setNetwork_id(int network_id) {
+    public void setNetwork_id(Integer network_id) {
         this.network_id = network_id;
     }
 
     @JsonIgnore
-    public int getGps_coordinates_id() {
+    public Integer getGps_coordinates_id() {
         return gps_coordinates_id;
     }
 

@@ -15,4 +15,8 @@ public class StudentController {
     public Iterable<Student> getStudents()  {
         return studentRepository.findAll();
     }
+    @GetMapping("/attendencerate")
+    public Iterable<Object[]> getAttendenceRate()  {
+        return studentRepository.findAttendenceRate(1,1);
+    }
 }
