@@ -1,8 +1,8 @@
 package com.example.demo.controller.api;
-import com.example.demo.model.Network;
-import com.example.demo.repository.NetworkRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+        import com.example.demo.model.Network;
+        import com.example.demo.repository.NetworkRepository;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
