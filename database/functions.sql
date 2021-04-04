@@ -13,8 +13,9 @@ BEGIN
 	DECLARE amountOfLecturesForCourse INT;
 	DECLARE chosen_class_id INT;
     
-    SET chosen_class_id =(SELECT student.class_id FROM student WHERE student.id=arg_student_id);
-
+    SET chosen_class_id = (SELECT class.id FROM student s
+							JOIN class c on s.class_id = c.id
+							WHERE student.id=arg_student_id);
     
     SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
 								JOIN lecture l ON ar.lecture_id = l.id
@@ -22,13 +23,15 @@ BEGIN
 								WHERE is_attending = 1 AND student_id = arg_student_id AND c.id LIKE IF(arg_course_id>0,arg_course_id,"%"));
     
 	SET amountOfLecturesForCourse = (SELECT count(*) FROM lecture l
-										JOIN course c ON l.course_id = c.id JOIN class_lecture AS cl ON l.id = cl.lecture_id
+										JOIN course c ON l.course_id = c.id JOIN class_lectures AS cl ON l.id = cl.lecture_id
 										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id=chosen_class_id);
     
 	SET studentLectureAttendanceRate = amountOfAttendances/amountOfLecturesForCourse*100;
                                         
 	RETURN (studentLectureAttendanceRate);
 END$$
+
+
 
 #Participation rate function
 DROP FUNCTION IF EXISTS getLectureParticipationRate;
