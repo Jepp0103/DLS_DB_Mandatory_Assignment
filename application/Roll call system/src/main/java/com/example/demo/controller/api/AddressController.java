@@ -1,6 +1,5 @@
 package com.example.demo.controller.api;
 import com.example.demo.model.Address;
-import com.example.demo.model.Lecture;
 import com.example.demo.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,7 @@ public class AddressController {
     @Autowired
     private AddressRepository addressRepository;
 
-    @GetMapping("/addresses") //Not working yet. Something wrong in the entity
+    @GetMapping("/addresses")
     public Iterable<Address> getAddresses()  {
         return addressRepository.findAll();
     }

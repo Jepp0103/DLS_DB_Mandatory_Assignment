@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
@@ -26,8 +27,8 @@ public class Address {
     private String street_name;
     @Column(name="street_number")
     private int street_number;
-    @Column(name="registred_on")
-    private Date registred_on;
+    @Column(name="registered_on")
+    private Date registered_on;
 
 //    @JsonIgnore
 //    public int getId() {
@@ -66,11 +67,11 @@ public class Address {
     }
 
     @JsonIgnore
-    public Date getRegistred_on() {
-        return registred_on;
+    public Date getRegistered_on() {
+        return registered_on;
     }
 
-    public void setRegistred_on(Date registred_on) {
-        this.registred_on = registred_on;
+    public void setRegistered_on(Date registered_on) {
+        this.registered_on = registered_on;
     }
 }
