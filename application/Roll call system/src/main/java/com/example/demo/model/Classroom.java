@@ -20,6 +20,8 @@ public class Classroom {
     private int campus_id;
     @Column(name="name")
     private String name;
+    @Column(name="is_available")
+    private Boolean isAvailable;
 
     public int getId() {
         return id;
@@ -44,5 +46,13 @@ public class Classroom {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
     }
 }

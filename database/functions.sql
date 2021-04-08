@@ -12,9 +12,9 @@ BEGIN
 	DECLARE amountOfAttendances INT;
 	DECLARE amountOfLecturesForCourse INT;
     
-    SET @chosen_class_id = (SELECT class.id FROM student s
-							JOIN class c on s.class_id = c.id
-							WHERE student.id=arg_student_id);
+    SET @chosen_class_id = (SELECT c.id FROM student s                       
+								JOIN class c on s.class_id = c.id                         
+								WHERE s.id=arg_student_id);
     
     SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
 								JOIN lecture l ON ar.lecture_id = l.id

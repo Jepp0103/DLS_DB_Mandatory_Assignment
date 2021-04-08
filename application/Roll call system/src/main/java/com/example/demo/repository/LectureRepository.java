@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface LectureRepository extends JpaRepository<Lecture,Integer> {
 
-    @Query(value = "SELECT c.name AS course_name, c.id, l.id, l.name AS lector_name from lecture l JOIN course c ON l.course_id = c.id", nativeQuery = true)
-    Iterable<Lecture> findLectureAndRelatedCourses();
+    @Query(value = "SELECT c.name, c.id, l.id, l.name from lecture l JOIN course c ON l.course_id = c.id", nativeQuery = true)
+    Iterable<Lecture> findLecturesAndRelatedCourses();
 
     //Lecture participation rate function with parameters
     @Query(value = "SELECT name, getLectureParticipationRate(:lectureId) FROM lecture WHERE id = :lectureId", nativeQuery = true)

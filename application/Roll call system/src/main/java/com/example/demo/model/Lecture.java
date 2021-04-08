@@ -19,15 +19,13 @@ public class Lecture {
     @Column(name="id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "course_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Course course_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "classroom_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Classroom classroom_id; //Currently some problems with this field when trying to access: api/lecturesAndRelatedCourses
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "classroom_id")
+    private Classroom classroom; //Currently some problems with this field when trying to access: api/lecturesAndRelatedCourses
 
     @Column(name="name")
     private String name;
@@ -55,20 +53,20 @@ public class Lecture {
 
     @JsonIgnore
     public Course getCourse_id() {
-        return course_id;
+        return course;
     }
 
-    public void setCourse_id(Course course_id) {
-        this.course_id = course_id;
+    public void setCourse_id(Course course) {
+        this.course = course;
     }
 
     @JsonIgnore
-    public Classroom getClassroom_id() {
-        return classroom_id;
+    public Classroom getClassroom() {
+        return classroom;
     }
 
-    public void setClassroom_id(Classroom classroom_id) {
-        this.classroom_id = classroom_id;
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
     }
 
     @JsonProperty

@@ -18,7 +18,7 @@ public class LectureController {
 
     @GetMapping("/lecturesAndRelatedCourses") //Not working yet due to an unknown column error in Lecture entity
     public Iterable<Lecture> getLecturesAndRelatedCourses()  {
-        return lectureRepository.findLectureAndRelatedCourses();
+        return lectureRepository.findLecturesAndRelatedCourses();
     }
 
     @GetMapping("/lectureParticipationRate") //Lecture participation rate function with parameters - http://localhost:4000/api/lectureParticipationRate?lectureId={number}
