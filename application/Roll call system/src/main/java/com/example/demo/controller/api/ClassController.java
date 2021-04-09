@@ -15,4 +15,9 @@ public class ClassController {
     public Iterable<Class> getClasses()  {
         return classRepository.findAll();
     }
+
+    @GetMapping("/averageClassAttendanceRate")
+    public Iterable<Integer> getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
+        return classRepository.findAverageClassAttendanceRate(courseId, classId);
+    }
 }

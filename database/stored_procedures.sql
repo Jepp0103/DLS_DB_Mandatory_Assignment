@@ -5,12 +5,11 @@
 DROP PROCEDURE IF EXISTS get_average_class_attendance_rate;
 DELIMITER $$
 CREATE PROCEDURE get_average_class_attendance_rate(
-    student_id_arg INT,
     course_id_arg INT,
 	class_id_arg INT
 )
 BEGIN 
-	SELECT AVG(getStudentLectureAttendanceRate(student_id_arg, course_id_arg)) AS class_attendance_rate
+	SELECT AVG(getStudentLectureAttendanceRate(student.id, course_id_arg)) AS class_attendance_rate
     FROM student
     WHERE class_id = class_id_arg;
 END $$

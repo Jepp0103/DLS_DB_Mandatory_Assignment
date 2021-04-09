@@ -11,5 +11,3 @@ FROM gps_coordinates g
     JOIN teacher t ON g.id = t.gps_coordinates_id;
     
 SELECT * FROM `get_gps_coordinates_teacher`;
-
-

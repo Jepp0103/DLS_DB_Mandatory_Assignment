@@ -610,12 +610,12 @@ INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `re
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (46, 5, 1, '2021-03-19 08:25:00');
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (47, 5, 1, '2021-03-19 08:25:00');
 -- end attached script 'test_data'
--- begin attached script 'functions.sql'
+-- begin attached script 'functions'
 #Attendance rate function
 DROP FUNCTION IF EXISTS getStudentLectureAttendanceRate;
 DELIMITER $$
 CREATE FUNCTION getStudentLectureAttendanceRate(
-	arg_student_id VARCHAR(100),
+	arg_student_id INT,
     arg_course_id INT
 )
 RETURNS INT
@@ -624,10 +624,10 @@ BEGIN
 	DECLARE studentLectureAttendanceRate INT;
 	DECLARE amountOfAttendances INT;
 	DECLARE amountOfLecturesForCourse INT;
-	DECLARE class VARCHAR(100);
     
-    SET @classname =(SELECT student.class_name FROM student WHERE student.email_address=arg_student_id);
-
+    SET @chosen_class_id = (SELECT c.id FROM student s                       
+								JOIN class c on s.class_id = c.id                         
+								WHERE s.id=arg_student_id);
     
     SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
 								JOIN lecture l ON ar.lecture_id = l.id
@@ -635,8 +635,8 @@ BEGIN
 								WHERE is_attending = 1 AND student_id = arg_student_id AND c.id LIKE IF(arg_course_id>0,arg_course_id,"%"));
     
 	SET amountOfLecturesForCourse = (SELECT count(*) FROM lecture l
-										JOIN course c ON l.course_id = c.id JOIN class_lecture AS cl ON l.id = cl.lecture_id
-										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id=@classname);
+										JOIN course c ON l.course_id = c.id JOIN class_lectures AS cl ON l.id = cl.lecture_id
+										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id= @chosen_class_id);
     
 	SET studentLectureAttendanceRate = amountOfAttendances/amountOfLecturesForCourse*100;
                                         
@@ -665,9 +665,22 @@ BEGIN
 		JOIN lecture l on ar.lecture_id = l.id
         WHERE l.id = lecture_id_arg);
     
-    
 	SET lectureParticipationRate = amountOfParticipators/amountOfTotalAttendances*100;
                                         
 	RETURN (lectureParticipationRate);
 END$$
--- end attached script 'functions.sql'
+-- end attached script 'functions'
+-- begin attached script 'stored_procedures'
+DROP PROCEDURE IF EXISTS get_average_class_attendance_rate;
+DELIMITER $$
+CREATE PROCEDURE get_average_class_attendance_rate(
+    course_id_arg INT,
+	class_id_arg INT
+)
+BEGIN 
+	SELECT AVG(getStudentLectureAttendanceRate(student.id, course_id_arg)) AS class_attendance_rate
+    FROM student
+    WHERE class_id = class_id_arg;
+END $$
+DELIMITER ;
+-- end attached script 'stored_procedures'
