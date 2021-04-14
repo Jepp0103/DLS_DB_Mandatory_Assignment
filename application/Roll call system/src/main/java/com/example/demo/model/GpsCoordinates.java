@@ -21,6 +21,8 @@ public class GpsCoordinates {
     private double latitude;
     @Column(name="longitude")
     private double longitude;
+    @Column(name="range")
+    private double range;
 
     @JsonIgnore
     public int getId() {
@@ -47,5 +49,13 @@ public class GpsCoordinates {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public double getRange() {
+        return range;
+    }
+
+    public void setRange(double range) {
+        this.range = range;
     }
 }

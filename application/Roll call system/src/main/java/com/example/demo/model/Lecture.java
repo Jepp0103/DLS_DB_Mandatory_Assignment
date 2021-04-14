@@ -3,9 +3,6 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -16,7 +13,8 @@ import java.sql.Time;
 @Table(name="lecture")
 public class Lecture {
     @Id
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,11 +30,11 @@ public class Lecture {
     @Column(name="date")
     private Date date;
     @Column(name="time_start")
-    private Time time_start;
+    private Time timeStart;
     @Column(name="time_end")
-    private Time time_end;
+    private Time timeEnd;
     @Column(name="time_zone")
-    private int time_zone;
+    private int timeZone;
     @Column(name="length")
     private int length;
     @Column(name="code")
@@ -51,23 +49,22 @@ public class Lecture {
         this.id = id;
     }
 
-    @JsonIgnore
-    public Course getCourse_id() {
+    public Course getCourse() {
         return course;
     }
 
-    public void setCourse_id(Course course) {
+    public void setCourse(Course course) {
         this.course = course;
     }
 
-    @JsonIgnore
     public Classroom getClassroom() {
         return classroom;
     }
 
-    public void setClassroom(Classroom classroom) {
+    public void setClassroomId(Classroom classroom) {
         this.classroom = classroom;
     }
+
 
     @JsonProperty
     public String getName() {
@@ -87,31 +84,28 @@ public class Lecture {
         this.date = date;
     }
 
-    @JsonIgnore
-    public Time getTime_start() {
-        return time_start;
+    public Time getTimeStart() {
+        return timeStart;
     }
 
-    public void setTime_start(Time time_start) {
-        this.time_start = time_start;
+    public void setTimeStart(Time timeStart) {
+        this.timeStart = timeStart;
     }
 
-    @JsonIgnore
-    public Time getTime_end() {
-        return time_end;
+    public Time getTimeEnd() {
+        return timeEnd;
     }
 
-    public void setTime_end(Time time_end) {
-        this.time_end = time_end;
+    public void setTimeEnd(Time timeEnd) {
+        this.timeEnd = timeEnd;
     }
 
-    @JsonIgnore
-    public int getTime_zone() {
-        return time_zone;
+    public int getTimeZone() {
+        return timeZone;
     }
 
-    public void setTime_zone(int time_zone) {
-        this.time_zone = time_zone;
+    public void setTimeZone(int timeZone) {
+        this.timeZone = timeZone;
     }
 
     @JsonIgnore
