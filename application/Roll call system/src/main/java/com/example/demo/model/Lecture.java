@@ -61,7 +61,7 @@ public class Lecture {
         return classroom;
     }
 
-    public void setClassroomId(Classroom classroom) {
+    public void setClassroom(Classroom classroom) {
         this.classroom = classroom;
     }
 

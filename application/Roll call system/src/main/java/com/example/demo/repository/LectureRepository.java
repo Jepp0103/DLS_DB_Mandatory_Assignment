@@ -18,4 +18,6 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     //Lecture participation rate function with arg 2 for testing
     @Query(value = "SELECT name, getLectureParticipationRate(2) FROM lecture WHERE id = 2", nativeQuery = true)
     Iterable<String> findLectureParticipationRateArg2();
+
+    //Notation - @transactional @modifying - insert into m
 }
