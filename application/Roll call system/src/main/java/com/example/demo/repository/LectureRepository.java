@@ -19,5 +19,6 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     @Query(value = "SELECT name, getLectureParticipationRate(2) FROM lecture WHERE id = 2", nativeQuery = true)
     Iterable<String> findLectureParticipationRateArg2();
 
+    //Iterable<Lecture> findLectureByDateBetweenAnd
     //Notation - @transactional @modifying - insert into m
 }
