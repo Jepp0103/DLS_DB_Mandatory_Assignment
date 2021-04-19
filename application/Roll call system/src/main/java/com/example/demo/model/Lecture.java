@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
@@ -27,6 +28,20 @@ public class Lecture {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classroom_id")
     private Classroom classroom; //Currently some problems with this field when trying to access: api/lecturesAndRelatedCourses
+
+    @ManyToMany
+    @JoinTable(
+            name = "class_lectures",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "class_id"))
+    Set<Class> classes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "teacher_lectures",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id"))
+    Set<Teacher> teachers;
 
     @Column(name="name")
     private String name;
@@ -66,6 +81,22 @@ public class Lecture {
 
     public void setClassroom(Classroom classroom) {
         this.classroom = classroom;
+    }
+
+    public Set<Class> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(Set<Class> classes) {
+        this.classes = classes;
+    }
+
+    public Set<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(Set<Teacher> teachers) {
+        this.teachers = teachers;
     }
 
     @JsonProperty

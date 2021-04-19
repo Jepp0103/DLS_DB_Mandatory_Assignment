@@ -29,7 +29,6 @@ public class Controller {
             else if (isStudent){
                 session.setAttribute("studentid",ss.getStudentIdByUsername(((UserDetails) principal).getUsername()));
                 session.setAttribute("myclass",ss.getClassIdByStudentId((int)(session.getAttribute("studentid"))));
-                System.out.println(session.getAttribute("myclass"));
             }
         }
         return "Home page";
