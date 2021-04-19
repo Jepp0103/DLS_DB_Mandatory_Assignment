@@ -4,6 +4,8 @@ import com.example.demo.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping(value = "/api")
 public class ClassController {
@@ -20,4 +22,9 @@ public class ClassController {
     public Iterable<Integer> getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
         return classRepository.findAverageClassAttendanceRate(courseId, classId);
     }
+    @GetMapping("/myclasses")
+    public Iterable<String> getTeachersClasses(HttpSession session)  {
+        return classRepository.findTeacherClasses((int)(session.getAttribute("teacherid")));
+    }
+
 }

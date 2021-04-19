@@ -27,4 +27,13 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
             value = "select email_address, getStudentLectureAttendanceRate(id,:course) from student where id=:student",
             nativeQuery = true)
     public List<Object[]> findSingleAttendenceRate(@Param("student") int studentid,@Param("course") int course);
+
+    @Query(value = "SELECT student_id from users where username = :username", nativeQuery = true)
+    public int getStudentIdByUsername(String username);
+
+    @Query(value = "SELECT class_id from student where id = :id", nativeQuery = true)
+    public int  getClassIdByStudentId(int id);
+
+
+
 }
