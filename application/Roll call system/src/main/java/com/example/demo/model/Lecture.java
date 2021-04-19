@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
@@ -28,7 +31,8 @@ public class Lecture {
     @Column(name="name")
     private String name;
     @Column(name="date")
-    private Date date;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime date;
     @Column(name="time_start")
     private Time timeStart;
     @Column(name="time_end")
@@ -40,7 +44,6 @@ public class Lecture {
     @Column(name="code")
     private String code;
 
-    @JsonIgnore
     public int getId() {
         return id;
     }
@@ -65,7 +68,6 @@ public class Lecture {
         this.classroom = classroom;
     }
 
-
     @JsonProperty
     public String getName() {
         return name;
@@ -76,11 +78,11 @@ public class Lecture {
     }
 
     @JsonIgnore
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

@@ -27,32 +27,45 @@ CREATE PROCEDURE registerStudentGps(
 	IN student_id INT,
     IN gps_latitude DECIMAL(10,8),
     IN gps_longitude DECIMAL(11,8),
-    IN gps_range DECIMAL(6,5)
+    IN gps_range DECIMAL(6,5),
+    OUT within_range CHAR(1)
 )
 BEGIN 
+	#Validate before insertion that all parameter values are valid.
+	DECLARE addedGpsId INT;
+
 	INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES (gps_latitude, gps_longitude, gps_range);
+
+	#SET addedGpsId = (SELECT LAST_INSERT_ID());
+    SELECT LAST_INSERT_ID() INTO addedGpsId;
+#	SET @addedGpsId = (SELECT id FROM gps_coordinates
+#						WHERE latitude = gps_latitude AND longitude = gps_longitude AND `range` = gps_range);
+                  
+	#Updating coordinates for the student
+	UPDATE student
+	SET gps_coordinates_id = addedGpsId
+	WHERE id = student_id;
+	
+    set within_range = 'n';
     
-    SET @addedGpsId = (SELECT id FROM gps_coordinates
-					   WHERE latitude = gps_latitude AND longitude = gps_longitude AND `range` = gps_range);
-                       
-       #OUT within_range CHAR(1)
+    #select 'n' into within_range;
+     
+       #OUT within_range CHAR(1)1
     #OUT addedGpsId INT
 END $$
 DELIMITER ;
-    
-CALL registerStudentGps(1, 34.70392118, 90.53752105, 7.55555);
 
-INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES (59.70392118, 23.537521047, 9.55555);
-    
-select * from gps_coordinates; 
+set @hi = '';
+CALL registerStudentGps(1, 70.75492148, 50.53352305, 4.53435, @hi);
+select @hi;
 
 
+select * from gps_coordinates;
 
-SELECT id FROM gps_coordinates
-	WHERE latitude = 55.70392118 AND longitude = 12.53752105 AND `range` = 7.55555;
-	
-    
-UPDATE student
-SET gps_coordinates_id = @addedGpsId;
+select * from student s
+	inner join gps_coordinates gc on s.gps_coordinates_id = gc.id; 
 
-#INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES ('60.70392118', '22.537521047',7.55555);
+select * from lecture;
+
+select * from classroom;
+select * from course;

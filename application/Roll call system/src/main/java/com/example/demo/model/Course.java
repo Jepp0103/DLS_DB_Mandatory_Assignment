@@ -21,7 +21,6 @@ public class Course {
     @Column(name="ects")
     private int ects;
 
-    @JsonIgnore
     public int getId() {
         return id;
     }
@@ -40,7 +39,6 @@ public class Course {
         this.name = name;
     }
 
-    @JsonIgnore
     public int getEcts() {
         return ects;
     }

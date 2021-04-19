@@ -36,10 +36,10 @@ public class LectureController {
 
     //Post mappings
     @PostMapping("/addLecture")
-    public Lecture addLecture(@RequestBody Lecture lecture, @RequestBody String payload)  {
+    public Lecture addLecture(@RequestBody Lecture lecture)  {
             System.out.println("Id "+ lecture.getId());
-            System.out.println("Course id " + payload);
-//            System.out.println("Classroom id "+ classroom);
+            System.out.println("Course id " + lecture.getCourse().getId());
+            System.out.println("Classroom id "+ lecture.getClassroom().getId());
             System.out.println("Name "+ lecture.getName());
             System.out.println("Date "+ lecture.getDate());
             System.out.println("Time start "+ lecture.getTimeStart());
