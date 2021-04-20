@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @RestController
 @RequestMapping(value = "/api")
 public class LectureController {
@@ -33,6 +37,17 @@ public class LectureController {
     public Iterable<String> getLectureParticipationRateArg2() {
         return lectureRepository.findLectureParticipationRateArg2();
     }
+    @GetMapping("/currentlectures")
+    public Iterable<String> getCurrentLectures(HttpSession session) {
+        LocalDateTime today=LocalDateTime.now(ZoneId.of("Europe/Copenhagen"));
+        if(session.getAttribute("myclass")!=null) {
+            return lectureRepository.findLectureByDateBetweenAndClasses_Id(today.minusHours(8), today.plusHours(8), (int)session.getAttribute("myclass"));
+        }
+        else if(session.getAttribute("teacherid")!=null) {
+            return lectureRepository.findLectureByDateBetweenAndTeachers_Id(today.minusHours(8), today.plusHours(8), (int)session.getAttribute("teacherid"));
+        }
+        return null;
+    }
 
     //Post mappings
     @PostMapping("/addLecture")
@@ -49,4 +64,7 @@ public class LectureController {
             System.out.println("Code "+ lecture.getCode());
         return lectureRepository.save(lecture);
     }
+
+
+
 }

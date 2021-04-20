@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LectureRepository extends JpaRepository<Lecture,Integer> {
@@ -19,6 +20,9 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     @Query(value = "SELECT name, getLectureParticipationRate(2) FROM lecture WHERE id = 2", nativeQuery = true)
     Iterable<String> findLectureParticipationRateArg2();
 
-    //Iterable<Lecture> findLectureByDateBetweenAnd
+    Iterable<String> findLectureByDateBetweenAndClasses_Id(LocalDateTime d1,LocalDateTime d2,int classId);
+
+    Iterable<String> findLectureByDateBetweenAndTeachers_Id(LocalDateTime d1,LocalDateTime d2,int teacherId);
+
     //Notation - @transactional @modifying - insert into m
 }
