@@ -17,6 +17,7 @@ public class StudentController {
     public Iterable<Student> getStudents()  {
         return studentRepository.findAll();
     }
+
     @GetMapping("/attendencerate")
     public Iterable<Object[]> getAttendenceRate(@RequestParam Map<String,String> params)  {
         Iterable<Object[]> iter;
