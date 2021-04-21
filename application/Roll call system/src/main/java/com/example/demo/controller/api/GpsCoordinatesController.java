@@ -1,6 +1,5 @@
 package com.example.demo.controller.api;
 import com.example.demo.model.GpsCoordinates;
-import com.example.demo.model.Lecture;
 import com.example.demo.repository.GpsCoordinatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ public class GpsCoordinatesController {
     private GpsCoordinatesRepository gpsCoordinatesRepository;
 
     //Get mappings
-    @GetMapping("/gpsCoordinates") //Seems to work, but no values are displayed. Entity may be wrong...
+    @GetMapping("/gpsCoordinates")
     public Iterable<GpsCoordinates> getGpsCoordinates()  {
         return gpsCoordinatesRepository.findAll();
     }
@@ -22,5 +21,14 @@ public class GpsCoordinatesController {
     @PostMapping("/addGpsCoordinates")
     public GpsCoordinates addGpsCoordinates(@RequestBody GpsCoordinates gpsCoordinates) {
         return gpsCoordinatesRepository.save(gpsCoordinates);
+    }
+
+    @PostMapping("/registerStudentGps")
+    public String addRegisteredStudentGps(@RequestBody int studentId,
+                                          @RequestBody int teacherId,
+                                          @RequestBody double studentLatitude,
+                                          @RequestBody double studentLongitude,
+                                          @RequestBody double gpsRange) {
+        return gpsCoordinatesRepository.registerStudentGps(studentId, teacherId, studentLatitude, studentLongitude, gpsRange);
     }
 }

@@ -19,9 +19,10 @@ public class ClassController {
     }
 
     @GetMapping("/averageClassAttendanceRate")
-    public Iterable<Integer> getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
+    public Integer getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
         return classRepository.findAverageClassAttendanceRate(courseId, classId);
     }
+
     @GetMapping("/myclasses")
     public Iterable<String> getTeachersClasses(HttpSession session)  {
         return classRepository.findTeacherClasses((int)(session.getAttribute("teacherid")));

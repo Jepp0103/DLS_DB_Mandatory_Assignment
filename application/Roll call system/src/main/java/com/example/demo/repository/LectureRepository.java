@@ -17,11 +17,11 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
 
     //Lecture participation rate function with parameters
     @Query(value = "SELECT name, getLectureParticipationRate(:lectureId) FROM lecture WHERE id = :lectureId", nativeQuery = true)
-    Iterable<String> findLectureParticipationRate(int lectureId);
+    String findLectureParticipationRate(int lectureId);
 
     //Lecture participation rate function with arg 2 for testing
     @Query(value = "SELECT name, getLectureParticipationRate(2) FROM lecture WHERE id = 2", nativeQuery = true)
-    Iterable<String> findLectureParticipationRateArg2();
+    String findLectureParticipationRateArg2();
 
     Iterable<String> findLectureByDateBetweenAndClasses_Id(LocalDateTime d1,LocalDateTime d2,int classId);
 
