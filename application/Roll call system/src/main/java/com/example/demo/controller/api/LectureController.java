@@ -58,7 +58,7 @@ public class LectureController {
     public void beginLecture(HttpSession session, @RequestParam int lectureId){//should be a post
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id((int)session.getAttribute("teacherid"));
         if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
-            ls.startLecture(lectureId);
+            ls.startLecture(lectureId,"asddsa");
         }
     }
     @PostMapping("/addLecture")
