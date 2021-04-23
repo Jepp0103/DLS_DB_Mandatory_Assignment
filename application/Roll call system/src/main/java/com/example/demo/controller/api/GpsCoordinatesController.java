@@ -25,7 +25,7 @@ public class GpsCoordinatesController {
     }
 
     @PostMapping("/registerStudentGps")
-    public String addRegisteredStudentGps(@RequestBody StudentGpsRegister sgr) {
-        return gpsCoordinatesRepository.registerStudentGps(sgr.getStudentId(), sgr.getTeacherId(), sgr.getStudentLatitude(), sgr.getStudentLongitude(), sgr.getGpsRange(), sgr.getWithinRange());
+    public char addRegisteredStudentGps(@RequestBody StudentGpsRegister sgr) {
+        return gpsCoordinatesRepository.registerStudentGps(sgr.getStudentId(), sgr.getTeacherId(), sgr.getStudentLatitude(), sgr.getStudentLongitude(), sgr.getGpsRange());
     }
 }

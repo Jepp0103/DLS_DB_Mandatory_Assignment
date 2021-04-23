@@ -15,7 +15,7 @@ public class LectureService {
         lr.insertLectureCode(lectureId,code);
     }
 
-    public boolean correctcode(int lectureId,String code) {
+    public boolean correctCode(int lectureId, String code) {
        return lr.existsByIdAndCode(lectureId,code);
     }
 }

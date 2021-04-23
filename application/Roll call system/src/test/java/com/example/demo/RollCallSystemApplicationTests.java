@@ -16,8 +16,8 @@ class RollCallSystemApplicationTests {
     @Test
     void correctCodeTest() {
         ls.startLecture(1,"asddsaa");
-        assertTrue(ls.correctcode(1,"asddsaa"));
-        assertFalse(ls.correctcode(1,"Wroooong"));
+        assertTrue(ls.correctCode(1,"asddsaa"));
+        assertFalse(ls.correctCode(1,"Wroooong"));
 
     }
     @Test
