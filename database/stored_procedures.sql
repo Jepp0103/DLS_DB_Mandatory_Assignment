@@ -54,11 +54,9 @@ BEGIN
 	DECLARE added_gps_id INT;
     DECLARE teacher_latitude DECIMAL(10,8);
     DECLARE teacher_longitude DECIMAL(11,8);
-    DECLARE lat_deg_dist DECIMAL (10,3);
-    DECLARE long_deg_dist DECIMAL (8,3);
-			
-	#Still need some validation here - hasn't been able to complete that part yet.
-    
+    DECLARE lat_deg_dist DECIMAL(10,3);
+    DECLARE long_deg_dist DECIMAL(8,3);
+			    
 	INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES (student_latitude, student_longitude, gps_range);
 	SELECT LAST_INSERT_ID() INTO added_gps_id;
 

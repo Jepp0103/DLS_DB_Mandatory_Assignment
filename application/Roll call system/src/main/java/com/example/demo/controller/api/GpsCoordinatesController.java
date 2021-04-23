@@ -1,5 +1,6 @@
 package com.example.demo.controller.api;
 import com.example.demo.model.GpsCoordinates;
+import com.example.demo.model.StudentGpsRegister;
 import com.example.demo.repository.GpsCoordinatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +25,7 @@ public class GpsCoordinatesController {
     }
 
     @PostMapping("/registerStudentGps")
-    public String addRegisteredStudentGps(@RequestBody int studentId,
-                                          @RequestBody int teacherId,
-                                          @RequestBody double studentLatitude,
-                                          @RequestBody double studentLongitude,
-                                          @RequestBody double gpsRange) {
-        return gpsCoordinatesRepository.registerStudentGps(studentId, teacherId, studentLatitude, studentLongitude, gpsRange);
+    public String addRegisteredStudentGps(@RequestBody StudentGpsRegister sgr) {
+        return gpsCoordinatesRepository.registerStudentGps(sgr.getStudentId(), sgr.getTeacherId(), sgr.getStudentLatitude(), sgr.getStudentLongitude(), sgr.getGpsRange(), sgr.getWithinRange());
     }
 }
