@@ -34,5 +34,6 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     @Query("UPDATE Lecture l set l.code = :code where l.id = :lectureId")
     void insertLectureCode(int lectureId, String code);
 
+    boolean existsByIdAndCode(int Id,String code);
     //Notation - @transactional @modifying - insert into m
 }

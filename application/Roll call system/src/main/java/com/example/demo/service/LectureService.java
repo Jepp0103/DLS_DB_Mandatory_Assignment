@@ -11,7 +11,11 @@ public class LectureService {
     private LectureRepository lr;
 
 
-    public void startLecture(int lectureId) {
-        lr.insertLectureCode(lectureId,"asddsa");
+    public void startLecture(int lectureId,String code) {
+        lr.insertLectureCode(lectureId,code);
+    }
+
+    public boolean correctcode(int lectureId,String code) {
+       return lr.existsByIdAndCode(lectureId,code);
     }
 }
