@@ -87,3 +87,41 @@ END $$
 DELIMITER ;
 
 
+
+DROP PROCEDURE IF EXISTS register_student_network;
+DELIMITER $$
+CREATE PROCEDURE register_student_network(
+	IN student_id INT,
+    IN teacher_id INT,
+    IN student_ssid VARCHAR(45),
+    IN student_ip_address VARCHAR(45), 
+    IN faculty_id INT,
+	OUT is_connected CHAR(1)
+)
+BEGIN 
+	DECLARE added_network_id INT;
+    DECLARE teacher_ssid VARCHAR(45);
+    DECLARE teacher_ip_address VARCHAR(45);
+    
+    INSERT INTO `network` (`ssid`, `ip_address`, `faculty_id`) VALUES (student_ssid, student_ip_address, faculty_id);
+	SELECT LAST_INSERT_ID() INTO added_network_id;
+    
+    #Updating student with the inserted network
+    UPDATE student 
+		SET 
+			network_id = added_network_id
+        WHERE 
+			id = student_id; 
+	
+	SELECT 'y' INTO is_connected;
+
+   # SET teacher_ssid = (SELECT ssid FROM 
+    
+    #SET teacher_ip_address =
+    
+   # SET teacher_faculty_id =
+
+END $$
+DELIMITER ;
+
+select * from faculty;
