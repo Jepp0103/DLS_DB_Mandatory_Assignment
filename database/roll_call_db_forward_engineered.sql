@@ -2,7 +2,7 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
 -- Schema roll_call_db
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`network` (
   `ip_address` VARCHAR(45) NOT NULL,
   `faculty_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_network_faculty1_idx` (`faculty_id` ASC) VISIBLE,
+  INDEX `fk_network_faculty1_idx` (`faculty_id` ASC),
   CONSTRAINT `fk_network_faculty1`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class` (
   `name` VARCHAR(45) NOT NULL,
   `faculty_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_faculty_id_idx` (`faculty_id` ASC) VISIBLE,
+  INDEX `fk_faculty_id_idx` (`faculty_id` ASC),
   CONSTRAINT `fk_class_faculty`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`student` (
   `email_address` VARCHAR(100) NOT NULL,
   `phone_number` VARCHAR(10) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_student_network1_idx` (`network_id` ASC) VISIBLE,
-  INDEX `fk_student_gps_coordinates_idx` (`gps_coordinates_id` ASC) VISIBLE,
-  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC) VISIBLE,
-  INDEX `fk_student_class1_idx` (`class_id` ASC) VISIBLE,
+  INDEX `fk_student_network1_idx` (`network_id` ASC),
+  INDEX `fk_student_gps_coordinates_idx` (`gps_coordinates_id` ASC),
+  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC),
+  INDEX `fk_student_class1_idx` (`class_id` ASC),
   CONSTRAINT `fk_student_network`
     FOREIGN KEY (`network_id`)
     REFERENCES `roll_call_db`.`network` (`id`)
@@ -144,10 +144,10 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`address` (
   `city_id` INT UNSIGNED NOT NULL,
   `street_name` VARCHAR(45) NOT NULL,
   `street_number` INT NOT NULL,
-  `registered_on` DATETIME(3) NOT NULL,
+  `registered_on` DATETIME NOT NULL,
   `additional_details` MEDIUMTEXT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_address_city_idx` (`city_id` ASC) VISIBLE,
+  INDEX `fk_address_city_idx` (`city_id` ASC),
   CONSTRAINT `fk_address_city`
     FOREIGN KEY (`city_id`)
     REFERENCES `roll_call_db`.`city` (`id`)
@@ -166,8 +166,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`campus` (
   `faculty_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_campus_faculty_idx` (`faculty_id` ASC) VISIBLE,
-  INDEX `fk_campus_address1_idx` (`address_id` ASC) VISIBLE,
+  INDEX `fk_campus_faculty_idx` (`faculty_id` ASC),
+  INDEX `fk_campus_address1_idx` (`address_id` ASC),
   CONSTRAINT `fk_campus_faculty`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`classroom` (
   `name` VARCHAR(45) NOT NULL,
   `is_available` TINYINT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_classroom_campus_idx` (`campus_id` ASC) VISIBLE,
+  INDEX `fk_classroom_campus_idx` (`campus_id` ASC),
   CONSTRAINT `fk_classroom_campus`
     FOREIGN KEY (`campus_id`)
     REFERENCES `roll_call_db`.`campus` (`id`)
@@ -209,15 +209,15 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`lecture` (
   `course_id` INT UNSIGNED NOT NULL,
   `classroom_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `date` DATETIME(3) NOT NULL,
+  `date` DATETIME NOT NULL,
   `time_start` TIME NOT NULL,
   `time_end` TIME NOT NULL,
   `time_zone` INT NOT NULL,
   `length` INT NOT NULL,
   `code` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_lecture_course_idx` (`course_id` ASC) VISIBLE,
-  INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC) VISIBLE,
+  INDEX `fk_lecture_course_idx` (`course_id` ASC),
+  INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC),
   CONSTRAINT `fk_lecture_course`
     FOREIGN KEY (`course_id`)
     REFERENCES `roll_call_db`.`course` (`id`)
@@ -239,8 +239,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`attendance_record` (
   `student_id` INT UNSIGNED NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   `is_attending` TINYINT NOT NULL,
-  `registred_at` DATETIME(3) NOT NULL,
-  INDEX `fk_ar_lecture_idx` (`lecture_id` ASC) VISIBLE,
+  `registred_at` DATETIME NOT NULL,
+  INDEX `fk_ar_lecture_idx` (`lecture_id` ASC),
   PRIMARY KEY (`student_id`, `lecture_id`),
   CONSTRAINT `fk_ar_student`
     FOREIGN KEY (`student_id`)
@@ -266,9 +266,9 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher` (
   `surname` VARCHAR(45) NOT NULL,
   `email_address` VARCHAR(100) NOT NULL,
   `phone_number` VARCHAR(10) NULL,
-  INDEX `fk_teacher_gps_coordinates1_idx` (`gps_coordinates_id` ASC) VISIBLE,
+  INDEX `fk_teacher_gps_coordinates1_idx` (`gps_coordinates_id` ASC),
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC) VISIBLE,
+  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC),
   CONSTRAINT `fk_teacher_gps_coordinates`
     FOREIGN KEY (`gps_coordinates_id`)
     REFERENCES `roll_call_db`.`gps_coordinates` (`id`)
@@ -285,8 +285,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher_lectures` (
   `teacher_id` INT UNSIGNED NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`teacher_id`, `lecture_id`),
-  INDEX `fk_teacher_has_lecture_lecture1_idx` (`lecture_id` ASC) VISIBLE,
-  INDEX `fk_teacher_has_lecture_teacher1_idx` (`teacher_id` ASC) VISIBLE,
+  INDEX `fk_teacher_has_lecture_lecture1_idx` (`lecture_id` ASC),
+  INDEX `fk_teacher_has_lecture_teacher1_idx` (`teacher_id` ASC),
   CONSTRAINT `fk_teacher_has_lecture_teacher1`
     FOREIGN KEY (`teacher_id`)
     REFERENCES `roll_call_db`.`teacher` (`id`)
@@ -308,8 +308,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class_lectures` (
   `class_id` INT UNSIGNED NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`class_id`, `lecture_id`),
-  INDEX `fk_class_has_lecture_lecture1_idx` (`lecture_id` ASC) VISIBLE,
-  INDEX `fk_class_has_lecture_class1_idx` (`class_id` ASC) VISIBLE,
+  INDEX `fk_class_has_lecture_lecture1_idx` (`lecture_id` ASC),
+  INDEX `fk_class_has_lecture_class1_idx` (`class_id` ASC),
   CONSTRAINT `fk_class_has_lecture_class1`
     FOREIGN KEY (`class_id`)
     REFERENCES `roll_call_db`.`class` (`id`)
@@ -541,7 +541,15 @@ INSERT INTO `city` (`zip_code`, `city_name`) VALUES ('2200', 'København N');
 INSERT INTO `address` (`city_id`, `street_name`, `street_number`, `registered_on`, `additional_details`) VALUES ('1', 'Lygten', '16', '2021-02-23 20:02:21.550', 'Kea digital 2');
 INSERT INTO `address` (`city_id`, `street_name`, `street_number`, `registered_on`, `additional_details`) VALUES ('1', 'Lygten', '37', '2021-02-23 20:02:21.550', 'Details');
 INSERT INTO `faculty` (`name`) VALUES ('KEA - Københavns Erhvervsakademi');
+INSERT INTO `faculty` (`name`) VALUES ('KU - Københavns Universitet');
+INSERT INTO `faculty` (`name`) VALUES ('DTU - Danmarks Tekniske Universitet');
+INSERT INTO `faculty` (`name`) VALUES ('CBS - Copenhagen Business School');
+
 INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (1, 'KEANET', '193.29.107.196');
+INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (2, 'KU NET', '193.29.108.197');
+INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (3, 'DTU NET', '193.29.109.198');
+INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (4, 'CBS NET', '193.29.103.199');
+
 
 INSERT INTO `campus` (`address_id`, `faculty_id`, `name`) VALUES ('1', '1', 'Lygten 37');
 INSERT INTO `campus` (`address_id`, `faculty_id`, `name`) VALUES ('2', '1', 'Lygten 16');

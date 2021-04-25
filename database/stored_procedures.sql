@@ -92,36 +92,46 @@ DROP PROCEDURE IF EXISTS register_student_network;
 DELIMITER $$
 CREATE PROCEDURE register_student_network(
 	IN student_id INT,
-    IN teacher_id INT,
     IN student_ssid VARCHAR(45),
     IN student_ip_address VARCHAR(45), 
-    IN faculty_id INT,
+    IN student_faculty_id INT, #Faculty id for a new inserted network to a student.
+    IN teaching_network_id INT, #Network id teaching is taking place.
 	OUT is_connected CHAR(1)
 )
 BEGIN 
-	DECLARE added_network_id INT;
-    DECLARE teacher_ssid VARCHAR(45);
-    DECLARE teacher_ip_address VARCHAR(45);
+	DECLARE added_student_network_id INT;
+    DECLARE teaching_ssid VARCHAR(45);
+    DECLARE teaching_ip_address VARCHAR(45);
+    DECLARE teaching_faculty_id INT;
     
-    INSERT INTO `network` (`ssid`, `ip_address`, `faculty_id`) VALUES (student_ssid, student_ip_address, faculty_id);
-	SELECT LAST_INSERT_ID() INTO added_network_id;
+    INSERT INTO `network` (`ssid`, `ip_address`, `faculty_id`) VALUES (student_ssid, student_ip_address, student_faculty_id);
+	SELECT LAST_INSERT_ID() INTO added_student_network_id;
     
     #Updating student with the inserted network
     UPDATE student 
 		SET 
-			network_id = added_network_id
+			network_id = added_student_network_id 
         WHERE 
-			id = student_id; 
+			id = student_id;
+            
+	SET teaching_ssid = (SELECT ssid FROM network 
+									WHERE id = teaching_network_id);
 	
-	SELECT 'y' INTO is_connected;
-
-   # SET teacher_ssid = (SELECT ssid FROM 
+    SET teaching_ip_address = (SELECT ip_address FROM network 
+										WHERE id = teaching_network_id);
+                                        
+	SET teaching_faculty_id = (SELECT faculty_id FROM network 
+								WHERE id = teaching_network_id);
+	
+	#Validating network of a student compared to a network where teaching is taking place
+    IF (student_ssid = teaching_ssid 
+	AND student_ip_address = teaching_ip_address 
+    AND student_faculty_id = teaching_faculty_id) 
+	THEN 
+		SELECT 'y' INTO is_connected;
+	ELSE 
+		SELECT 'n' INTO is_connected;
+	END IF;
     
-    #SET teacher_ip_address =
-    
-   # SET teacher_faculty_id =
-
 END $$
 DELIMITER ;
-
-select * from faculty;
