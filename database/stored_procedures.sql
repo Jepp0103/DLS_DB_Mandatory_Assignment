@@ -30,25 +30,18 @@ CREATE PROCEDURE register_student_gps(
     IN teacher_id INT,
     IN student_latitude DECIMAL(10,8),
     IN student_longitude DECIMAL(11,8),
-    IN gps_range DECIMAL(6,5),
 	OUT within_range CHAR(1)
 )
 BEGIN 
-	DECLARE added_gps_id INT;
+	#DECLARE added_gps_id INT;
     DECLARE teacher_latitude DECIMAL(10,8);
     DECLARE teacher_longitude DECIMAL(11,8);
     DECLARE lat_deg_dist DECIMAL(10,3);
     DECLARE long_deg_dist DECIMAL(8,3);
-			    
-	INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES (student_latitude, student_longitude, gps_range);
-	SELECT LAST_INSERT_ID() INTO added_gps_id;
-
-	#Updating student with the inserted gps coordinates
-	UPDATE student 
-		SET 
-			gps_coordinates_id = added_gps_id
-		WHERE
-			id = student_id;
+    DECLARE teacher_gps_coordinates_id INT;
+    
+    SET teacher_gps_coordinates_id = (SELECT gps_coordinates_id FROM teacher t
+											WHERE t.id = teacher_id);
 
 	#Getting latitude and longitude values for a teacher.
 	SET teacher_latitude = (SELECT latitude FROM gps_coordinates gc
@@ -66,18 +59,21 @@ BEGIN
 	#Comparing gps values for teacher and student meter distance and returning within range value. 
 	IF  (teacher_latitude = student_latitude AND teacher_longitude = student_longitude) #When student gps values are equal to teacher gps values
 	THEN
+		CALL update_student_gps(student_id, teacher_gps_coordinates_id);
 		SELECT 'y' INTO within_range;
 		
 	ELSEIF (teacher_latitude > student_latitude OR teacher_longitude > student_longitude) #When gps values are higher for a teacher than a student but still within 9.99999 meters range
 		AND ((teacher_latitude * lat_deg_dist) - (student_latitude * lat_deg_dist)) <= 9.99999 
 		AND ((teacher_longitude * long_deg_dist) - (student_longitude * long_deg_dist)) <= 9.99999
 	THEN
+		CALL update_student_gps(student_id, teacher_gps_coordinates_id);
 		SELECT 'y' INTO within_range;
 		
 	ELSEIF (student_latitude > teacher_latitude OR student_longitude > teacher_longitude) #When gps values are higher for a student than a teacher but still within 9.99999 meters range 
 	AND ((student_latitude * lat_deg_dist) - (teacher_latitude * lat_deg_dist)) <= 9.99999 
 	AND ((student_longitude * long_deg_dist) - (teacher_longitude * long_deg_dist)) <= 9.99999 
 	THEN
+		CALL update_student_gps(student_id, teacher_gps_coordinates_id);
 		SELECT 'y' INTO within_range;
 	ELSE 
 		SELECT 'n' INTO within_range; 
@@ -86,7 +82,20 @@ BEGIN
 END $$
 DELIMITER ;
 
-
+DROP PROCEDURE IF EXISTS update_student_gps;
+DELIMITER $$
+CREATE PROCEDURE update_student_gps(
+	student_id INT,
+    teacher_gps_coordinates_id INT
+)
+BEGIN
+	UPDATE student 
+		SET 
+			gps_coordinates_id = teacher_gps_coordinates_id
+		WHERE
+			id = student_id;
+END $$
+DELIMITER ;
 
 DROP PROCEDURE IF EXISTS register_student_network;
 DELIMITER $$
@@ -99,20 +108,10 @@ CREATE PROCEDURE register_student_network(
 	OUT is_connected CHAR(1)
 )
 BEGIN 
-	DECLARE added_student_network_id INT;
+	#DECLARE added_student_network_id INT;
     DECLARE teaching_ssid VARCHAR(45);
     DECLARE teaching_ip_address VARCHAR(45);
     DECLARE teaching_faculty_id INT;
-    
-    INSERT INTO `network` (`ssid`, `ip_address`, `faculty_id`) VALUES (student_ssid, student_ip_address, student_faculty_id);
-	SELECT LAST_INSERT_ID() INTO added_student_network_id;
-    
-    #Updating student with the inserted network
-    UPDATE student 
-		SET 
-			network_id = added_student_network_id 
-        WHERE 
-			id = student_id;
             
 	SET teaching_ssid = (SELECT ssid FROM network 
 									WHERE id = teaching_network_id);
@@ -128,10 +127,16 @@ BEGIN
 	AND student_ip_address = teaching_ip_address 
     AND student_faculty_id = teaching_faculty_id) 
 	THEN 
+		#Updating student with the inserted network
+		UPDATE student 
+			SET 
+				network_id = teaching_network_id 
+			WHERE 
+				id = student_id;
+                
 		SELECT 'y' INTO is_connected;
 	ELSE 
 		SELECT 'n' INTO is_connected;
 	END IF;
-    
 END $$
 DELIMITER ;
