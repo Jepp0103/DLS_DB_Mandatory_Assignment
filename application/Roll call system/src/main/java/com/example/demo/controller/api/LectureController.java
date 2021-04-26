@@ -1,5 +1,6 @@
 package com.example.demo.controller.api;
 
+import com.example.demo.JwtTokenUtil;
 import com.example.demo.model.Lecture;
 import com.example.demo.repository.LectureRepository;
 import com.example.demo.service.LectureService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -19,6 +21,8 @@ public class LectureController {
     private LectureRepository lectureRepository;
     @Autowired
     private LectureService ls;
+    @Autowired
+    JwtTokenUtil jtu;
 
     //Get mappings
     @GetMapping("/lectures")
@@ -42,21 +46,26 @@ public class LectureController {
         return lectureRepository.findLectureParticipationRateArg2();
     }
     @GetMapping("/currentlectures")
-    public Iterable<String> getCurrentLectures(HttpSession session) {
+    public Iterable<String> getCurrentLectures(HttpServletRequest request) {
         LocalDateTime today=LocalDateTime.now(ZoneId.of("Europe/Copenhagen"));
-        if(session.getAttribute("myclass")!=null) {
-            return lectureRepository.findLectureByDateBetweenAndClasses_Id(today.minusHours(8), today.plusHours(8), (int)session.getAttribute("myclass"));
+        String token = request.getHeader("Authorization").substring(7);
+        Integer classid=jtu.getTeacherIdFromToken(token);
+        if(classid!=null) {
+            return lectureRepository.findLectureByDateBetweenAndClasses_Id(today.minusHours(8), today.plusHours(8), classid);
         }
-        else if(session.getAttribute("teacherid")!=null) {
-            return lectureRepository.findLectureByDateBetweenAndTeachers_Id(today.minusHours(8), today.plusHours(8), (int)session.getAttribute("teacherid"));
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        if(teacherid!=null) {
+            return lectureRepository.findLectureByDateBetweenAndTeachers_Id(today.minusHours(8), today.plusHours(8), teacherid);
         }
         return null;
     }
 
     //Post mappings
     @GetMapping("/beginlecture")
-    public void beginLecture(HttpSession session, @RequestParam int lectureId){//should be a post
-        Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id((int)session.getAttribute("teacherid"));
+    public void beginLecture(@RequestParam int lectureId, HttpServletRequest request){//should be a post
+        String token = request.getHeader("Authorization").substring(7);
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
             ls.startLecture(lectureId,"asddsa");
         }

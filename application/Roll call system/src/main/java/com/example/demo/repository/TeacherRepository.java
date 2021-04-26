@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface TeacherRepository extends JpaRepository<Teacher,String> {
 
     @Query(value = "SELECT teacher_id from users where username = :username", nativeQuery = true)
-    int getTeacherIdFromUser(String username);
+    Integer getTeacherIdFromUser(String username);
 
 }

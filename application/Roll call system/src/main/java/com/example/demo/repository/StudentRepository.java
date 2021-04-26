@@ -34,10 +34,10 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
     public List<Object[]> findSingleAttendenceRate(@Param("student") int studentid,@Param("course") int course);
 
     @Query(value = "SELECT student_id from users where username = :username", nativeQuery = true)
-    public int getStudentIdByUsername(String username);
+    public Integer getStudentIdByUsername(String username);
 
     @Query(value = "SELECT class_id from student where id = :id", nativeQuery = true)
-    public int  getClassIdByStudentId(int id);
+    public Integer  getClassIdByStudentId(int id);
 
     @Modifying
     @Query(value = "INSERT into attendance_record (student_id,lecture_id,is_attending,registred_at) values (:studentId,:lectureId,1,NOW())",nativeQuery = true)

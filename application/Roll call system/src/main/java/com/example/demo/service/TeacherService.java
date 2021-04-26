@@ -10,7 +10,7 @@ public class TeacherService {
     @Autowired
     TeacherRepository tr;
 
-    public int getTeacherIdFromUser(String username){
+    public Integer getTeacherIdFromUser(String username){
         return tr.getTeacherIdFromUser(username);
     }
 

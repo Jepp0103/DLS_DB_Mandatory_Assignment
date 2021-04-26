@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.example.demo.model.Teacher;
+import com.example.demo.service.StudentService;
+import com.example.demo.service.TeacherService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -21,12 +25,27 @@ public class JwtTokenUtil implements Serializable {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
+    @Autowired
+    StudentService ss;
+    @Autowired
+    TeacherService ts;
+
     @Value("${jwt.secret}")
     private String secret;
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
+    }
+
+    public Integer getTeacherIdFromToken(String token) {
+        return getAllClaimsFromToken(token).get("teacherid",Integer.class);
+    }
+    public Integer getClassIdFromToken(String token) {
+        return getAllClaimsFromToken(token).get("classid",Integer.class);
+    }
+    public Integer getStudentIdFromToken(String token) {
+        return getAllClaimsFromToken(token).get("studentid",Integer.class);
     }
 
     //retrieve expiration date from jwt token
@@ -52,6 +71,16 @@ public class JwtTokenUtil implements Serializable {
     //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        Integer teacherid=ts.getTeacherIdFromUser(userDetails.getUsername());
+        if (teacherid!=null){claims.put("teacherid",teacherid); }
+        else {
+            Integer studentid=ss.getStudentIdByUsername(userDetails.getUsername());
+            if (studentid!=null){
+                claims.put("studentid",studentid);
+                claims.put("classid",ss.getClassIdByStudentId(studentid));
+            }
+
+        }
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

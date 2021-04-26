@@ -13,11 +13,11 @@ public class StudentService {
     @Autowired
     LectureService ls;
 
-    public int getStudentIdByUsername(String username){
+    public Integer getStudentIdByUsername(String username){
         return sr.getStudentIdByUsername(username);
     }
 
-    public int getClassIdByStudentId(int id){
+    public Integer getClassIdByStudentId(int id){
         return sr.getClassIdByStudentId(id);
     }
 
