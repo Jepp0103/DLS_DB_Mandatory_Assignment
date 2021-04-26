@@ -1,5 +1,7 @@
 package com.example.demo.controller.api;
         import com.example.demo.model.Network;
+        import com.example.demo.model.StudentGpsRegister;
+        import com.example.demo.model.StudentNetworkRegister;
         import com.example.demo.repository.NetworkRepository;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.web.bind.annotation.*;
@@ -14,5 +16,10 @@ public class NetworkController {
     @GetMapping("/networks")
     public Iterable<Network> getNetworks()  {
         return networkRepository.findAll();
+    }
+
+    @PostMapping("/registerStudentNetwork")
+    public char addRegisteredStudentNetwork(@RequestBody StudentNetworkRegister snr) {
+        return networkRepository.registerStudentNetwork(snr.getStudentId(), snr.getStudentSsid(), snr.getIpAddress(), snr.getStudentFacultyId(), snr.getTeachingNetworkId());
     }
 }

@@ -6,7 +6,6 @@ public class StudentGpsRegister { //Needed as a class in order to create a post 
     private int teacherId;
     private double studentLatitude;
     private double studentLongitude;
-    private double gpsRange;
     private String withinRange;
 
     public int getStudentId() {
@@ -39,14 +38,6 @@ public class StudentGpsRegister { //Needed as a class in order to create a post 
 
     public void setStudentLongitude(double studentLongitude) {
         this.studentLongitude = studentLongitude;
-    }
-
-    public double getGpsRange() {
-        return gpsRange;
-    }
-
-    public void setGpsRange(double gpsRange) {
-        this.gpsRange = gpsRange;
     }
 
     public String getWithinRange() {
