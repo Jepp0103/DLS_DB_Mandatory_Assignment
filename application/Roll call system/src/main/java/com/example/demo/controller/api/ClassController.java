@@ -23,9 +23,10 @@ public class ClassController {
     }
 
     @GetMapping("/averageClassAttendanceRate")
-    public Iterable<Integer> getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
+    public Integer getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
         return classRepository.findAverageClassAttendanceRate(courseId, classId);
     }
+
     @GetMapping("/myclasses")
     public Iterable<String> getTeachersClasses(HttpServletRequest request)  {
         String token = request.getHeader("Authorization").substring(7);

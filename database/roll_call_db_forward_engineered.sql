@@ -12,6 +12,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- Schema roll_call_db
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `roll_call_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+SHOW WARNINGS;
 USE `roll_call_db` ;
 
 -- -----------------------------------------------------
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`faculty` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`network`
@@ -41,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`network` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`gps_coordinates`
@@ -53,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`gps_coordinates` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`class`
@@ -70,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`student`
@@ -105,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`student` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`course`
@@ -116,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`course` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`city`
@@ -127,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`city` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`address`
@@ -147,6 +155,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`address` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`campus`
@@ -171,6 +180,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`campus` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`classroom`
@@ -189,6 +199,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`classroom` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`lecture`
@@ -219,6 +230,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`lecture` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`attendance_record`
@@ -242,6 +254,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`attendance_record` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`teacher`
@@ -263,6 +276,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`teacher_lectures`
@@ -285,6 +299,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher_lectures` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`class_lectures`
@@ -307,47 +322,288 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class_lectures` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+SHOW WARNINGS;
 USE `roll_call_db` ;
 
 -- -----------------------------------------------------
 -- Placeholder table for view `roll_call_db`.`get_gps_coordinates_student`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `roll_call_db`.`get_gps_coordinates_student` (`latitude` INT, `longitude` INT, `student` INT);
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Placeholder table for view `roll_call_db`.`get_gps_coordinates_teacher`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `roll_call_db`.`get_gps_coordinates_teacher` (`latitude` INT, `longitude` INT, `teacher` INT);
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- procedure get_average_class_attendance_rate
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `roll_call_db`$$
+CREATE PROCEDURE get_average_class_attendance_rate(
+    course_id_arg INT,
+	class_id_arg INT
+)
+BEGIN 
+	SELECT AVG(getStudentLectureAttendanceRate(student.id, course_id_arg)) AS class_attendance_rate
+    FROM student
+    WHERE class_id = class_id_arg;
+END$$
+
+DELIMITER ;
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- procedure register_student_gps
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `roll_call_db`$$
+#A stored procedure, which will insert network and GPS records for a student (or only GPS for a teacher), 
+#once they are successfully retrieved from the front-end, 
+#a request will be sent to the back-end and the back-end 
+#will call this stored procedure providing the correct parameters. 
+#What could be returned is if the student is within the range of the 
+#teacher’s registered GPS coordinates.
+CREATE PROCEDURE register_student_gps(
+	IN student_id INT,
+    IN teacher_id INT,
+    IN student_latitude DECIMAL(10,8),
+    IN student_longitude DECIMAL(11,8),
+	OUT within_range CHAR(1)
+)
+BEGIN 
+	#DECLARE added_gps_id INT;
+    DECLARE teacher_latitude DECIMAL(10,8);
+    DECLARE teacher_longitude DECIMAL(11,8);
+    DECLARE lat_deg_dist DECIMAL(10,3);
+    DECLARE long_deg_dist DECIMAL(8,3);
+    DECLARE teacher_gps_coordinates_id INT;
+    
+    SET teacher_gps_coordinates_id = (SELECT gps_coordinates_id FROM teacher t
+											WHERE t.id = teacher_id);
+
+	#Getting latitude and longitude values for a teacher.
+	SET teacher_latitude = (SELECT latitude FROM gps_coordinates gc
+								JOIN teacher t ON gc.id = t.gps_coordinates_id
+								WHERE t.id = teacher_id);
+						   
+	SET teacher_longitude = (SELECT longitude FROM gps_coordinates gc
+								JOIN teacher t ON gc.id = t.gps_coordinates_id
+								WHERE t.id = teacher_id);
+   
+	#Source for calculating distance - https://www.usgs.gov/faqs/how-much-distance-does-a-degree-minute-and-second-cover-your-maps?qt-news_science_products=0#qt-news_science_products
+	SET lat_deg_dist = 111033.736; #Distance for one latitude degree in meters
+	SET long_deg_dist = 87870.182; #Distance for one longitude degree in meters
+	
+	#Comparing gps values for teacher and student meter distance and returning within range value. 
+	IF  (teacher_latitude = student_latitude AND teacher_longitude = student_longitude) #When student gps values are equal to teacher gps values
+	THEN
+		CALL update_student_gps(student_id, teacher_gps_coordinates_id);
+		SELECT 'y' INTO within_range;
+		
+	ELSEIF (teacher_latitude > student_latitude OR teacher_longitude > student_longitude) #When gps values are higher for a teacher than a student but still within 9.99999 meters range
+		AND ((teacher_latitude * lat_deg_dist) - (student_latitude * lat_deg_dist)) <= 9.99999 
+		AND ((teacher_longitude * long_deg_dist) - (student_longitude * long_deg_dist)) <= 9.99999
+	THEN
+		CALL update_student_gps(student_id, teacher_gps_coordinates_id);
+		SELECT 'y' INTO within_range;
+		
+	ELSEIF (student_latitude > teacher_latitude OR student_longitude > teacher_longitude) #When gps values are higher for a student than a teacher but still within 9.99999 meters range 
+	AND ((student_latitude * lat_deg_dist) - (teacher_latitude * lat_deg_dist)) <= 9.99999 
+	AND ((student_longitude * long_deg_dist) - (teacher_longitude * long_deg_dist)) <= 9.99999 
+	THEN
+		CALL update_student_gps(student_id, teacher_gps_coordinates_id);
+		SELECT 'y' INTO within_range;
+	ELSE 
+		SELECT 'n' INTO within_range; 
+	END IF;   
+
+END$$
+
+DELIMITER ;
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- function getStudentLectureAttendanceRate
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `roll_call_db`$$
+CREATE FUNCTION getStudentLectureAttendanceRate(
+	arg_student_id INT,
+    arg_course_id INT
+)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	DECLARE studentLectureAttendanceRate INT;
+	DECLARE amountOfAttendances INT;
+	DECLARE amountOfLecturesForCourse INT;
+    
+    SET @chosen_class_id = (SELECT c.id FROM student s                       
+								JOIN class c on s.class_id = c.id                         
+								WHERE s.id=arg_student_id);
+    
+    SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
+								JOIN lecture l ON ar.lecture_id = l.id
+								JOIN course c ON l.course_id = c.id
+								WHERE is_attending = 1 AND student_id = arg_student_id AND c.id LIKE IF(arg_course_id>0,arg_course_id,"%"));
+    
+	SET amountOfLecturesForCourse = (SELECT count(*) FROM lecture l
+										JOIN course c ON l.course_id = c.id JOIN class_lectures AS cl ON l.id = cl.lecture_id
+										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id= @chosen_class_id);
+    
+	SET studentLectureAttendanceRate = amountOfAttendances/amountOfLecturesForCourse*100;
+                                        
+	RETURN (studentLectureAttendanceRate);
+END$$
+
+DELIMITER ;
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- function getLectureParticipationRate
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `roll_call_db`$$
+CREATE FUNCTION getLectureParticipationRate(
+    lecture_id_arg INT
+)
+RETURNS INT
+
+DETERMINISTIC
+BEGIN
+	DECLARE lectureParticipationRate INT;
+	DECLARE amountOfParticipators INT;
+    DECLARE amountOfTotalAttendances INT;
+    
+    SET amountOfParticipators = (SELECT COUNT(*) FROM attendance_record ar
+		JOIN lecture l on ar.lecture_id = l.id
+        WHERE l.id = lecture_id_arg AND is_attending = 1);
+    
+	SET amountOfTotalAttendances = (SELECT COUNT(*) FROM attendance_record ar
+		JOIN lecture l on ar.lecture_id = l.id
+        WHERE l.id = lecture_id_arg);
+    
+	SET lectureParticipationRate = amountOfParticipators/amountOfTotalAttendances*100;
+                                        
+	RETURN (lectureParticipationRate);
+END$$
+
+DELIMITER ;
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- procedure update_student_gps
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `roll_call_db`$$
+CREATE PROCEDURE update_student_gps(
+	student_id INT,
+    teacher_gps_coordinates_id INT
+)
+BEGIN
+	UPDATE student 
+		SET 
+			gps_coordinates_id = teacher_gps_coordinates_id
+		WHERE
+			id = student_id;
+END$$
+
+DELIMITER ;
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- procedure register_student_network
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `roll_call_db`$$
+CREATE PROCEDURE register_student_network(
+	IN student_id INT,
+    IN student_ssid VARCHAR(45),
+    IN student_ip_address VARCHAR(45), 
+    IN student_faculty_id INT, #Faculty id for a new inserted network to a student.
+    IN teaching_network_id INT, #Network id teaching is taking place.
+	OUT is_connected CHAR(1)
+)
+BEGIN 
+	#DECLARE added_student_network_id INT;
+    DECLARE teaching_ssid VARCHAR(45);
+    DECLARE teaching_ip_address VARCHAR(45);
+    DECLARE teaching_faculty_id INT;
+            
+	SET teaching_ssid = (SELECT ssid FROM network 
+									WHERE id = teaching_network_id);
+	
+    SET teaching_ip_address = (SELECT ip_address FROM network 
+										WHERE id = teaching_network_id);
+                                        
+	SET teaching_faculty_id = (SELECT faculty_id FROM network 
+								WHERE id = teaching_network_id);
+	
+	#Validating network of a student compared to a network where teaching is taking place
+    IF (student_ssid = teaching_ssid 
+	AND student_ip_address = teaching_ip_address 
+    AND student_faculty_id = teaching_faculty_id) 
+	THEN 
+		#Updating student with the inserted network
+		UPDATE student 
+			SET 
+				network_id = teaching_network_id 
+			WHERE 
+				id = student_id;
+                
+		SELECT 'y' INTO is_connected;
+	ELSE 
+		SELECT 'n' INTO is_connected;
+	END IF;
+END$$
+
+DELIMITER ;
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- View `roll_call_db`.`get_gps_coordinates_student`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `roll_call_db`.`get_gps_coordinates_student`;
+SHOW WARNINGS;
 USE `roll_call_db`;
 CREATE OR REPLACE VIEW `get_gps_coordinates_student` AS
 SELECT latitude, longitude, concat(s.forename, " ", s.surname) as student
 FROM gps_coordinates g
     JOIN student s ON g.id = s.gps_coordinates_id;
 SELECT * FROM `get_gps_coordinates_student`;
+SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- View `roll_call_db`.`get_gps_coordinates_teacher`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `roll_call_db`.`get_gps_coordinates_teacher`;
+SHOW WARNINGS;
 USE `roll_call_db`;
 CREATE OR REPLACE VIEW `get_gps_coordinates_teacher` AS
 SELECT latitude, longitude, concat(t.forename, " ", t.surname) as teacher
 FROM gps_coordinates g
     JOIN teacher t ON g.id = t.gps_coordinates_id;
+SHOW WARNINGS;
 USE `roll_call_db`;
 
 DELIMITER $$
+SHOW WARNINGS$$
 USE `roll_call_db`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `roll_call_db`.`student_BEFORE_INSERT` BEFORE INSERT ON `student` FOR EACH ROW
 BEGIN
 	SET NEW.email_address = LOWER(NEW.email_address);
 END$$
 
+SHOW WARNINGS$$
 
 DELIMITER ;
 
@@ -359,7 +615,15 @@ INSERT INTO `city` (`zip_code`, `city_name`) VALUES ('2200', 'København N');
 INSERT INTO `address` (`city_id`, `street_name`, `street_number`, `registered_on`, `additional_details`) VALUES ('1', 'Lygten', '16', '2021-02-23 20:02:21.550', 'Kea digital 2');
 INSERT INTO `address` (`city_id`, `street_name`, `street_number`, `registered_on`, `additional_details`) VALUES ('1', 'Lygten', '37', '2021-02-23 20:02:21.550', 'Details');
 INSERT INTO `faculty` (`name`) VALUES ('KEA - Københavns Erhvervsakademi');
+INSERT INTO `faculty` (`name`) VALUES ('KU - Københavns Universitet');
+INSERT INTO `faculty` (`name`) VALUES ('DTU - Danmarks Tekniske Universitet');
+INSERT INTO `faculty` (`name`) VALUES ('CBS - Copenhagen Business School');
+
 INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (1, 'KEANET', '193.29.107.196');
+INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (2, 'KU NET', '193.29.108.197');
+INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (3, 'DTU NET', '193.29.109.198');
+INSERT INTO `network` (`faculty_id`, `ssid`, `ip_address`) VALUES (4, 'CBS NET', '193.29.103.199');
+
 
 INSERT INTO `campus` (`address_id`, `faculty_id`, `name`) VALUES ('1', '1', 'Lygten 37');
 INSERT INTO `campus` (`address_id`, `faculty_id`, `name`) VALUES ('2', '1', 'Lygten 16');
@@ -610,77 +874,3 @@ INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `re
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (46, 5, 1, '2021-03-19 08:25:00');
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (47, 5, 1, '2021-03-19 08:25:00');
 -- end attached script 'test_data'
--- begin attached script 'functions'
-#Attendance rate function
-DROP FUNCTION IF EXISTS getStudentLectureAttendanceRate;
-DELIMITER $$
-CREATE FUNCTION getStudentLectureAttendanceRate(
-	arg_student_id INT,
-    arg_course_id INT
-)
-RETURNS INT
-DETERMINISTIC
-BEGIN
-	DECLARE studentLectureAttendanceRate INT;
-	DECLARE amountOfAttendances INT;
-	DECLARE amountOfLecturesForCourse INT;
-    
-    SET @chosen_class_id = (SELECT c.id FROM student s                       
-								JOIN class c on s.class_id = c.id                         
-								WHERE s.id=arg_student_id);
-    
-    SET amountOfAttendances = (SELECT count(is_attending) FROM attendance_record ar
-								JOIN lecture l ON ar.lecture_id = l.id
-								JOIN course c ON l.course_id = c.id
-								WHERE is_attending = 1 AND student_id = arg_student_id AND c.id LIKE IF(arg_course_id>0,arg_course_id,"%"));
-    
-	SET amountOfLecturesForCourse = (SELECT count(*) FROM lecture l
-										JOIN course c ON l.course_id = c.id JOIN class_lectures AS cl ON l.id = cl.lecture_id
-										WHERE c.id LIKE IF(arg_course_id>0,arg_course_id,"%") AND cl.class_id= @chosen_class_id);
-    
-	SET studentLectureAttendanceRate = amountOfAttendances/amountOfLecturesForCourse*100;
-                                        
-	RETURN (studentLectureAttendanceRate);
-END$$
-
-#Participation rate function
-DROP FUNCTION IF EXISTS getLectureParticipationRate;
-DELIMITER $$
-CREATE FUNCTION getLectureParticipationRate(
-    lecture_id_arg INT
-)
-RETURNS INT
-
-DETERMINISTIC
-BEGIN
-	DECLARE lectureParticipationRate INT;
-	DECLARE amountOfParticipators INT;
-    DECLARE amountOfTotalAttendances INT;
-    
-    SET amountOfParticipators = (SELECT COUNT(*) FROM attendance_record ar
-		JOIN lecture l on ar.lecture_id = l.id
-        WHERE l.id = lecture_id_arg AND is_attending = 1);
-    
-	SET amountOfTotalAttendances = (SELECT COUNT(*) FROM attendance_record ar
-		JOIN lecture l on ar.lecture_id = l.id
-        WHERE l.id = lecture_id_arg);
-    
-	SET lectureParticipationRate = amountOfParticipators/amountOfTotalAttendances*100;
-                                        
-	RETURN (lectureParticipationRate);
-END$$
--- end attached script 'functions'
--- begin attached script 'stored_procedures'
-DROP PROCEDURE IF EXISTS get_average_class_attendance_rate;
-DELIMITER $$
-CREATE PROCEDURE get_average_class_attendance_rate(
-    course_id_arg INT,
-	class_id_arg INT
-)
-BEGIN 
-	SELECT AVG(getStudentLectureAttendanceRate(student.id, course_id_arg)) AS class_attendance_rate
-    FROM student
-    WHERE class_id = class_id_arg;
-END $$
-DELIMITER ;
--- end attached script 'stored_procedures'

@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.repository.LectureRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class StudentService {
     public boolean registerAttendence(int studentId,int[] teachers,double latitude, double longitude, int lectureId,String code){
         boolean lecturebegun=true;
         boolean withinrange=studentWithinRange(studentId,teachers,latitude,longitude);
-        boolean correctcode=ls.correctcode(lectureId,code);
+        boolean correctcode=ls.correctCode(lectureId,code);
         boolean correctnetwork=true;
         if (correctcode && lecturebegun){
             if (correctnetwork){
