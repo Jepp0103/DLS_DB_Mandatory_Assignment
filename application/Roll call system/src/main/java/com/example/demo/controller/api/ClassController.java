@@ -29,7 +29,7 @@ public class ClassController {
 
     @GetMapping("/myclasses")
     public Iterable<String> getTeachersClasses(HttpServletRequest request)  {
-        String token = request.getHeader("Authorization").substring(7);
+        String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         return teacherid!=null ? classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token)) : null;
     }

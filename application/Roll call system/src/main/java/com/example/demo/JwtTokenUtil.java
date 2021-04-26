@@ -18,6 +18,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Component
 public class JwtTokenUtil implements Serializable {
 
@@ -35,17 +37,17 @@ public class JwtTokenUtil implements Serializable {
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+        return token !=null ? getClaimFromToken(token, Claims::getSubject) : null;
     }
 
     public Integer getTeacherIdFromToken(String token) {
-        return getAllClaimsFromToken(token).get("teacherid",Integer.class);
+        return token !=null ? getAllClaimsFromToken(token).get("teacherid",Integer.class) : null;
     }
     public Integer getClassIdFromToken(String token) {
-        return getAllClaimsFromToken(token).get("classid",Integer.class);
+        return token !=null ? getAllClaimsFromToken(token).get("classid",Integer.class) : null;
     }
     public Integer getStudentIdFromToken(String token) {
-        return getAllClaimsFromToken(token).get("studentid",Integer.class);
+        return token !=null ? getAllClaimsFromToken(token).get("studentid",Integer.class) : null;
     }
 
     //retrieve expiration date from jwt token
@@ -100,5 +102,14 @@ public class JwtTokenUtil implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String getCurrentToken(HttpServletRequest request) {
+        String requestTokenHeader = request.getHeader("Authorization");
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
+            return requestTokenHeader.substring(7);
+
+        }
+        return null;
     }
 }

@@ -48,7 +48,7 @@ public class LectureController {
     @GetMapping("/currentlectures")
     public Iterable<String> getCurrentLectures(HttpServletRequest request) {
         LocalDateTime today=LocalDateTime.now(ZoneId.of("Europe/Copenhagen"));
-        String token = request.getHeader("Authorization").substring(7);
+        String token = jtu.getCurrentToken(request);
         Integer classid=jtu.getTeacherIdFromToken(token);
         if(classid!=null) {
             return lectureRepository.findLectureByDateBetweenAndClasses_Id(today.minusHours(8), today.plusHours(8), classid);
@@ -63,7 +63,7 @@ public class LectureController {
     //Post mappings
     @GetMapping("/beginlecture")
     public void beginLecture(@RequestParam int lectureId, HttpServletRequest request){//should be a post
-        String token = request.getHeader("Authorization").substring(7);
+        String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
