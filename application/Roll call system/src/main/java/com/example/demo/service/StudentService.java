@@ -1,8 +1,16 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Course;
+import com.example.demo.model.StudentStats;
+import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.NetworkRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentService {
@@ -11,6 +19,10 @@ public class StudentService {
     StudentRepository sr;
     @Autowired
     LectureService ls;
+    @Autowired
+    NetworkRepository nr;
+    @Autowired
+    CourseRepository cr;
 
     public Integer getStudentIdByUsername(String username){
         return sr.getStudentIdByUsername(username);
@@ -20,11 +32,11 @@ public class StudentService {
         return sr.getClassIdByStudentId(id);
     }
 
-    public boolean registerAttendence(int studentId,int[] teachers,double latitude, double longitude, int lectureId,String code){
+    public boolean registerAttendence(int studentId,int[] teachers,double latitude, double longitude, int lectureId,String code, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId){
         boolean lecturebegun=true;
         boolean withinrange=studentWithinRange(studentId,teachers,latitude,longitude);
         boolean correctcode=ls.correctCode(lectureId,code);
-        boolean correctnetwork=true;
+        boolean correctnetwork=correctNetwork(studentId,studentSsid,ipAddress,studentFacultyId,teachingNetworkId);
         if (correctcode && lecturebegun){
             if (correctnetwork){
                 sr.registerAttendence(studentId, lectureId);
@@ -38,7 +50,6 @@ public class StudentService {
         return false;
     }
 
-
     public boolean studentWithinRange(int student, int[] teachers, double latitude, double longitude) {
         for (int teacher : teachers) {
             if (sr.studentWithinRange(student,teacher,latitude,longitude,0)=='y'){ //fifth parameter is irrelevant atm.
@@ -47,4 +58,23 @@ public class StudentService {
         }
         return false;
     }
+    public boolean correctNetwork(int studentId, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId) {
+        //fifth parameter is irrelevant atm.
+        return nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId) == 'y';
+    }
+    public StudentStats getStudentStats(int studentid, int classid){
+        List<Course> mycourses = cr.getClassCourses(classid);
+        Map<String,Integer> participationrates= new HashMap<String,Integer>();
+
+        for (Course course : mycourses)
+        {
+            Integer participationrate=sr.findSingleAttendenceRate(studentid,course.getId());
+            if (participationrate!=null){
+                participationrates.put(course.getName(),participationrate);
+            }
+        }
+        Integer overallparticipationrate=sr.findSingleAttendenceRate(studentid);
+        return new StudentStats(overallparticipationrate,participationrates);
+    }
+
 }

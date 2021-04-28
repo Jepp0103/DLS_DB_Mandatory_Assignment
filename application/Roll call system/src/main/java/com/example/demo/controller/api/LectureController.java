@@ -45,15 +45,17 @@ public class LectureController {
     public String getLectureParticipationRateArg2() {
         return lectureRepository.findLectureParticipationRateArg2();
     }
+
     @GetMapping("/currentlectures")
     public Iterable<String> getCurrentLectures(HttpServletRequest request) {
         LocalDateTime today=LocalDateTime.now(ZoneId.of("Europe/Copenhagen"));
         String token = jtu.getCurrentToken(request);
-        Integer classid=jtu.getTeacherIdFromToken(token);
+        Integer classid = jtu.getClassIdFromToken(token);
         if(classid!=null) {
             return lectureRepository.findLectureByDateBetweenAndClasses_Id(today.minusHours(8), today.plusHours(8), classid);
         }
         Integer teacherid=jtu.getTeacherIdFromToken(token);
+        System.out.println(teacherid);
         if(teacherid!=null) {
             return lectureRepository.findLectureByDateBetweenAndTeachers_Id(today.minusHours(8), today.plusHours(8), teacherid);
         }
@@ -64,7 +66,7 @@ public class LectureController {
     @GetMapping("/beginlecture")
     public void beginLecture(@RequestParam int lectureId, HttpServletRequest request){//should be a post
         String token = jtu.getCurrentToken(request);
-        Integer teacherid=jtu.getTeacherIdFromToken(token);
+            Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
             ls.startLecture(lectureId,"asddsa");
