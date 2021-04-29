@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 import com.example.demo.JwtTokenUtil;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.StudentService;
 import com.example.demo.service.TeacherService;
 import io.jsonwebtoken.Claims;
@@ -20,6 +21,8 @@ public class Controller {
     StudentService ss;
     @Autowired
     JwtTokenUtil jtu;
+    @Autowired
+    UserRepository ur;
     @GetMapping("/")
     public String getHomePage(HttpServletRequest request)  {
 
@@ -45,6 +48,12 @@ public class Controller {
             }
         }*/
         return "Home page";
+    }
+    @GetMapping("/resetpasswords")
+    public String getHomePage() {
+        System.out.println(ur.findByUsername("user").getPassword());
+        ur.resetAllPasswords(ur.findByUsername("user").getPassword());
+        return "Passwords reset";
     }
 //Moved mapping for entities to their own api classes.
 
