@@ -4,6 +4,7 @@ import axios from "axios";
 class login extends Component {
   constructor() {
     super();
+	alert(localStorage.getItem("authorization"));
 
     this.state = {
       username: "immanuel@stud.kea.dk",
@@ -27,13 +28,18 @@ class login extends Component {
 
     axios.post(endpoint, user_object).then(res => {
       localStorage.setItem("authorization", res.data.token);
-	  alert( localStorage.getItem("authorization"));
       return this.handleDashboard();
     });
   };
 
   handleDashboard() {
-    axios.get("http://localhost:4000/").then(res => {
+	let config = {
+	  headers: {
+		authorization: "Bearer "+localStorage.getItem("authorization"),
+	  }
+	}
+	console.log(config);
+    axios.get("http://localhost:4000/",config).then(res => {
       if (res.data === "Home page") {
         this.props.history.push("/home");
       } else {
@@ -52,14 +58,14 @@ class login extends Component {
               <input type="text"
                 class="form-control"
                 placeholder="User name"
-                value="immanuel@stud.kea.dk"
+                
               />
             </div>
             <div className="form-group">
               <input type="password"
                 class="form-control"
                 placeholder="password"
-                value="password"
+                
               />
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">
