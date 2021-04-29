@@ -1,6 +1,7 @@
 package com.example.demo;
 
 
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,14 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    UserRepository ur;
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(dataSource)
-            .withUser("immanuel@stud.kea.dk").password(passwordEncoder().encode("password")).roles("USER", "ADMIN")
-        ;
-        // configure AuthenticationManager so that it knows from where to load
-// user for matching credentials
-// Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+        if (ur.findByUsername("user")==null) {
+            auth.jdbcAuthentication().dataSource(dataSource).withUser("user").password(passwordEncoder().encode("password")).roles("USER", "ADMIN");
+        }
+
     }
 
     @Bean
@@ -65,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable()
         .authorizeRequests()
-        .antMatchers("/authenticate").permitAll()
+        .antMatchers("/authenticate","/resetpasswords").permitAll()
         .anyRequest().authenticated()
         .and()
         .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
