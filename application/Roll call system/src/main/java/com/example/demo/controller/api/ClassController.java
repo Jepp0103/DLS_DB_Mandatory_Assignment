@@ -22,7 +22,7 @@ public class ClassController {
         return classRepository.findAll();
     }
 
-    @GetMapping("/averageClassAttendanceRate")
+    @GetMapping("/averageclassattendancerate")
     public Integer getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
         return classRepository.findAverageClassAttendanceRate(courseId, classId);
     }

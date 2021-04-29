@@ -63,13 +63,22 @@ public class LectureController {
     }
 
     //Post mappings
-    @GetMapping("/beginlecture")
-    public void beginLecture(@RequestParam int lectureId, HttpServletRequest request){//should be a post
+    @GetMapping("/beginregistration")
+    public void beginRegistration(@RequestParam int lectureId, HttpServletRequest request){//should be a post
         String token = jtu.getCurrentToken(request);
-            Integer teacherid=jtu.getTeacherIdFromToken(token);
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
-            ls.startLecture(lectureId,"asddsa");
+            ls.startRegistration(lectureId,"asddsa");
+        }
+    }
+    @GetMapping("/endregistration")
+    public void endRegistration(@RequestParam int lectureId, HttpServletRequest request){//should be a post
+        String token = jtu.getCurrentToken(request);
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
+        if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
+            ls.endRegistration(lectureId);
         }
     }
 

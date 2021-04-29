@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class Controller {
     @Autowired
     TeacherService ts;
@@ -23,11 +23,12 @@ public class Controller {
     @GetMapping("/")
     public String getHomePage(HttpServletRequest request)  {
 
-        final String requestTokenHeader = request.getHeader("Authorization").substring(7);
-        System.out.println( jtu.getUsernameFromToken(requestTokenHeader.substring(7)));
-        System.out.println( jtu.getTeacherIdFromToken(requestTokenHeader.substring(7)));
-        System.out.println( jtu.getStudentIdFromToken(requestTokenHeader.substring(7)));
-        System.out.println( jtu.getClassIdFromToken(requestTokenHeader.substring(7)));
+        String token = jtu.getCurrentToken(request);
+        System.out.println(token);
+        System.out.println( jtu.getUsernameFromToken(token));
+        System.out.println( jtu.getTeacherIdFromToken(token));
+        System.out.println( jtu.getStudentIdFromToken(token));
+        System.out.println( jtu.getClassIdFromToken(token));
 
         /*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {

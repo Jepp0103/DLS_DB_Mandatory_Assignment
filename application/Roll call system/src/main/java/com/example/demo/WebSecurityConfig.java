@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -31,8 +34,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
+    private DataSource dataSource;
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-// configure AuthenticationManager so that it knows from where to load
+        auth.jdbcAuthentication().dataSource(dataSource)
+            .withUser("immanuel@stud.kea.dk").password(passwordEncoder().encode("password")).roles("USER", "ADMIN")
+        ;
+        // configure AuthenticationManager so that it knows from where to load
 // user for matching credentials
 // Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
@@ -49,9 +56,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*")
+        .allowedMethods("HEAD", "GET", "PUT", "POST",
+        "DELETE", "PATCH").allowedHeaders("*");
+    }
+        @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+        httpSecurity.cors().and().csrf().disable()
         .authorizeRequests()
         .antMatchers("/authenticate").permitAll()
         .anyRequest().authenticated()

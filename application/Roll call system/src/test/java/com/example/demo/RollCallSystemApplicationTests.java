@@ -15,7 +15,7 @@ class RollCallSystemApplicationTests {
     StudentService ss;
     @Test
     void correctCodeTest() {
-        ls.startLecture(1,"asddsaa");
+        ls.startRegistration(1,"asddsaa");
         assertTrue(ls.correctCode(1,"asddsaa"));
         assertFalse(ls.correctCode(1,"Wroooong"));
 
