@@ -32,7 +32,7 @@ public class StudentService {
         return sr.getClassIdByStudentId(id);
     }
 
-    public boolean registerAttendence(int studentId,int[] teachers,double latitude, double longitude, int lectureId,String code, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId){
+    public boolean registerAttendence(int studentId,int teachers,double latitude, double longitude, int lectureId,String code, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId){
         boolean lecturebegun=true;
         boolean withinrange=studentWithinRange(studentId,teachers,latitude,longitude);
         boolean correctcode=ls.correctCode(lectureId,code);
@@ -50,11 +50,9 @@ public class StudentService {
         return false;
     }
 
-    public boolean studentWithinRange(int student, int[] teachers, double latitude, double longitude) {
-        for (int teacher : teachers) {
-            if (sr.studentWithinRange(student,teacher,latitude,longitude,0)=='y'){ //fifth parameter is irrelevant atm.
-                return true;
-            }
+    public boolean studentWithinRange(int student, int teacher, double latitude, double longitude) {
+        if (sr.studentWithinRange(student,teacher,latitude,longitude)=='y'){ //fifth parameter is irrelevant atm.
+            return true;
         }
         return false;
     }

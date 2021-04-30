@@ -45,5 +45,5 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
     void registerAttendence(int studentId, int lectureId);
 
     @Procedure("register_student_gps")
-    char studentWithinRange(int student, int teacher, double latitude, double longitude, int range);
+    char studentWithinRange(int student, int teacher, double latitude, double longitude);
 }

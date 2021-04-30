@@ -6,6 +6,8 @@ import com.example.demo.repository.LectureRepository;
 import com.example.demo.service.LectureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,10 +63,23 @@ public class LectureController {
         }
         return null;
     }
+    @GetMapping("/mylectures")
+    public ResponseEntity<?> getMyLectures(HttpServletRequest request) {
+        String token = jtu.getCurrentToken(request);
+        Integer classid = jtu.getClassIdFromToken(token);
+        if(classid!=null) {
+            return ResponseEntity.ok(lectureRepository.findLectureByClasses_Id(classid));
+        }
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        if(teacherid!=null) {
+            return ResponseEntity.ok(lectureRepository.findLectureByTeachers_Id(teacherid));
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 
     //Post mappings
-    @GetMapping("/beginregistration")
-    public void beginRegistration(@RequestParam int lectureId, HttpServletRequest request){//should be a post
+    @PostMapping("/beginregistration")
+    public void beginRegistration(@RequestBody int lectureId, HttpServletRequest request){//should be a post
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
@@ -72,8 +87,8 @@ public class LectureController {
             ls.startRegistration(lectureId,"asddsa");
         }
     }
-    @GetMapping("/endregistration")
-    public void endRegistration(@RequestParam int lectureId, HttpServletRequest request){//should be a post
+    @PostMapping("/endregistration")
+    public void endRegistration(@RequestBody int lectureId, HttpServletRequest request){//should be a post
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);

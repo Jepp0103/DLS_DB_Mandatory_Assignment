@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
@@ -15,6 +12,7 @@ import java.util.Date;
 @Table(name="gps_coordinates")
 public class GpsCoordinates {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
     @Column(name="latitude")
@@ -23,6 +21,7 @@ public class GpsCoordinates {
     private double longitude;
     @Column(name="range")
     private double range;
+
 
     @JsonIgnore
     public int getId() {
@@ -33,7 +32,6 @@ public class GpsCoordinates {
         this.id = id;
     }
 
-    @JsonIgnore
     public double getLatitude() {
         return latitude;
     }
@@ -42,7 +40,6 @@ public class GpsCoordinates {
         this.latitude = latitude;
     }
 
-    @JsonIgnore
     public double getLongitude() {
         return longitude;
     }

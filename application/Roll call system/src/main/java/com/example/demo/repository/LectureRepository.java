@@ -40,5 +40,8 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     @Modifying
     @Query("UPDATE Lecture l set l.code = null where l.id = :lectureId")
     void removeLectureCodee(int lectureId);
+
+    Set<Lecture> findLectureByClasses_Id(int teacherid);
+
     //Notation - @transactional @modifying - insert into m
 }

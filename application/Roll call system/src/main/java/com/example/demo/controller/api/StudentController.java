@@ -1,5 +1,6 @@
 package com.example.demo.controller.api;
 import com.example.demo.JwtTokenUtil;
+import com.example.demo.model.RegisterAttendenceRequest;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentStats;
 import com.example.demo.repository.StudentRepository;
@@ -60,5 +61,15 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
     }
-
+    @PostMapping("/registerattendence")
+    public ResponseEntity<?> registerAttendence(HttpServletRequest request, @RequestBody RegisterAttendenceRequest payload) {
+        String token = jtu.getCurrentToken(request);
+        Integer classid = jtu.getClassIdFromToken(token);
+        Integer studentid = jtu.getStudentIdFromToken(token);
+        if (classid != null && studentid != null) {
+            ss.registerAttendence(studentid, payload.getTeacherid(), payload.getLatitude(), payload.getLongitude(), payload.getLectureid(), payload.getCode(), payload.getStudentSSID(), payload.getIpaddress(), payload.getFacultyid(), payload.getTeachingnetworkid());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 }
