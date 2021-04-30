@@ -37,12 +37,19 @@ public class StudentService {
         boolean withinrange=studentWithinRange(studentId,teachers,latitude,longitude);
         boolean correctcode=ls.correctCode(lectureId,code);
         boolean correctnetwork=correctNetwork(studentId,studentSsid,ipAddress,studentFacultyId,teachingNetworkId);
+        System.out.println(teachers);
+        System.out.println(latitude);
+        System.out.println(code);
+        System.out.println(lectureId);
+        System.out.println(correctcode);
+        System.out.println(withinrange);
+        System.out.println(correctnetwork);
         if (correctcode && lecturebegun){
-            if (correctnetwork){
+            if (withinrange){
                 sr.registerAttendence(studentId, lectureId);
                 return true;
             }
-            else if (withinrange){
+            else if (correctnetwork){
                 sr.registerAttendence(studentId, lectureId);
                 return true;
             }
@@ -57,7 +64,11 @@ public class StudentService {
         return false;
     }
     public boolean correctNetwork(int studentId, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId) {
-        //fifth parameter is irrelevant atm.
+        System.out.println(studentSsid);
+        System.out.println(ipAddress);
+        System.out.println(studentFacultyId);
+        System.out.println(teachingNetworkId);
+        System.out.println(nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId));
         return nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId) == 'y';
     }
     public StudentStats getStudentStats(int studentid, int classid){
