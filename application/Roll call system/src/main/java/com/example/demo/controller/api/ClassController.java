@@ -3,6 +3,8 @@ import com.example.demo.JwtTokenUtil;
 import com.example.demo.model.Class;
 import com.example.demo.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +31,11 @@ public class ClassController {
     }
 
     @GetMapping("/myclasses")
-    public Iterable<String> getTeachersClasses(HttpServletRequest request)  {
+    public ResponseEntity<?> getTeachersClasses(HttpServletRequest request)  {
         String token = jtu.getCurrentToken(request);
+        if (jtu.getClassIdFromToken(token)!=null){return ResponseEntity.ok(jtu.getClassIdFromToken(token));}
         Integer teacherid=jtu.getTeacherIdFromToken(token);
-        return teacherid!=null ? classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token)) : null;
+        return teacherid!=null ? ResponseEntity.ok(classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token))) : null;
     }
 
 }
