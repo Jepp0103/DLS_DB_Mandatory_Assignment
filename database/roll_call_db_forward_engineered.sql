@@ -736,9 +736,9 @@ INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phon
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Radu-Mihai@stud.kea.dk', '2', 'Radu-Mihai', 'Onescu', '11111174');
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Stefani@stud.kea.dk', '2', 'Stefani', 'Dimitrova Dimitrova', '11111175');
 
-INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Tomas@kea.dk', 'Tomas', 'Pesek', '22222222');
-INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Morten@kea.dk', 'Morten', 'Christiansen', '77777777');
-INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Andrea@kea.dk', 'Andrea', 'Corradini', '44444444');
+INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`,`gps_coordinates_id`) VALUES ('Tomas@kea.dk', 'Tomas', 'Pesek', '22222222',1);
+INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`,`gps_coordinates_id`) VALUES ('Morten@kea.dk', 'Morten', 'Christiansen', '77777777',2);
+INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`,`gps_coordinates_id`) VALUES ('Andrea@kea.dk', 'Andrea', 'Corradini', '44444444',3);
 
 INSERT INTO `classroom` (`campus_id`, `is_available`, `name`) VALUES ('1', 1, 'B235');
 INSERT INTO `classroom` (`campus_id`, `is_available`, `name`) VALUES ('1', 1, 'B219 ');
