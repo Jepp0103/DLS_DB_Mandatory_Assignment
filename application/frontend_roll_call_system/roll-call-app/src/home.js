@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import styled from 'styled-components';
 import "./css/home.css";
-// const client = require('./client');
 
 
 class home extends Component {
@@ -10,11 +9,24 @@ class home extends Component {
     this.state = { classes: [] };
   }
 
-  // componentDidMount() {
-  //   client({ method: 'GET', path: '/api/employees' }).done(response => {
-  //     this.setState({ employees: response.entity._embedded.employees });
-  //   });
-  // }
+  componentDidMount() {
+    fetch("http://localhost:4000/api/classes")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            classes: result.classes
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
 
   handleLogout() {
     localStorage.clear();
@@ -28,7 +40,13 @@ class home extends Component {
         <h1>School roll call</h1>
         <div id="classDiv">
           <b>Current classes:</b>
-
+          <ul>
+            {classes.map(class => (
+              <li key={class.id}>
+              {class.name}
+            </li>
+            ))}
+          </ul>
         </div>
         <div id="excStudentsDiv">
           <b>Expected students:</b>

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping(value = "/api")
 public class Controller {
     @Autowired
     TeacherService ts;

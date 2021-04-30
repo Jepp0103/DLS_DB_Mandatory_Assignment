@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@RequestMapping(value = "/api")
 @CrossOrigin
 public class JwtAuthenticationController {
 
