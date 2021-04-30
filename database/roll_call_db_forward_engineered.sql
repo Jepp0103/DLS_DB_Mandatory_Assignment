@@ -2,7 +2,7 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
 -- Schema roll_call_db
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`network` (
   `ip_address` VARCHAR(45) NOT NULL,
   `faculty_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_network_faculty1_idx` (`faculty_id` ASC),
+  INDEX `fk_network_faculty1_idx` (`faculty_id` ASC) VISIBLE,
   CONSTRAINT `fk_network_faculty1`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class` (
   `name` VARCHAR(45) NOT NULL,
   `faculty_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_faculty_id_idx` (`faculty_id` ASC),
+  INDEX `fk_faculty_id_idx` (`faculty_id` ASC) VISIBLE,
   CONSTRAINT `fk_class_faculty`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`student` (
   `email_address` VARCHAR(100) NOT NULL,
   `phone_number` VARCHAR(10) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_student_network1_idx` (`network_id` ASC),
-  INDEX `fk_student_gps_coordinates_idx` (`gps_coordinates_id` ASC),
-  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC),
-  INDEX `fk_student_class1_idx` (`class_id` ASC),
+  INDEX `fk_student_network1_idx` (`network_id` ASC) VISIBLE,
+  INDEX `fk_student_gps_coordinates_idx` (`gps_coordinates_id` ASC) VISIBLE,
+  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC) VISIBLE,
+  INDEX `fk_student_class1_idx` (`class_id` ASC) VISIBLE,
   CONSTRAINT `fk_student_network`
     FOREIGN KEY (`network_id`)
     REFERENCES `roll_call_db`.`network` (`id`)
@@ -144,10 +144,10 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`address` (
   `city_id` INT UNSIGNED NOT NULL,
   `street_name` VARCHAR(45) NOT NULL,
   `street_number` INT NOT NULL,
-  `registered_on` DATETIME NOT NULL,
+  `registered_on` DATETIME(3) NOT NULL,
   `additional_details` MEDIUMTEXT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_address_city_idx` (`city_id` ASC),
+  INDEX `fk_address_city_idx` (`city_id` ASC) VISIBLE,
   CONSTRAINT `fk_address_city`
     FOREIGN KEY (`city_id`)
     REFERENCES `roll_call_db`.`city` (`id`)
@@ -166,8 +166,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`campus` (
   `faculty_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_campus_faculty_idx` (`faculty_id` ASC),
-  INDEX `fk_campus_address1_idx` (`address_id` ASC),
+  INDEX `fk_campus_faculty_idx` (`faculty_id` ASC) VISIBLE,
+  INDEX `fk_campus_address1_idx` (`address_id` ASC) VISIBLE,
   CONSTRAINT `fk_campus_faculty`
     FOREIGN KEY (`faculty_id`)
     REFERENCES `roll_call_db`.`faculty` (`id`)
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`classroom` (
   `name` VARCHAR(45) NOT NULL,
   `is_available` TINYINT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_classroom_campus_idx` (`campus_id` ASC),
+  INDEX `fk_classroom_campus_idx` (`campus_id` ASC) VISIBLE,
   CONSTRAINT `fk_classroom_campus`
     FOREIGN KEY (`campus_id`)
     REFERENCES `roll_call_db`.`campus` (`id`)
@@ -209,15 +209,15 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`lecture` (
   `course_id` INT UNSIGNED NOT NULL,
   `classroom_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `date` DATETIME NOT NULL,
+  `date` DATETIME(3) NOT NULL,
   `time_start` TIME NOT NULL,
   `time_end` TIME NOT NULL,
   `time_zone` INT NOT NULL,
   `length` INT NOT NULL,
   `code` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_lecture_course_idx` (`course_id` ASC),
-  INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC),
+  INDEX `fk_lecture_course_idx` (`course_id` ASC) VISIBLE,
+  INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC) VISIBLE,
   CONSTRAINT `fk_lecture_course`
     FOREIGN KEY (`course_id`)
     REFERENCES `roll_call_db`.`course` (`id`)
@@ -239,8 +239,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`attendance_record` (
   `student_id` INT UNSIGNED NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   `is_attending` TINYINT NOT NULL,
-  `registred_at` DATETIME NOT NULL,
-  INDEX `fk_ar_lecture_idx` (`lecture_id` ASC),
+  `registred_at` DATETIME(3) NOT NULL,
+  INDEX `fk_ar_lecture_idx` (`lecture_id` ASC) VISIBLE,
   PRIMARY KEY (`student_id`, `lecture_id`),
   CONSTRAINT `fk_ar_student`
     FOREIGN KEY (`student_id`)
@@ -266,9 +266,9 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher` (
   `surname` VARCHAR(45) NOT NULL,
   `email_address` VARCHAR(100) NOT NULL,
   `phone_number` VARCHAR(10) NULL,
-  INDEX `fk_teacher_gps_coordinates1_idx` (`gps_coordinates_id` ASC),
+  INDEX `fk_teacher_gps_coordinates1_idx` (`gps_coordinates_id` ASC) VISIBLE,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC),
+  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC) VISIBLE,
   CONSTRAINT `fk_teacher_gps_coordinates`
     FOREIGN KEY (`gps_coordinates_id`)
     REFERENCES `roll_call_db`.`gps_coordinates` (`id`)
@@ -285,8 +285,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher_lectures` (
   `teacher_id` INT UNSIGNED NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`teacher_id`, `lecture_id`),
-  INDEX `fk_teacher_has_lecture_lecture1_idx` (`lecture_id` ASC),
-  INDEX `fk_teacher_has_lecture_teacher1_idx` (`teacher_id` ASC),
+  INDEX `fk_teacher_has_lecture_lecture1_idx` (`lecture_id` ASC) VISIBLE,
+  INDEX `fk_teacher_has_lecture_teacher1_idx` (`teacher_id` ASC) VISIBLE,
   CONSTRAINT `fk_teacher_has_lecture_teacher1`
     FOREIGN KEY (`teacher_id`)
     REFERENCES `roll_call_db`.`teacher` (`id`)
@@ -308,8 +308,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class_lectures` (
   `class_id` INT UNSIGNED NOT NULL,
   `lecture_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`class_id`, `lecture_id`),
-  INDEX `fk_class_has_lecture_lecture1_idx` (`lecture_id` ASC),
-  INDEX `fk_class_has_lecture_class1_idx` (`class_id` ASC),
+  INDEX `fk_class_has_lecture_lecture1_idx` (`lecture_id` ASC) VISIBLE,
+  INDEX `fk_class_has_lecture_class1_idx` (`class_id` ASC) VISIBLE,
   CONSTRAINT `fk_class_has_lecture_class1`
     FOREIGN KEY (`class_id`)
     REFERENCES `roll_call_db`.`class` (`id`)
@@ -610,6 +610,49 @@ DELIMITER ;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- begin attached script 'security_setup.sql'
+CREATE TABLE `users` (
+  `username` varchar(50) NOT NULL,
+  `password` varchar(500) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `student_id` int unsigned DEFAULT NULL,
+  `teacher_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `teacher_id_UNIQUE` (`teacher_id`),
+  KEY `fk_individual_student` (`student_id`),
+  CONSTRAINT `fk_individual_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
+  CONSTRAINT `fk_individual_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `authorities` (
+  `username` varchar(50) NOT NULL,
+  `authority` varchar(50) NOT NULL,
+  KEY `fk_authorities_users` (`username`),
+  CONSTRAINT `fk_authorities_users` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TRIGGER IF EXISTS `roll_call_db`.`teacher_AFTER_INSERT`;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` TRIGGER `teacher_AFTER_INSERT` AFTER INSERT ON `teacher` FOR EACH ROW BEGIN
+INSERT INTO `roll_call_db`.`users` (`username`, `password`, `enabled`,`teacher_id`) VALUES (new.email_address, '$2a$10$hGko1F1s45iCEpzioDvQiuui6QabjjA4ob8y3AIvSk8Ocv5Jg.hWK.hWK', '1',NEW.id);
+INSERT INTO `roll_call_db`.`authorities` (`username`, `authority`) VALUES (new.email_address, 'ROLE_TEACHER');
+
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roll_call_db`.`student_AFTER_INSERT`;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` TRIGGER `student_AFTER_INSERT` AFTER INSERT ON `student` FOR EACH ROW BEGIN
+INSERT INTO `roll_call_db`.`users` (`username`, `password`, `enabled`,`student_id`) VALUES (new.email_address, '$2a$10$hGko1F1s45iCEpzioDvQiuui6QabjjA4ob8y3AIvSk8Ocv5Jg.hWK', '1',NEW.id);
+INSERT INTO `roll_call_db`.`authorities` (`username`, `authority`) VALUES (new.email_address, 'ROLE_STUDENT');
+
+END$$
+DELIMITER ;
+
+
+-- end attached script 'security_setup.sql'
 -- begin attached script 'test_data'
 INSERT INTO `city` (`zip_code`, `city_name`) VALUES ('2200', 'København N');
 INSERT INTO `address` (`city_id`, `street_name`, `street_number`, `registered_on`, `additional_details`) VALUES ('1', 'Lygten', '16', '2021-02-23 20:02:21.550', 'Kea digital 2');
@@ -642,11 +685,6 @@ INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `fore
 INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Martinj@stud.kea.dk', 2, 3, 'Martin', 'Jorgensen', '11111126');
 INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Cecilie@stud.kea.dk', 2, 2, 'Cecilie', 'Christensen', '11111128');
 INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Ole@stud.kea.dk', 1, 3, 'Ole', 'Olsen', '11111129');
-
-#Test data for teacher coordinate views
-INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Ejner@kea.dk', 1, 'Ejner', 'Hansen', '22222292');
-INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Kaj@kea.dk', 2, 'Kaj', 'Sørensen', '44444434');
-INSERT INTO `teacher` (`email_address`, `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Sven@kea.dk', 3, 'Sven', 'Olsen', '77777787');
 
 
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Abul@stud.kea.dk', '1', 'Abul', 'Kasem Mohammed Omar Sharif', '11111111');
@@ -697,11 +735,14 @@ INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phon
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Pedro@stud.kea.dk', '2', 'Pedro', 'Miguel Cravide Palma', '11111173');
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Radu-Mihai@stud.kea.dk', '2', 'Radu-Mihai', 'Onescu', '11111174');
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Stefani@stud.kea.dk', '2', 'Stefani', 'Dimitrova Dimitrova', '11111175');
+
 INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Tomas@kea.dk', 'Tomas', 'Pesek', '22222222');
-INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Andrea@kea.dk', 'Andrea', 'Corradini', '44444444');
 INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Morten@kea.dk', 'Morten', 'Christiansen', '77777777');
+INSERT INTO `teacher` (`email_address`, `forename`, `surname`, `phone_number`) VALUES ('Andrea@kea.dk', 'Andrea', 'Corradini', '44444444');
+
 INSERT INTO `classroom` (`campus_id`, `is_available`, `name`) VALUES ('1', 1, 'B235');
 INSERT INTO `classroom` (`campus_id`, `is_available`, `name`) VALUES ('1', 1, 'B219 ');
+
 INSERT INTO `course` (`name`, `ects`) VALUES ('Databases for developers', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Testing', '10');
 INSERT INTO `course` (`name`, `ects`) VALUES ('Development of large systems', '10');
