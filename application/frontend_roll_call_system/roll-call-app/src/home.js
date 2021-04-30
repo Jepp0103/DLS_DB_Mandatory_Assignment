@@ -8,34 +8,64 @@ import axios from "axios";
 class home extends Component {
   constructor(props) {
     super(props);
+    this.getClasses = this.getClasses.bind(this);
+    this.getStudents = this.getExpectedStudents.bind(this);
     this.state = {
-
       isLoaded: false,
-      classes: []
+      classes: [],
+      students: []
     };
   }
 
   componentDidMount() {
+
+    this.getClasses();
+    this.getExpectedStudents();
+  }
+
+  getClasses() {
     axios.get("http://localhost:4000/api/classes")
       .then(result => {
         console.log("result", result.data)
-
         for (var i = 0; i < result.data.length; i++) {
           this.state.classes.push(result.data[i].name);
         }
-
         console.log("classes", this.state.classes)
         this.setState({
-          isLoaded: true,
+          isLoaded: false,
         });
       })
       .catch(error => {
         this.setState({
-          isLoaded: true,
+          isLoaded: false,
           error
         });
       })
   }
+
+  getExpectedStudents() {
+    axios.get("http://localhost:4000/api/students") //Have to change endpoint in the future
+      .then(result => {
+        console.log("result", result.data)
+        for (var i = 0; i < result.data.length; i++) {
+          this.state.students.push(result.data[i].email_address);
+        }
+        console.log("students", this.state.students)
+        this.setState({
+          isLoaded: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+      })
+  }
+
+
+
+
   handleLogout() {
     localStorage.clear();
     window.location.href = "/";
@@ -54,7 +84,9 @@ class home extends Component {
         </div>
         <div id="excStudentsDiv">
           <b>Expected students:</b>
-
+          <ul>
+            {this.state.students}
+          </ul>
         </div>
         <div id="attendingStudentsDiv">
           <b>Attending students:</b>
@@ -84,7 +116,8 @@ class home extends Component {
         </a>
       </div >
     );
-    // }
   }
 }
+
+
 export default home;
