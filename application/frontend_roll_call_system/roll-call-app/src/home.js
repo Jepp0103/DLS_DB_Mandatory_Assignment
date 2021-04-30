@@ -1,33 +1,41 @@
 import React, { Component } from "react";
 import styled from 'styled-components';
 import "./css/home.css";
+import axios from "axios";
+
 
 
 class home extends Component {
   constructor(props) {
     super(props);
-    this.state = { classes: [] };
+    this.state = {
+
+      isLoaded: false,
+      classes: []
+    };
   }
 
   componentDidMount() {
-    fetch("http://localhost:4000/api/classes")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            classes: result.classes
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
-  }
+    axios.get("http://localhost:4000/api/classes")
+      .then(result => {
+        console.log("result", result.data)
 
+        for (var i = 0; i < result.data.length; i++) {
+          this.state.classes.push(result.data[i].name);
+        }
+
+        console.log("classes", this.state.classes)
+        this.setState({
+          isLoaded: true,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      })
+  }
   handleLogout() {
     localStorage.clear();
     window.location.href = "/";
@@ -35,21 +43,13 @@ class home extends Component {
 
   render() {
     const { error, isLoaded, classes } = this.state;
-
     return (
-
       <div id="homeStudentRollCall">
         <h1>School roll call</h1>
         <div id="classDiv">
           <b>Current classes:</b>
-          {classes}
-
           <ul>
-            {/* .map(cl => (
-              <li key={cl.id}>
-                {cl.name}
-              </li>
-            ))} */}
+            {this.state.classes}
           </ul>
         </div>
         <div id="excStudentsDiv">
@@ -76,7 +76,7 @@ class home extends Component {
 
         </div>
         <a id="logout"
-          href="javascript:void(0);"
+          href="#!"
           onClick={this.handleLogout}
           className="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
           <i className="ti-power-off mR-10"></i>
@@ -84,6 +84,7 @@ class home extends Component {
         </a>
       </div >
     );
+    // }
   }
 }
 export default home;
