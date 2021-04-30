@@ -1,7 +1,7 @@
 import React from "react";
 import "./css/App.css";
 import { BrowserRouter, Route } from "react-router-dom";
-import interceptors from "../src/interceptors";
+import interceptors from "./interceptors";
 import login from "./login";
 import home from "./home";
 
