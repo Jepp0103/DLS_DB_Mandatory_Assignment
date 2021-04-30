@@ -4,7 +4,7 @@ import axios from "axios";
 class login extends Component {
   constructor() {
     super();
-	alert(localStorage.getItem("authorization"));
+    alert(localStorage.getItem("authorization"));
 
     this.state = {
       username: "immanuel@stud.kea.dk",
@@ -16,7 +16,7 @@ class login extends Component {
   handleFormSubmit = event => {
     event.preventDefault();
 
-    const endpoint = "http://localhost:4000/authenticate";
+    const endpoint = "http://localhost:4000/api/authenticate";
 
     const username = this.state.username;
     const password = this.state.password;
@@ -33,13 +33,13 @@ class login extends Component {
   };
 
   handleDashboard() {
-	let config = {
-	  headers: {
-		authorization: "Bearer "+localStorage.getItem("authorization"),
-	  }
-	}
-	console.log(config);
-    axios.get("http://localhost:4000/",config).then(res => {
+    let config = {
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("authorization"),
+      }
+    }
+    console.log(config);
+    axios.get("http://localhost:4000/api/", config).then(res => {
       if (res.data === "Home page") {
         this.props.history.push("/home");
       } else {
@@ -58,14 +58,14 @@ class login extends Component {
               <input type="text"
                 class="form-control"
                 placeholder="User name"
-                
+
               />
             </div>
             <div className="form-group">
               <input type="password"
                 class="form-control"
                 placeholder="password"
-                
+
               />
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">

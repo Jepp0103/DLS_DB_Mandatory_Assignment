@@ -34,18 +34,22 @@ class home extends Component {
   }
 
   render() {
+    const { error, isLoaded, classes } = this.state;
+
     return (
 
       <div id="homeStudentRollCall">
         <h1>School roll call</h1>
         <div id="classDiv">
           <b>Current classes:</b>
+          {classes}
+
           <ul>
-            {classes.map(class => (
-              <li key={class.id}>
-              {class.name}
-            </li>
-            ))}
+            {/* .map(cl => (
+              <li key={cl.id}>
+                {cl.name}
+              </li>
+            ))} */}
           </ul>
         </div>
         <div id="excStudentsDiv">
@@ -78,7 +82,7 @@ class home extends Component {
           <i className="ti-power-off mR-10"></i>
           <span>Logout</span>
         </a>
-      </div>
+      </div >
     );
   }
 }
