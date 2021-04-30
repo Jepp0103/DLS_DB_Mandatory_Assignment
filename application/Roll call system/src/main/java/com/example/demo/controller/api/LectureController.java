@@ -79,22 +79,25 @@ public class LectureController {
 
     //Post mappings
     @PostMapping("/beginregistration")
-    public void beginRegistration(@RequestBody int lectureId, HttpServletRequest request){//should be a post
+    public void beginRegistration(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
+        System.out.println(lecture);
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
-        if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
-            ls.startRegistration(lectureId,"asddsa");
+        if (mylectures.stream().anyMatch(o -> o.getId()==lecture.getId())){
+            ls.startRegistration(lecture.getId(),lecture.getCode());
         }
     }
     @PostMapping("/endregistration")
-    public void endRegistration(@RequestBody int lectureId, HttpServletRequest request){//should be a post
+    public ResponseEntity<?> endRegistration(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
-        if (mylectures.stream().anyMatch(o -> o.getId()==lectureId)){
-            ls.endRegistration(lectureId);
+        if (mylectures.stream().anyMatch(o -> o.getId()==lecture.getId())){
+            ls.endRegistration(lecture.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/addLecture")

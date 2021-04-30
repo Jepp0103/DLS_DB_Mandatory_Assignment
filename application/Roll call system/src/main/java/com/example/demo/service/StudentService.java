@@ -8,6 +8,7 @@ import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,18 +33,18 @@ public class StudentService {
         return sr.getClassIdByStudentId(id);
     }
 
-    public boolean registerAttendence(int studentId,int teachers,double latitude, double longitude, int lectureId,String code, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId){
+    public boolean registerAttendence(int studentId,int teachers,double latitude, double longitude, int lectureId,String code, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId) {
         boolean lecturebegun=true;
         boolean withinrange=studentWithinRange(studentId,teachers,latitude,longitude);
         boolean correctcode=ls.correctCode(lectureId,code);
         boolean correctnetwork=correctNetwork(studentId,studentSsid,ipAddress,studentFacultyId,teachingNetworkId);
         if (correctcode && lecturebegun){
-            if (withinrange){
-                sr.registerAttendence(studentId, lectureId);
-                return true;
-            }
-            else if (correctnetwork){
-                sr.registerAttendence(studentId, lectureId);
+            if (withinrange || correctnetwork){
+                try {
+                    sr.registerAttendence(studentId, lectureId);
+                }catch (Exception e){
+                    sr.updateAttendence(studentId,lectureId);
+                }
                 return true;
             }
         }

@@ -23,8 +23,8 @@ class RollCallSystemApplicationTests {
     @Test
     void withinRangeTest(){
         int Teachers[] = {1};
-        assertTrue(ss.studentWithinRange(15,Teachers,55.70392118,12.53752100));
-        assertFalse(ss.studentWithinRange(15,Teachers,55.60392118,12.53752100));
+        assertTrue(ss.studentWithinRange(15,1,55.70392118,12.53752100));
+        assertFalse(ss.studentWithinRange(15,1,55.60392118,12.53752100));
     }
 
 }

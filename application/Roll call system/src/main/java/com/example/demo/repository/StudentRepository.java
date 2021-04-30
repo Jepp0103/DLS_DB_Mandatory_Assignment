@@ -46,4 +46,9 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
 
     @Procedure("register_student_gps")
     char studentWithinRange(int student, int teacher, double latitude, double longitude);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE attendance_record SET is_attending=1, registred_at=NOW() WHERE student_id=:studentId and lecture_id=:lectureId",nativeQuery = true)
+    void updateAttendence(int studentId, int lectureId);
 }

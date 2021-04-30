@@ -67,8 +67,8 @@ public class StudentController {
         Integer classid = jtu.getClassIdFromToken(token);
         Integer studentid = jtu.getStudentIdFromToken(token);
         if (classid != null && studentid != null) {
-            ss.registerAttendence(studentid, payload.getTeacherid(), payload.getLatitude(), payload.getLongitude(), payload.getLectureid(), payload.getCode(), payload.getStudentSSID(), payload.getIpaddress(), payload.getFacultyid(), payload.getTeachingnetworkid());
-            return new ResponseEntity<>(HttpStatus.OK);
+            boolean registrationsucces = ss.registerAttendence(studentid, payload.getTeacherid(), payload.getLatitude(), payload.getLongitude(), payload.getLectureid(), payload.getCode(), payload.getStudentSSID(), payload.getIpaddress(), payload.getFacultyid(), payload.getTeachingnetworkid());
+            return ResponseEntity.ok(registrationsucces ? "Registration successful" : "Registratoin failed");
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
