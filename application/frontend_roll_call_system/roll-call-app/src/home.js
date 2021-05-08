@@ -18,7 +18,6 @@ class home extends Component {
   }
 
   componentDidMount() {
-
     this.getClasses();
     this.getExpectedStudents();
   }

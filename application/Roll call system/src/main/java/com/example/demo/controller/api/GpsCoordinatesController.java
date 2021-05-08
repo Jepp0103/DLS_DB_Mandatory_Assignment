@@ -13,18 +13,18 @@ public class GpsCoordinatesController {
     private GpsCoordinatesRepository gpsCoordinatesRepository;
 
     //Get mappings
-    @GetMapping("/gpsCoordinates")
+    @GetMapping("/gpscoordinates")
     public Iterable<GpsCoordinates> getGpsCoordinates()  {
         return gpsCoordinatesRepository.findAll();
     }
 
     //Post mappings
-    @PostMapping("/addGpsCoordinates")
+    @PostMapping("/addgpscoordinates")
     public GpsCoordinates addGpsCoordinates(@RequestBody GpsCoordinates gpsCoordinates) {
         return gpsCoordinatesRepository.save(gpsCoordinates);
     }
 
-    @PostMapping("/registerStudentGps")
+    @PostMapping("/registerstudentgps")
     public char addRegisteredStudentGps(@RequestBody StudentGpsRegister sgr) {
         return gpsCoordinatesRepository.registerStudentGps(sgr.getStudentId(), sgr.getTeacherId(), sgr.getStudentLatitude(), sgr.getStudentLongitude());
     }

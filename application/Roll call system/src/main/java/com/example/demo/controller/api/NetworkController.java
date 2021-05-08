@@ -18,7 +18,7 @@ public class NetworkController {
         return networkRepository.findAll();
     }
 
-    @PostMapping("/registerStudentNetwork")
+    @PostMapping("/registerstudentnetwork")
     public char addRegisteredStudentNetwork(@RequestBody StudentNetworkRegister snr) {
         return networkRepository.registerStudentNetwork(snr.getStudentId(), snr.getStudentSsid(), snr.getIpAddress(), snr.getStudentFacultyId(), snr.getTeachingNetworkId());
     }
