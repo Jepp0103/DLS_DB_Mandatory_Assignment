@@ -35,6 +35,7 @@ public class ClassController {
         String token = jtu.getCurrentToken(request);
         if (jtu.getClassIdFromToken(token)!=null){return ResponseEntity.ok(jtu.getClassIdFromToken(token));}
         Integer teacherid=jtu.getTeacherIdFromToken(token);
+        System.out.println("My classes? " + classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token)));
         return teacherid!=null ? ResponseEntity.ok(classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token))) : null;
     }
 

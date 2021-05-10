@@ -68,8 +68,8 @@ public class StudentController {
         Integer studentid = jtu.getStudentIdFromToken(token);
         if (classid != null && studentid != null) {
             boolean registrationsucces = ss.registerAttendence(studentid, payload.getTeacherid(), payload.getLatitude(), payload.getLongitude(), payload.getLectureid(), payload.getCode(), payload.getStudentSSID(), payload.getIpaddress(), payload.getFacultyid(), payload.getTeachingnetworkid());
-            return ResponseEntity.ok(registrationsucces ? "Registration successful" : "Registratoin failed");
+            return ResponseEntity.ok(registrationsucces ? "Registration successful" : "Registration failed");
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-}   
+}

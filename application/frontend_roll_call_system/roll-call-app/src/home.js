@@ -23,7 +23,7 @@ class home extends Component {
   }
 
   getClasses() {
-    axios.get("http://localhost:4000/api/classes")
+    axios.get("http://localhost:4000/api/myclasses")
       .then(result => {
         console.log("result", result.data)
         for (var i = 0; i < result.data.length; i++) {
@@ -49,7 +49,6 @@ class home extends Component {
         for (var i = 0; i < result.data.length; i++) {
           this.state.students.push(result.data[i].email_address);
         }
-        console.log("students", this.state.students)
         this.setState({
           isLoaded: false,
         });
@@ -61,8 +60,6 @@ class home extends Component {
         });
       })
   }
-
-
 
 
   handleLogout() {
