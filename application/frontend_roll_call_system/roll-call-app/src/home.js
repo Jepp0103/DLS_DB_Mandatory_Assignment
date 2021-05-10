@@ -14,7 +14,8 @@ class home extends Component {
       isLoaded: false,
       classes: [],
       students: [],
-      currentLectures: []
+      currentLectures: [],
+      mylectures: []
     };
   }
 
@@ -22,6 +23,7 @@ class home extends Component {
     this.getClasses();
     this.getExpectedStudents();
     this.getCurrentLectures();
+    this.getMyLectures();
   }
 
   getClasses() {
@@ -71,7 +73,26 @@ class home extends Component {
           this.state.currentLectures.push(result.data[i]);
         }
         this.setState({
+          isLoaded: true,
+        });
+      })
+      .catch(error => {
+        this.setState({
           isLoaded: false,
+          error
+        });
+      })
+  }
+
+  getMyLectures() {
+    axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
+      .then(result => {
+        console.log("my lectures: ", result.data)
+        for (var i = 0; i < result.data.length; i++) {
+          this.state.mylectures.push(result.data[i].name); //Currently not displaying
+        }
+        this.setState({
+          isLoaded: true,
         });
       })
       .catch(error => {
@@ -113,6 +134,12 @@ class home extends Component {
         </div  >
         <div id="currentCourseDiv">
           <b>Current course:</b>
+
+        </div>
+
+        <div id="myLecturesDiv">
+          <b>My lectures:</b>
+          {this.state.mylectures}
 
         </div>
         <div id="currentLectureDiv">
