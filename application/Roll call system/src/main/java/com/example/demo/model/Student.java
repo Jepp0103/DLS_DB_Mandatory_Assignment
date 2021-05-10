@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
@@ -18,8 +15,6 @@ public class Student {
     private int id;
     @Column(name="email_address")
     private String email_address;
-    @Column(name="class_id")
-    private int class_id;
     @Column(name="network_id")
     private Integer network_id;
     @Column(name="gps_coordinates_id")
@@ -30,6 +25,9 @@ public class Student {
     private String surname;
     @Column(name="phone_number")
     private String phone_number;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class myclass;
 
     @JsonIgnore
     public int getId() {
@@ -47,15 +45,6 @@ public class Student {
 
     public void setEmail_address(String email_address) {
         this.email_address = email_address;
-    }
-
-    @JsonProperty
-    public int getClass_id() {
-        return class_id;
-    }
-
-    public void setClass_id(int class_id) {
-        this.class_id = class_id;
     }
 
     @JsonIgnore

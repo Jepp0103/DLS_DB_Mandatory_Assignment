@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
@@ -20,6 +18,9 @@ public class Class {
     private String name;
     @Column(name="faculty_id")
     private int faculty_id;
+    @OneToMany(mappedBy="myclass",fetch = FetchType.LAZY)
+    private Set<Student> students;
+
 
     @JsonIgnore
     public int getId() {
@@ -46,5 +47,13 @@ public class Class {
 
     public void setFaculty_id(int faculty_id) {
         this.faculty_id = faculty_id;
+    }
+
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
     }
 }

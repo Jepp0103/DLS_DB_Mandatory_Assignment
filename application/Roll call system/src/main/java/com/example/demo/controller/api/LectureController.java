@@ -80,11 +80,12 @@ public class LectureController {
     //Post mappings
     @PostMapping("/beginregistration")
     public void beginRegistration(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
-        System.out.println(lecture);
+        System.out.println(lecture.getId());
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lecture.getId())){
+            System.out.println(teacherid);
             ls.startRegistration(lecture.getId(),lecture.getCode());
         }
     }
