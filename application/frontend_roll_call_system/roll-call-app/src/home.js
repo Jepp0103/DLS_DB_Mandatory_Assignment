@@ -13,19 +13,21 @@ class home extends Component {
     this.state = {
       isLoaded: false,
       classes: [],
-      students: []
+      students: [],
+      currentLectures: []
     };
   }
 
   componentDidMount() {
     this.getClasses();
     this.getExpectedStudents();
+    this.getCurrentLectures();
   }
 
   getClasses() {
     axios.get("http://localhost:4000/api/myclasses")
       .then(result => {
-        console.log("result", result.data)
+        console.log("my classes: ", result.data)
         for (var i = 0; i < result.data.length; i++) {
           this.state.classes.push(result.data[i].name);
         }
@@ -45,7 +47,7 @@ class home extends Component {
   getExpectedStudents() {
     axios.get("http://localhost:4000/api/students") //Have to change endpoint in the future
       .then(result => {
-        console.log("result", result.data)
+        console.log("students: ", result.data)
         for (var i = 0; i < result.data.length; i++) {
           this.state.students.push(result.data[i].email_address);
         }
@@ -61,6 +63,24 @@ class home extends Component {
       })
   }
 
+  getCurrentLectures() {
+    axios.get("http://localhost:4000/api/currentlectures") //Have to change endpoint in the future
+      .then(result => {
+        console.log("current lecture: ", result.data)
+        for (var i = 0; i < result.data.length; i++) {
+          this.state.currentLectures.push(result.data[i]);
+        }
+        this.setState({
+          isLoaded: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+      })
+  }
 
   handleLogout() {
     localStorage.clear();
@@ -97,6 +117,7 @@ class home extends Component {
         </div>
         <div id="currentLectureDiv">
           <b>Current lecture:</b>
+          {this.state.currentLecture}
 
         </div>
         <div id="networkDiv">

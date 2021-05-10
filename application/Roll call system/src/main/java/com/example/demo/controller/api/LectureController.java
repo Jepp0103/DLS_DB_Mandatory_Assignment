@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.util.Set;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "/api")
 public class LectureController {
     @Autowired
