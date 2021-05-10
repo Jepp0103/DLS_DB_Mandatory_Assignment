@@ -4,22 +4,20 @@ import axios from "axios";
 class login extends Component {
   constructor() {
     super();
-    alert(localStorage.getItem("authorization"));
+    console.log(localStorage.getItem("authorization"));
 
     this.state = {
-      username: "immanuel@stud.kea.dk",
-      password: "password"
+      username: "",
+      password: ""
     };
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   handleFormSubmit = event => {
     event.preventDefault();
-
     const endpoint = "http://localhost:4000/api/authenticate";
-
-    const username = this.state.username;
-    const password = this.state.password;
+    const username = this.refs.username.value;
+    const password = this.refs.pass.value;
 
     const user_object = {
       username: username,
@@ -55,14 +53,14 @@ class login extends Component {
           <form class="form-signin" onSubmit={this.handleFormSubmit}>
             <h2 class="form-signin-heading">Please login</h2>
             <div className="form-group">
-              <input type="text"
+              <input ref="username" type="text"
                 class="form-control"
                 placeholder="User name"
 
               />
             </div>
-            <div className="form-group">
-              <input type="password"
+            <div  className="form-group">
+              <input ref="pass" type="password"
                 class="form-control"
                 placeholder="password"
 

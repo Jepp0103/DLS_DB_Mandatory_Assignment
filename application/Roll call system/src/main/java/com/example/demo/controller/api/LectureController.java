@@ -50,17 +50,17 @@ public class LectureController {
     }
 
     @GetMapping("/currentlectures")
-    public Iterable<String> getCurrentLectures(HttpServletRequest request) {
+    public ResponseEntity<?> getCurrentLectures(HttpServletRequest request) {
         LocalDateTime today=LocalDateTime.now(ZoneId.of("Europe/Copenhagen"));
         String token = jtu.getCurrentToken(request);
         Integer classid = jtu.getClassIdFromToken(token);
         if(classid!=null) {
-            return lectureRepository.findLectureByDateBetweenAndClasses_Id(today.minusHours(8), today.plusHours(8), classid);
+            return ResponseEntity.ok(lectureRepository.findLectureByDateBetweenAndClasses_Id(today.minusHours(8), today.plusHours(8), classid));
         }
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         System.out.println(teacherid);
         if(teacherid!=null) {
-            return lectureRepository.findLectureByDateBetweenAndTeachers_Id(today.minusHours(8), today.plusHours(8), teacherid);
+            return ResponseEntity.ok(lectureRepository.findLectureByDateBetweenAndTeachers_Id(today.minusHours(8), today.plusHours(8), teacherid));
         }
         return null;
     }
