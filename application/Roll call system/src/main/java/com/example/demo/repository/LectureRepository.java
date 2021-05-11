@@ -1,5 +1,7 @@
 package com.example.demo.repository;
+import com.example.demo.model.AttendenceResponse;
 import com.example.demo.model.Lecture;
+import com.example.demo.model.TeacherClassCourseResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -42,6 +44,9 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     void removeLectureCodee(int lectureId);
 
     Set<Lecture> findLectureByClasses_Id(int teacherid);
+
+    @Query(value = "SELECT forename, surname, is_attending  FROM attendance_record left join student on student_id=id WHERE lecture_id = :lectureId", nativeQuery = true)
+    Set<AttendenceResponse> getLectureAttendence(int lectureId);
 
     //Notation - @transactional @modifying - insert into m
 }
