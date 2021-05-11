@@ -45,7 +45,7 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
 
     Set<Lecture> findLectureByClasses_Id(int teacherid);
 
-    @Query(value = "SELECT forename, surname, is_attending  FROM attendance_record left join student on student_id=id WHERE lecture_id = 2", nativeQuery = true)
+    @Query(value = "SELECT forename, surname, is_attending  FROM attendance_record left join student on student_id=id WHERE lecture_id = :lectureId", nativeQuery = true)
     Set<AttendenceResponse> getLectureAttendence(int lectureId);
 
     //Notation - @transactional @modifying - insert into m
