@@ -43,6 +43,10 @@ public class LectureController {
     public String getLectureParticipationRate(@RequestParam int lectureId) {
         return lectureRepository.findLectureParticipationRate(lectureId);
     }
+    @GetMapping("/lectureattendence")
+    public ResponseEntity<?> getLectureAttendence(@RequestParam int lectureid) {
+        return ResponseEntity.ok(lectureRepository.getLectureAttendence(lectureid));
+    }
 
     @GetMapping("/lectureparticipationratearg2") //Lecture participation rate function with arg 2 for testing
     public String getLectureParticipationRateArg2() {
