@@ -22,8 +22,8 @@ class home extends Component {
   componentDidMount() {
     this.getClasses();
     this.getExpectedStudents();
-    this.getCurrentLectures();
     this.getMyLectures();
+    this.getCurrentLectures();
   }
 
   getClasses() {
@@ -31,9 +31,8 @@ class home extends Component {
       .then(result => {
         console.log("my classes: ", result.data)
         for (var i = 0; i < result.data.length; i++) {
-          this.state.classes.push(result.data[i].name);
+          this.state.classes.push(result.data[i].classname);
         }
-        console.log("classes", this.state.classes)
         this.setState({
           isLoaded: false,
         });
@@ -68,9 +67,9 @@ class home extends Component {
   getCurrentLectures() {
     axios.get("http://localhost:4000/api/currentlectures") //Have to change endpoint in the future
       .then(result => {
-        console.log("current lecture: ", result.data)
+        console.log("current lectures: ", result.data)
         for (var i = 0; i < result.data.length; i++) {
-          this.state.currentLectures.push(result.data[i]);
+          this.state.currentLectures.push(result.data[i].name);
         }
         this.setState({
           isLoaded: true,
@@ -87,12 +86,13 @@ class home extends Component {
   getMyLectures() {
     axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
       .then(result => {
-        console.log("my lectures: ", result.data)
+        console.log("my lectures: ", result.data[0].name)
         for (var i = 0; i < result.data.length; i++) {
-          this.state.mylectures.push(result.data[i].name); //Currently not displaying
+          this.state.mylectures.push(result.data[i].name);
         }
+        console.log("my lectures array", this.state.mylectures)
         this.setState({
-          isLoaded: true,
+          isLoaded: false,
         });
       })
       .catch(error => {
@@ -139,17 +139,19 @@ class home extends Component {
 
         <div id="myLecturesDiv">
           <b>My lectures:</b>
-          {this.state.mylectures}
+          <ul>
+            {this.state.mylectures}
+          </ul>
 
         </div>
         <div id="currentLectureDiv">
-          <b>Current lecture:</b>
-          {this.state.currentLecture}
-
+          <b>Current lectures:</b>
+          <ul>
+            {this.state.currentLectures}
+          </ul>
         </div>
         <div id="networkDiv">
           <b>Network:</b>
-
         </div>
         <a id="logout"
           href="#!"

@@ -8,3 +8,6 @@
     color: black;
 }
 
+#excStudentsDiv {
+    overflow-y: auto;
+}
