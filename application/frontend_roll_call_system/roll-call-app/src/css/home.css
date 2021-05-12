@@ -8,6 +8,6 @@
     color: black;
 }
 
-#excStudentsDiv {
+#excStudentsDiv, #attendingStudentsDiv, #attStudentsUL {
     overflow-y: auto;
 }

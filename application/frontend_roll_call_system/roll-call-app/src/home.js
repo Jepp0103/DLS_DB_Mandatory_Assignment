@@ -2,55 +2,35 @@ import React, { Component } from "react";
 import styled from 'styled-components';
 import "./css/home.css";
 import axios from "axios";
+import $ from "jquery";
 
 
 
 class home extends Component {
   constructor(props) {
     super(props);
-    this.getClasses = this.getClasses.bind(this);
-    this.getStudents = this.getExpectedStudents.bind(this);
     this.state = {
       isLoaded: false,
       classes: [],
-      students: [],
       currentLectures: [],
-      mylectures: []
+      mylectures: [],
+      attendingStudents: [],
+      lectureParticipationRate: ""
     };
   }
 
   componentDidMount() {
     this.getClasses();
-    this.getExpectedStudents();
     this.getMyLectures();
     this.getCurrentLectures();
+    this.getAttendingStudents();
   }
 
   getClasses() {
     axios.get("http://localhost:4000/api/myclasses")
       .then(result => {
-        console.log("my classes: ", result.data)
         for (var i = 0; i < result.data.length; i++) {
-          this.state.classes.push(result.data[i].classname);
-        }
-        this.setState({
-          isLoaded: false,
-        });
-      })
-      .catch(error => {
-        this.setState({
-          isLoaded: false,
-          error
-        });
-      })
-  }
-
-  getExpectedStudents() {
-    axios.get("http://localhost:4000/api/students") //Have to change endpoint in the future
-      .then(result => {
-        console.log("students: ", result.data)
-        for (var i = 0; i < result.data.length; i++) {
-          this.state.students.push(result.data[i].email_address);
+          this.state.classes.push(result.data[i].classname + ", ");
         }
         this.setState({
           isLoaded: false,
@@ -86,13 +66,62 @@ class home extends Component {
   getMyLectures() {
     axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
       .then(result => {
-        console.log("my lectures: ", result.data[0].name)
         for (var i = 0; i < result.data.length; i++) {
-          this.state.mylectures.push(result.data[i].name);
+          this.state.mylectures.push("(Lecture id: " + result.data[i].id +
+            ", lecture name: " + result.data[i].name +
+            ", course: " + result.data[i].course.name + "), ");
         }
-        console.log("my lectures array", this.state.mylectures)
         this.setState({
           isLoaded: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+      })
+  }
+
+  getAttendingStudents() {
+    $("#getStudentsBtn").click(() => {
+      let lectureIdInput = $("#lectureIdInput").val();
+      if (lectureIdInput !== null) {
+        axios.get("http://localhost:4000/api/lectureattendence?lectureid=" + lectureIdInput) //Have to change endpoint in the future
+          .then(result => {
+            this.state.attendingStudents = []; //Emptying array before inserting again
+            for (var i = 0; i < result.data.length; i++) {
+              this.state.attendingStudents.push(result.data[i].forename + " " + result.data[i].surname + ": " + result.data[i].is_attending + ", \n");
+            }
+
+            $("#attStudentsUL").html(this.state.attendingStudents);
+
+            //Displaying participation rate for a lecture
+            this.getLectureParticipationRate(lectureIdInput);
+
+            this.setState({
+              isLoaded: true,
+            });
+          })
+          .catch(error => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+          })
+      }
+    });
+  }
+
+  getLectureParticipationRate(lectureId) {
+    axios.get("http://localhost:4000/api/lectureparticipationrate?lectureId=" + lectureId) //Have to change endpoint in the future
+      .then(result => {
+        console.log("lecture participation rate data: ", result.data)
+        this.state.lectureParticipationRate = result.data
+        $("#lectureParticipationRateTag").text(this.state.lectureParticipationRate + " %");
+
+        this.setState({
+          isLoaded: true,
         });
       })
       .catch(error => {
@@ -108,6 +137,8 @@ class home extends Component {
     window.location.href = "/";
   }
 
+
+
   render() {
     const { error, isLoaded, classes } = this.state;
     return (
@@ -119,14 +150,14 @@ class home extends Component {
             {this.state.classes}
           </ul>
         </div>
-        <div id="excStudentsDiv">
-          <b>Expected students:</b>
-          <ul>
-            {this.state.students}
-          </ul>
-        </div>
         <div id="attendingStudentsDiv">
-          <b>Attending students:</b>
+          <b>Attending students for specific lecture:</b>
+          <input type="text" id="lectureIdInput" placeholder="Write id of lecture" />
+          <button id="getStudentsBtn">Get students</button>
+          <br></br>
+          <b id="lectureParticipationRateTag"></b>
+          <ul id="attStudentsUL">
+          </ul>
         </div>
         <div id="gpsDiv">
           <b>GPS:</b>
@@ -138,14 +169,14 @@ class home extends Component {
         </div>
 
         <div id="myLecturesDiv">
-          <b>My lectures:</b>
+          <b>All my lectures:</b>
           <ul>
             {this.state.mylectures}
           </ul>
 
         </div>
         <div id="currentLectureDiv">
-          <b>Current lectures:</b>
+          <b>Active lectures:</b>
           <ul>
             {this.state.currentLectures}
           </ul>
