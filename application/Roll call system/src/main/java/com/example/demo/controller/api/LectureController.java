@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -38,14 +39,14 @@ public class LectureController {
         return lectureRepository.findLecturesAndRelatedCourses();
     }
 
-    @GetMapping("/lectureparticipationrate")
+    @PostMapping("/lectureparticipationrate")
     //Lecture participation rate function with parameters - http://localhost:4000/api/lectureParticipationRate?lectureId={number}
-    public String getLectureParticipationRate(@RequestParam int lectureId) {
-        return lectureRepository.findLectureParticipationRate(lectureId);
+    public String getLectureParticipationRate(@RequestBody Map<String, Integer> body) {
+        return lectureRepository.findLectureParticipationRate(body.get("lectureid"));
     }
-    @GetMapping("/lectureattendence")
-    public ResponseEntity<?> getLectureAttendence(@RequestParam int lectureid) {
-        return ResponseEntity.ok(lectureRepository.getLectureAttendence(lectureid));
+    @PostMapping("/lectureattendence")
+    public ResponseEntity<?> getLectureAttendence(@RequestBody Map<String, Integer> body) {
+        return ResponseEntity.ok(lectureRepository.getLectureAttendence(body.get("lectureid")));
     }
 
     @GetMapping("/lectureparticipationratearg2") //Lecture participation rate function with arg 2 for testing

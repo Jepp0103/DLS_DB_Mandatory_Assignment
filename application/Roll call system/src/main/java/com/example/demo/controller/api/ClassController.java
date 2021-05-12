@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -25,9 +26,9 @@ public class ClassController {
         return classRepository.findAll();
     }
 
-    @GetMapping("/averageclassattendancerate")
-    public Integer getAverageClassAttendanceRate(@RequestParam int courseId, @RequestParam int classId)  {
-        return classRepository.findAverageClassAttendanceRate(courseId, classId);
+    @PostMapping("/averageclassattendancerate")
+    public Integer getAverageClassAttendanceRate(@RequestBody Map<String, Integer> body)  {
+        return classRepository.findAverageClassAttendanceRate(body.get("courseid"), body.get("classid"));
     }
 
     @GetMapping("/myclasses")
