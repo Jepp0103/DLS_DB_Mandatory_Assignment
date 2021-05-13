@@ -41,8 +41,8 @@ public class LectureController {
 
     @PostMapping("/lectureparticipationrate")
     //Lecture participation rate function with parameters - http://localhost:4000/api/lectureParticipationRate?lectureId={number}
-    public String getLectureParticipationRate(@RequestBody Map<String, Integer> body) {
-        return lectureRepository.findLectureParticipationRate(body.get("lectureid"));
+    public ResponseEntity<?> getLectureParticipationRate(@RequestBody Map<String, Integer> body) {
+        return ResponseEntity.ok(lectureRepository.findLectureParticipationRate(body.get("lectureid")));
     }
     @PostMapping("/lectureattendence")
     public ResponseEntity<?> getLectureAttendence(@RequestBody Map<String, Integer> body) {
@@ -50,8 +50,8 @@ public class LectureController {
     }
 
     @GetMapping("/lectureparticipationratearg2") //Lecture participation rate function with arg 2 for testing
-    public String getLectureParticipationRateArg2() {
-        return lectureRepository.findLectureParticipationRateArg2();
+    public ResponseEntity<?> getLectureParticipationRateArg2() {
+        return ResponseEntity.ok(lectureRepository.findLectureParticipationRateArg2());
     }
 
     @GetMapping("/currentlectures")
@@ -67,7 +67,7 @@ public class LectureController {
         if(teacherid!=null) {
             return ResponseEntity.ok(lectureRepository.findLectureByDateBetweenAndTeachers_Id(today.minusHours(8), today.plusHours(8), teacherid));
         }
-        return null;
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     @GetMapping("/mylectures")
     public ResponseEntity<?> getMyLectures(HttpServletRequest request) {
@@ -85,15 +85,16 @@ public class LectureController {
 
     //Post mappings
     @PostMapping("/beginregistration")
-    public void beginRegistration(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
+    public ResponseEntity<?> beginRegistration(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
         System.out.println(lecture.getId());
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lecture.getId())){
-            System.out.println(teacherid);
             ls.startRegistration(lecture.getId(),lecture.getCode());
+            return new ResponseEntity<>(HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     @PostMapping("/endregistration")
     public ResponseEntity<?> endRegistration(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
