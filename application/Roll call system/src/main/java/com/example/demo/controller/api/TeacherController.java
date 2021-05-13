@@ -31,7 +31,10 @@ public class TeacherController {
     public ResponseEntity<?> updateTeacherCoordinates(@RequestBody GpsCoordinates coordinats, HttpServletRequest request) {
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
-        gcr.updateTeachersCoordinates(coordinats.getLatitude(), coordinats.getLongitude(), teacherRepository.getTeacherById(teacherid).getGps_coordinates_id());
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (teacherid!=null) {
+            gcr.updateTeachersCoordinates(coordinats.getLatitude(), coordinats.getLongitude(), teacherRepository.getTeacherById(teacherid).getGps_coordinates_id());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }

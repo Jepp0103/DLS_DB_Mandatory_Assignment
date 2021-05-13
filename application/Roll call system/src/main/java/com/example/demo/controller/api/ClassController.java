@@ -34,10 +34,15 @@ public class ClassController {
     @GetMapping("/myclasses")
     public ResponseEntity<?> getTeachersClasses(HttpServletRequest request)  {
         String token = jtu.getCurrentToken(request);
-        if (jtu.getClassIdFromToken(token)!=null){return ResponseEntity.ok(jtu.getClassIdFromToken(token));}
+        Integer classid=jtu.getTeacherIdFromToken(token);
+        if (classid!=null){
+            return ResponseEntity.ok(jtu.getClassIdFromToken(token));
+        }
         Integer teacherid=jtu.getTeacherIdFromToken(token);
-        System.out.println("My classes? " + classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token)));
-        return teacherid!=null ? ResponseEntity.ok(classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token))) : null;
+        if (teacherid!=null){
+            return ResponseEntity.ok(classRepository.findTeacherClasses(jtu.getTeacherIdFromToken(token)));
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
 }
