@@ -16,7 +16,7 @@ class home extends Component {
       mylectures: [],
       attendingStudents: [],
       lectureParticipationRate: ""
-    };
+    }
   }
 
   componentDidMount() {
@@ -64,30 +64,40 @@ class home extends Component {
   }
 
   getMyLectures() {
-    axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
-      .then(result => {
-        for (var i = 0; i < result.data.length; i++) {
-          this.state.mylectures.push("(Lecture id: " + result.data[i].id +
-            ", lecture name: " + result.data[i].name +
-            ", course: " + result.data[i].course.name + "), ");
-        }
-        this.setState({
-          isLoaded: false,
+    $("#getMyLecturesBtn").click(() => {
+      axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
+        .then(result => {
+          for (var i = 0; i < result.data.length; i++) {
+            this.state.mylectures.push("(Lecture id: " + result.data[i].id +
+              ", lecture name: " + result.data[i].name +
+              ", course: " + result.data[i].course.name + "), ");
+          }
+
+          $("#myLecturesUl").html(this.state.mylectures);
+
+          this.setState({
+            isLoaded: false,
+          });
+        })
+        .catch(error => {
+          this.setState({
+            isLoaded: false,
+            error
+          });
         });
-      })
-      .catch(error => {
-        this.setState({
-          isLoaded: false,
-          error
-        });
-      })
+    });
+    $("#hideMyLecturesBtn").click(() => {
+      $("#myLecturesUl").empty();
+      this.state.mylectures = [];
+    });
   }
 
   getAttendingStudents() {
     $("#getStudentsBtn").click(() => {
-      let lectureIdInput = $("#lectureIdInput").val();
+      let lectureIdInput = { "lectureid": $("#lectureIdInput").val() };
+      console.log("lectureidInput", lectureIdInput)
       if (lectureIdInput !== null) {
-        axios.get("http://localhost:4000/api/lectureattendence?lectureid=" + lectureIdInput) //Have to change endpoint in the future
+        axios.post("http://localhost:4000/api/lectureattendence", lectureIdInput) //Have to change endpoint in the future
           .then(result => {
             this.state.attendingStudents = []; //Emptying array before inserting again
             for (var i = 0; i < result.data.length; i++) {
@@ -111,14 +121,17 @@ class home extends Component {
           })
       }
     });
+    $("#hideStudentsBtn").click(() => {
+      $("#attStudentsUL").empty();
+    });
   }
 
   getLectureParticipationRate(lectureId) {
-    axios.get("http://localhost:4000/api/lectureparticipationrate?lectureId=" + lectureId) //Have to change endpoint in the future
+    axios.post("http://localhost:4000/api/lectureparticipationrate", lectureId) //Have to change endpoint in the future
       .then(result => {
         console.log("lecture participation rate data: ", result.data)
         this.state.lectureParticipationRate = result.data
-        $("#lectureParticipationRateTag").text(this.state.lectureParticipationRate + " %");
+        $("#lectureParticipationRateTag").text(this.state.lectureParticipationRate + " % attendance");
 
         this.setState({
           isLoaded: true,
@@ -154,6 +167,7 @@ class home extends Component {
           <b>Attending students for specific lecture:</b>
           <input type="text" id="lectureIdInput" placeholder="Write id of lecture" />
           <button id="getStudentsBtn">Get students</button>
+          <button id="hideStudentsBtn">Hide students</button>
           <br></br>
           <b id="lectureParticipationRateTag"></b>
           <ul id="attStudentsUL">
@@ -170,8 +184,10 @@ class home extends Component {
 
         <div id="myLecturesDiv">
           <b>All my lectures:</b>
-          <ul>
-            {this.state.mylectures}
+          <button id="getMyLecturesBtn">Show my lectures</button>
+          <button id="hideMyLecturesBtn">Hide my lectures</button>
+          <br></br>
+          <ul id="myLecturesUl">
           </ul>
 
         </div>
