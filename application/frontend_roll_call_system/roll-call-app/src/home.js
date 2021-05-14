@@ -24,11 +24,13 @@ class home extends Component {
     this.getMyLectures();
     this.getCurrentLectures();
     this.getAttendingStudents();
+    this.beginRegistration();
   }
 
   getClasses() {
     axios.get("http://localhost:4000/api/myclasses")
       .then(result => {
+        console.log("classes", result.data)
         for (var i = 0; i < result.data.length; i++) {
           this.state.classes.push(result.data[i].classname + ", ");
         }
@@ -49,7 +51,7 @@ class home extends Component {
       .then(result => {
         console.log("current lectures: ", result.data)
         for (var i = 0; i < result.data.length; i++) {
-          this.state.currentLectures.push(result.data[i].name);
+          this.state.currentLectures.push("Id: " + result.data[i].id + ", name: " + result.data[i].name);
         }
         this.setState({
           isLoaded: true,
@@ -72,9 +74,7 @@ class home extends Component {
               ", lecture name: " + result.data[i].name +
               ", course: " + result.data[i].course.name + "), ");
           }
-
           $("#myLecturesUl").html(this.state.mylectures);
-
           this.setState({
             isLoaded: false,
           });
@@ -95,7 +95,6 @@ class home extends Component {
   getAttendingStudents() {
     $("#getStudentsBtn").click(() => {
       let lectureIdInput = { "lectureid": $("#lectureIdInput").val() };
-      console.log("lectureidInput", lectureIdInput)
       if (lectureIdInput !== null) {
         axios.post("http://localhost:4000/api/lectureattendence", lectureIdInput) //Have to change endpoint in the future
           .then(result => {
@@ -121,13 +120,15 @@ class home extends Component {
           })
       }
     });
+
     $("#hideStudentsBtn").click(() => {
       $("#attStudentsUL").empty();
+      $("#lectureParticipationRateTag").empty();
     });
   }
 
   getLectureParticipationRate(lectureId) {
-    axios.post("http://localhost:4000/api/lectureparticipationrate", lectureId) //Have to change endpoint in the future
+    axios.post("http://localhost:4000/api/lectureparticipationrate", lectureId)
       .then(result => {
         console.log("lecture participation rate data: ", result.data)
         this.state.lectureParticipationRate = result.data
@@ -143,6 +144,29 @@ class home extends Component {
           error
         });
       })
+  }
+
+  beginRegistration() {
+    $("#getStudentsBtn").click(() => {
+
+      let registrationInput = {
+        "id": $("#lectureRegIdInput").val(),
+        "code": $("#lectureRegCodeInput").val()
+      };
+      axios.post("http://localhost:4000/api/beginregistration", registrationInput)
+      console.log("registrationinput", registrationInput)
+        .then(result => {
+          this.setState({
+            isLoaded: true,
+          });
+        })
+        .catch(error => {
+          this.setState({
+            isLoaded: false,
+            error
+          });
+        })
+    });
   }
 
   handleLogout() {
@@ -196,6 +220,13 @@ class home extends Component {
           <ul>
             {this.state.currentLectures}
           </ul>
+        </div>
+        <div>
+          <input type="text" id="lectureRegIdInput" placeholder="Lecture id to register" />
+          <input type="text" id="lectureRegCodeInput" placeholder="Add register code" />
+        </div>
+        <div>
+          <button>Open attendance</button>
         </div>
         <div id="networkDiv">
           <b>Network:</b>
