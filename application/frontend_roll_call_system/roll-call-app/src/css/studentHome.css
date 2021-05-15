@@ -1,0 +1,13 @@
+
+#homeStudentRollCall {
+    background-color: green;
+    width: 80%;
+}
+
+#logout {
+    color: black;
+}
+
+#excStudentsDiv, #attendingStudentsDiv, #attStudentsUL {
+    overflow-y: auto;
+}

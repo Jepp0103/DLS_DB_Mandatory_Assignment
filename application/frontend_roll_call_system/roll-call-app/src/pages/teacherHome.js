@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import styled from 'styled-components';
-import "./css/home.css";
+import "../css/teacherHome.css";
 import axios from "axios";
 import $ from "jquery";
 
 
 
-class home extends Component {
+class teacherHome extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +48,6 @@ class home extends Component {
   getCurrentLectures() {
     axios.get("http://localhost:4000/api/currentlectures") //Have to change endpoint in the future
       .then(result => {
-        console.log("current lectures: ", result.data)
         for (var i = 0; i < result.data.length; i++) {
           this.state.currentLectures.push("Id: " + result.data[i].id + ", name: " + result.data[i].name);
         }
@@ -160,6 +158,7 @@ class home extends Component {
           .then(result => {
             $("#lectureRegIdInput").val("");
             $("#lectureRegCodeInput").val("");
+            alert("Register code for lecture succesfully added");
             this.setState({
               isLoaded: true,
             });
@@ -186,8 +185,8 @@ class home extends Component {
   render() {
     const { error, isLoaded, classes } = this.state;
     return (
-      <div id="homeStudentRollCall">
-        <h1>School roll call</h1>
+      <div id="homeTeacherRollCall">
+        <h1>School roll call teacher</h1>
         <div id="classDiv">
           <b>Current classes:</b>
           <ul>
@@ -249,4 +248,4 @@ class home extends Component {
 }
 
 
-export default home;
+export default teacherHome;

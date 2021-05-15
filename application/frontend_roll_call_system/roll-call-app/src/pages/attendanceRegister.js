@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import styled from 'styled-components';
 import "./css/home.css";
 import axios from "axios";
 import $ from "jquery";
@@ -28,4 +27,4 @@ class attendanceRegister extends Component {
 }
 
 
-export default home;
+export default attendanceRegister;
