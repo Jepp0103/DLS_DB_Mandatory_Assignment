@@ -34,7 +34,8 @@ public class ClassController {
     @GetMapping("/myclasses")
     public ResponseEntity<?> getTeachersClasses(HttpServletRequest request)  {
         String token = jtu.getCurrentToken(request);
-        Integer classid=jtu.getTeacherIdFromToken(token);
+        Integer classid=jtu.getClassIdFromToken(token);
+        System.out.println(classid);
         if (classid!=null){
             return ResponseEntity.ok(jtu.getClassIdFromToken(token));
         }
