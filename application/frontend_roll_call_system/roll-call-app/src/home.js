@@ -147,25 +147,32 @@ class home extends Component {
   }
 
   beginRegistration() {
-    $("#getStudentsBtn").click(() => {
+    $("#openAttButton").click(() => {
 
       let registrationInput = {
         "id": $("#lectureRegIdInput").val(),
         "code": $("#lectureRegCodeInput").val()
       };
-      axios.post("http://localhost:4000/api/beginregistration", registrationInput)
       console.log("registrationinput", registrationInput)
-        .then(result => {
-          this.setState({
-            isLoaded: true,
-          });
-        })
-        .catch(error => {
-          this.setState({
-            isLoaded: false,
-            error
-          });
-        })
+      let isNum = /^\d+$/.test($("#lectureRegIdInput").val()); //Validating if lecture id input is a number
+      if ($("#lectureRegIdInput").val() != "" && isNum && $("#lectureRegCodeInput").val() != "") {
+        axios.post("http://localhost:4000/api/beginregistration", registrationInput)
+          .then(result => {
+            $("#lectureRegIdInput").val("");
+            $("#lectureRegCodeInput").val("");
+            this.setState({
+              isLoaded: true,
+            });
+          })
+          .catch(error => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+          })
+      } else {
+        alert("Invalid input for lecture id or register code");
+      }
     });
   }
 
@@ -205,16 +212,6 @@ class home extends Component {
           <b>Current course:</b>
 
         </div>
-
-        <div id="myLecturesDiv">
-          <b>All my lectures:</b>
-          <button id="getMyLecturesBtn">Show my lectures</button>
-          <button id="hideMyLecturesBtn">Hide my lectures</button>
-          <br></br>
-          <ul id="myLecturesUl">
-          </ul>
-
-        </div>
         <div id="currentLectureDiv">
           <b>Active lectures:</b>
           <ul>
@@ -222,14 +219,22 @@ class home extends Component {
           </ul>
         </div>
         <div>
-          <input type="text" id="lectureRegIdInput" placeholder="Lecture id to register" />
+          <input type="text" id="lectureRegIdInput" placeholder="Active lecture id to register" />
           <input type="text" id="lectureRegCodeInput" placeholder="Add register code" />
         </div>
         <div>
-          <button>Open attendance</button>
+          <button id="openAttButton">Open attendance</button>
         </div>
         <div id="networkDiv">
           <b>Network:</b>
+        </div>
+        <div id="myLecturesDiv">
+          <b>All my lectures:</b>
+          <button id="getMyLecturesBtn">Show my lectures</button>
+          <button id="hideMyLecturesBtn">Hide my lectures</button>
+          <br></br>
+          <ul id="myLecturesUl">
+          </ul>
         </div>
         <a id="logout"
           href="#!"
