@@ -34,21 +34,20 @@ public class Controller {
         System.out.println( jtu.getStudentIdFromToken(token));
         System.out.println( jtu.getClassIdFromToken(token));
 
-        /*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            boolean isTeacher = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(r -> r.getAuthority().equals("ROLE_TEACHER"));
-            boolean isStudent = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(r -> r.getAuthority().equals("ROLE_STUDENT"));
-            if (isTeacher){
-                session.setAttribute("teacherid",ts.getTeacherIdFromUser(((UserDetails) principal).getUsername()));
-            }
-            else if (isStudent){
-                session.setAttribute("studentid",ss.getStudentIdByUsername(((UserDetails) principal).getUsername()));
-                session.setAttribute("myclass",ss.getClassIdByStudentId((int)(session.getAttribute("studentid"))));
-            }
-        }*/
         return "Home page";
+    }
+    @GetMapping("/getrole")
+    public String getRole(HttpServletRequest request)  {
+        String token = jtu.getCurrentToken(request);
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        if (teacherid!=null){
+            return "teacher";
+        }
+        Integer studentid=jtu.getStudentIdFromToken(token);
+        if(studentid!=null){
+            return "student";
+        }
+        return null;
     }
     @GetMapping("/resetpasswords")
     public String getHomePage() {
