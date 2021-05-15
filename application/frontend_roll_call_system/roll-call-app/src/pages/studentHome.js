@@ -1,7 +1,15 @@
 import React, { Component } from "react";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams
+} from "react-router-dom";
 import "../css/studentHome.css";
 import axios from "axios";
 import $ from "jquery";
+
 
 
 
@@ -46,11 +54,15 @@ class studentHome extends Component {
     }
 
     getCurrentLectures() {
-        axios.get("http://localhost:4000/api/currentlectures") //Have to change endpoint in the future
+        axios.get("http://localhost:4000/api/currentlectures")
             .then(result => {
+                let html = '<Router><React.Fragment><b>Active lectures:</b><ul id="currentLecturesUl">';
                 for (var i = 0; i < result.data.length; i++) {
-                    this.state.currentLectures.push("Id: " + result.data[i].id + ", name: " + result.data[i].name);
+                    html += '<li><Link to = "/' + result.data[i].id + '">Link</Link></li>';
                 }
+                html += '</ul><Switch><Route path="/:id" component={Child}/></Switch></React.Fragment></Router>';
+                alert(html)
+                $("#currentLectureDiv").html(html);
                 this.setState({
                     isLoaded: true,
                 });
@@ -60,12 +72,12 @@ class studentHome extends Component {
                     isLoaded: false,
                     error
                 });
-            })
+            });
     }
 
     getMyLectures() {
         $("#getMyLecturesBtn").click(() => {
-            axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
+            axios.get("http://localhost:4000/api/mylectures")
                 .then(result => {
                     for (var i = 0; i < result.data.length; i++) {
                         this.state.mylectures.push("(Lecture id: " + result.data[i].id +
@@ -180,10 +192,10 @@ class studentHome extends Component {
         window.location.href = "/";
     }
 
-
-
     render() {
         const { error, isLoaded, classes } = this.state;
+        let cr = this.getCurrentLectures();
+        alert(cr)
         return (
             <div id="homeStudentRollCall">
                 <h1>School roll call student</h1>
@@ -205,18 +217,14 @@ class studentHome extends Component {
                 </div>
                 <div id="gpsDiv">
                     <b>GPS:</b>
-
                 </div  >
                 <div id="currentCourseDiv">
                     <b>Current course:</b>
-
                 </div>
                 <div id="currentLectureDiv">
-                    <b>Active lectures:</b>
-                    <ul>
-                        {this.state.currentLectures}
-                    </ul>
-                </div>
+                    {cr}
+                    {/* <Router><React.Fragment><b>Active lectures:</b><ul id="currentLecturesUl"><li><Link to="/15">Link</Link></li></ul><Switch><Route path="/:id" component={Child} /></Switch></React.Fragment></Router> */}
+                </div >
                 <div>
                     <input type="text" id="lectureRegIdInput" placeholder="Active lecture id to register" />
                     <input type="text" id="lectureRegCodeInput" placeholder="Add register code" />
@@ -242,10 +250,20 @@ class studentHome extends Component {
                     <i className="ti-power-off mR-10"></i>
                     <span>Logout</span>
                 </a>
+
             </div >
         );
     }
 }
+
+const Child = ({ match }) => (
+    // We can use the `useParams` hook here to access
+    // the dynamic pieces of the URL.
+    <div>
+        <h3>ID: {match.params.id}​​​​​</h3>
+    </div>
+);
+
 
 
 export default studentHome;

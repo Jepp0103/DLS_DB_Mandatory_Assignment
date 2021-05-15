@@ -180,8 +180,6 @@ class teacherHome extends Component {
     window.location.href = "/";
   }
 
-
-
   render() {
     const { error, isLoaded, classes } = this.state;
     return (
