@@ -40,7 +40,6 @@ public class Class {
         this.name = name;
     }
 
-    @JsonIgnore
     public int getFaculty_id() {
         return faculty_id;
     }

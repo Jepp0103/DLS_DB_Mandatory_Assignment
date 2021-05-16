@@ -12,7 +12,7 @@
     overflow-y: auto;
 }
 .row {
-    height:150px; /*set height*/
+    height:250px; /*set height*/
     border:2px solid blue;
 	border-radius: 10px;
     width:100%;

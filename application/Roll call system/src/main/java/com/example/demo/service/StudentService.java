@@ -52,13 +52,9 @@ public class StudentService {
     }
 
     public boolean studentWithinRange(int student, int teacher, double latitude, double longitude) {
-        if (sr.studentWithinRange(student,teacher,latitude,longitude)=='y'){ //fifth parameter is irrelevant atm.
-            return true;
-        }
-        return false;
+        return sr.studentWithinRange(student,teacher,latitude,longitude)=='y';
     }
     public boolean correctNetwork(int studentId, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId) {
-        System.out.println(nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId));
         return nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId) == 'y';
     }
     public StudentStats getStudentStats(int studentid, int classid){

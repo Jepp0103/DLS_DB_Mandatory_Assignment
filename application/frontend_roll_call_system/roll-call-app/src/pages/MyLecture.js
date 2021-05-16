@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import $ from "jquery";
-
+import {BrowserRouter as Router} from "react-router-dom";
 class MyLecture extends Component {
   constructor(props) {
     super(props);
@@ -12,17 +12,27 @@ class MyLecture extends Component {
 		lectureid: props.match.params.id,
 		currentLecture: ""
     }
+
   }
-	componentDidMount() {
+	componentDidMount() {	
+
         this.getLecture();
 		this.beginRegistration();
 	}
-   getLecture() {
+	componentDidUpdate(prevProps) {
+		if (this.props.match.params.id!== prevProps.match.params.id) {
+			this.state.lectureid=this.props.match.params.id;
+			this.getLecture();
+		
+		}
+	}
+
+   getLecture() {console.log("*"+this.state.lectureid);
 	   let data = { "lectureid": this.state.lectureid };
          axios.post("http://localhost:4000/api/getlecture", data)
             .then(result => {
                 this.state.currentLecture = result.data;
-				console.log(result.data.teachers[0]);
+				console.log(result.data);
                 this.setState({
                     isLoaded: true,
                 });
@@ -44,7 +54,7 @@ class MyLecture extends Component {
 				"teachingnetworkid":1,
 				"latitude":55.70392118,
 				"longitude":12.53752105,
-				"teacherid":1,
+				"teacherid":this.state.currentLecture.teachers[0].id,
 				"facultyid":1
 
 				
@@ -73,6 +83,8 @@ class MyLecture extends Component {
                 alert("Invalid input for lecture id or register code");
             }
         });
+
+
     }
   render() {
     const { match, location} = this.props;
