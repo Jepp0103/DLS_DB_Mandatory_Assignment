@@ -1,0 +1,84 @@
+use roll_call_mongo_db
+
+#Create new table (collection)
+db.createCollection('student')
+
+#Insert one student
+db.student.insert({
+	forename: 'Lars',
+	surname: 'Larsen',
+	email_address: 'lars@mail.com',
+	phone_number: '12345678'
+})
+
+db.student.insert({
+	forename: 'Carl',
+	surname: 'Carlsen',
+	email_address: 'carl@mail.com',
+	phone_number: '87654321'
+})
+
+db.student.insert({
+	forename: 'Mads',
+	surname: 'Madsen',
+	email_address: 'mads@mail.com',
+	phone_number: '29292929'
+})
+
+#Insert many students
+db.student.insertMany([
+{
+	forename: 'Georg',
+	surname: 'Jensen',
+	email_address: 'georg@mail.com',
+	phone_number: '12121212'
+},
+{
+	forename: 'Poul',
+	surname: 'Poulsen',
+	email_address: 'poul@mail.com',
+	phone_number: '13131313'
+},
+{
+	forename: 'Jason',
+	surname: 'Derulo',
+	email_address: 'jason@mail.com',
+	phone_number: '23232323'
+}
+])
+
+db.student.insertMany([
+{
+	forename: 'Fred',
+	surname: 'Jensen',
+	email_address: 'fred@mail.com',
+	phone_number: '15151515',
+	network_id: 1
+},
+{
+	forename: 'Soul',
+	surname: 'Soulsen',
+	email_address: 'poul@mail.com',
+	phone_number: '14141414',
+	network_id: 1
+},
+{
+	forename: 'Mason',
+	surname: 'Derulo',
+	email_address: 'mason@mail.com',
+	phone_number: '25252525',
+	network_id: 1
+}
+])
+
+#Query all students
+db.student.find()
+
+#Easy read
+db.student.find().pretty()
+
+#Similar to where clause sql
+db.student.find({network_id: 1}).pretty()
+
+#Sort collection in acsending order
+db.student.find().sort({forename : 1}).pretty()
