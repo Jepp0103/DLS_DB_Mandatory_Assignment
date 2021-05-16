@@ -107,10 +107,14 @@ public class LectureController {
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-
     @PostMapping("/addlecture")
     public Lecture addLecture(@RequestBody Lecture lecture)  {
         return lectureRepository.save(lecture);
+    }
+
+    @PostMapping("/getlecture")
+    public Lecture getLecture(@RequestBody Map<String, Integer> body) {
+        return lectureRepository.findById((int)body.get("lectureid"));
     }
 
 

@@ -9,6 +9,7 @@ import {
 import "../css/studentHome.css";
 import axios from "axios";
 import $ from "jquery";
+import MyLecture from "../pages/MyLecture.js";
 
 
 
@@ -18,11 +19,11 @@ class studentHome extends Component {
         super(props);
         this.state = {
             isLoaded: false,
-            classes: [],
+            classes: "",
             currentLectures: [],
             mylectures: [],
             attendingStudents: [],
-            lectureParticipationRate: ""
+            lectureParticipationRate: "",
         }
     }
 
@@ -31,16 +32,14 @@ class studentHome extends Component {
         this.getMyLectures();
         this.getCurrentLectures();
         this.getAttendingStudents();
-        this.beginRegistration();
     }
 
     getClasses() {
         axios.get("http://localhost:4000/api/myclasses")
             .then(result => {
                 console.log("classes", result.data)
-                for (var i = 0; i < result.data.length; i++) {
-                    this.state.classes.push(result.data[i].classname + ", ");
-                }
+                    this.state.classes=result.data.name;
+                
                 this.setState({
                     isLoaded: false,
                 });
@@ -56,14 +55,12 @@ class studentHome extends Component {
     getCurrentLectures() {
         axios.get("http://localhost:4000/api/currentlectures")
             .then(result => {
-                let html = '<Router><React.Fragment><b>Active lectures:</b><ul id="currentLecturesUl">';
                 for (var i = 0; i < result.data.length; i++) {
-                    html += '<li><Link to = "/' + result.data[i].id + '">Link</Link></li>';
+                    //lectures += '<li><Link to = "/' + result.data[i].id + '">Link</Link></li>';
                 }
-                html += '</ul><Switch><Route path="/:id" component={Child}/></Switch></React.Fragment></Router>';
-                alert(html)
-                $("#currentLectureDiv").html(html);
-                this.setState({
+              //  $("#currentLectureDiv").html(html);
+                this.state.currentLectures=result;
+				this.setState({
                     isLoaded: true,
                 });
             })
@@ -156,36 +153,6 @@ class studentHome extends Component {
             })
     }
 
-    beginRegistration() {
-        $("#regAttButton").click(() => {
-
-            let registrationInput = {
-                "id": $("#lectureRegIdInput").val(),
-                "code": $("#lectureRegCodeInput").val()
-            };
-            console.log("registrationinput", registrationInput)
-            let isNum = /^\d+$/.test($("#lectureRegIdInput").val()); //Validating if lecture id input is a number
-            if ($("#lectureRegIdInput").val() != "" && isNum && $("#lectureRegCodeInput").val() != "") {
-                axios.post("http://localhost:4000/api/beginregistration", registrationInput)
-                    .then(result => {
-                        $("#lectureRegIdInput").val("");
-                        $("#lectureRegCodeInput").val("");
-                        alert("Register code for lecture succesfully added");
-                        this.setState({
-                            isLoaded: true,
-                        });
-                    })
-                    .catch(error => {
-                        this.setState({
-                            isLoaded: false,
-                            error
-                        });
-                    })
-            } else {
-                alert("Invalid input for lecture id or register code");
-            }
-        });
-    }
 
     handleLogout() {
         localStorage.clear();
@@ -194,43 +161,67 @@ class studentHome extends Component {
 
     render() {
         const { error, isLoaded, classes } = this.state;
-        let cr = this.getCurrentLectures();
-        alert(cr)
+		if (isLoaded){
         return (
-            <div id="homeStudentRollCall">
+            <div id="homeStudentRollCall" class="container">
+			<Router>
+
                 <h1>School roll call student</h1>
-                <div id="classDiv">
-                    <b>Current classes:</b>
-                    <ul>
-                        {this.state.classes}
-                    </ul>
-                </div>
-                <div id="attendingStudentsDiv">
-                    <b>Attending students for specific lecture:</b>
-                    <input type="text" id="lectureIdInput" placeholder="Write id of lecture" />
-                    <button id="getStudentsBtn">Get students</button>
-                    <button id="hideStudentsBtn">Hide students</button>
-                    <br></br>
-                    <b id="lectureParticipationRateTag"></b>
-                    <ul id="attStudentsUL">
-                    </ul>
-                </div>
-                <div id="gpsDiv">
-                    <b>GPS:</b>
-                </div  >
-                <div id="currentCourseDiv">
+				<div class="row">
+					<div id="classDiv" class="col3">
+						<b>My class:</b>
+						<p>
+							{this.state.classes}
+						</p>
+					</div>
+					<div id="currentLectureDiv" class="col3">
+							<React.Fragment>
+								<b>Active lectures:</b><br/>
+										
+									{this.state.currentLectures.data.map(lecture => (
+										<Link 
+										  to={{
+											pathname: `/currentlectures/${lecture.id}`, 
+											query:{id: `${lecture.id}`, name: `${lecture.name}`}
+										  }}>
+										  {lecture.name}
+										</Link>	
+										
+									))}
+																	
+
+							</React.Fragment>
+					</div >
+					<div id="gpsDiv" class="col3">
+						<b>GPS:</b>
+					</div  >
+				</div>
+			
+				<Switch>
+					<Route path="/currentlectures/:id" component={MyLecture}/>
+				</Switch>
+				<a id="logout"
+                    href="#!"
+                    onClick={this.handleLogout}
+                    className="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                    <i className="ti-power-off mR-10"></i>
+                    <span>Logout</span>
+                </a>
+			</Router>
+
+            </div >
+					/*<div id="attendingStudentsDiv" class="col3">
+						<b>Attending students for specific lecture:</b>
+						<input type="text" id="lectureIdInput" placeholder="Write id of lecture" />
+						<button id="getStudentsBtn">Get students</button>
+						<button id="hideStudentsBtn">Hide students</button>
+						<br></br>
+						<b id="lectureParticipationRateTag"></b>
+						<ul id="attStudentsUL">
+						</ul>
+					</div>
+					                <div id="currentCourseDiv">
                     <b>Current course:</b>
-                </div>
-                <div id="currentLectureDiv">
-                    {cr}
-                    {/* <Router><React.Fragment><b>Active lectures:</b><ul id="currentLecturesUl"><li><Link to="/15">Link</Link></li></ul><Switch><Route path="/:id" component={Child} /></Switch></React.Fragment></Router> */}
-                </div >
-                <div>
-                    <input type="text" id="lectureRegIdInput" placeholder="Active lecture id to register" />
-                    <input type="text" id="lectureRegCodeInput" placeholder="Add register code" />
-                </div>
-                <div>
-                    <button id="regAttButton">Register attendance</button>
                 </div>
                 <div id="networkDiv">
                     <b>Network:</b>
@@ -242,27 +233,14 @@ class studentHome extends Component {
                     <br></br>
                     <ul id="myLecturesUl">
                     </ul>
-                </div>
-                <a id="logout"
-                    href="#!"
-                    onClick={this.handleLogout}
-                    className="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                    <i className="ti-power-off mR-10"></i>
-                    <span>Logout</span>
-                </a>
+                </div>*/
 
-            </div >
+			
         );
+		}else{return "";}
     }
 }
 
-const Child = ({ match }) => (
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
-    <div>
-        <h3>ID: {match.params.id}​​​​​</h3>
-    </div>
-);
 
 
 

@@ -5,6 +5,7 @@ import interceptors from "./interceptors";
 import login from "./pages/login";
 import teacherHome from "./pages/teacherHome";
 import studentHome from "./pages/studentHome";
+import MyLecture from "./pages/studentHome";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route exact path="/" component={login} />
           <Route exact path="/teacherhome" component={teacherHome} />
           <Route exact path="/studenthome" component={studentHome} />
+		  <Route exact path="/currentlectures/:id" component={MyLecture} />
         </BrowserRouter>
       </header>
     </div>

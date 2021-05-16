@@ -11,3 +11,45 @@
 #excStudentsDiv, #attendingStudentsDiv, #attStudentsUL {
     overflow-y: auto;
 }
+.row {
+    height:150px; /*set height*/
+    border:2px solid blue;
+	border-radius: 10px;
+    width:100%;
+    margin-bottom:10px;
+    padding:10px;
+}
+* {
+    box-sizing: border-box;
+}
+.container {
+    width:100%;
+    max-width:600px;
+    border:2px solid black;
+    margin: 0 auto;
+    padding:10px;
+}
+.col1 {
+    border:2px solid red;
+	border-radius: 10px;
+    width:100%;
+    height:100%;    
+}
+.col2 {
+    border:2px solid green;
+	border-radius: 10px;
+    width:49%;
+    float:left;
+    height:100%;
+    margin-right:2%;    
+}
+.col2:last-child {margin-right:0;  }
+.col3 {
+    border:2px solid brown;
+	border-radius: 10px;
+    width:32%;
+    float:left;
+    height:100%;
+    margin-right:2%;    
+}
+.col3:last-child {margin-right:0;  }
