@@ -1,84 +1,195 @@
+//If db exists and is selected and needs to be dropped
+db.dropDatabase()
+
+//Dropping tables
+db.student.drop()
+
 use roll_call_mongo_db
 
-#Create new table (collection)
+//Create new table (collection)
 db.createCollection('student')
 
-#Insert one student
-db.student.insert({
-	forename: 'Lars',
-	surname: 'Larsen',
-	email_address: 'lars@mail.com',
-	phone_number: '12345678'
-})
-
-db.student.insert({
-	forename: 'Carl',
-	surname: 'Carlsen',
-	email_address: 'carl@mail.com',
-	phone_number: '87654321'
-})
-
-db.student.insert({
-	forename: 'Mads',
-	surname: 'Madsen',
-	email_address: 'mads@mail.com',
-	phone_number: '29292929'
-})
-
-#Insert many students
+//Insert many students
 db.student.insertMany([
-{
-	forename: 'Georg',
-	surname: 'Jensen',
-	email_address: 'georg@mail.com',
-	phone_number: '12121212'
-},
-{
-	forename: 'Poul',
-	surname: 'Poulsen',
-	email_address: 'poul@mail.com',
-	phone_number: '13131313'
-},
-{
-	forename: 'Jason',
-	surname: 'Derulo',
-	email_address: 'jason@mail.com',
-	phone_number: '23232323'
-}
+    {
+        forename: 'Lars',
+        surname: 'Larsen',
+        email_address: 'lars@mail.com',
+        phone_number: '12345678',
+        gps_coordinates: {
+            longitude: '55.70392118',
+            latitude: '12.537521047'
+        },
+        network: {
+            ssid: "KEANET",
+            ip_address: "193.29.107.196",
+            faculty: "KEA - Københavns Erhvervsakademi"
+        },
+        class: {
+            name: 'SD21w1',
+            faculty: "KEA - Københavns Erhvervsakademi"
+        }
+    },
+    {
+        forename: 'Carl',
+        surname: 'Carlsen',
+        email_address: 'carl@mail.com',
+        phone_number: '87654321',
+        gps_coordinates: {
+            longitude: '55.70392118',
+            latitude: '12.537521047'
+        },
+        network: {
+            ssid: "KEANET",
+            ip_address: "193.29.107.196",
+            faculty: "KEA - Københavns Erhvervsakademi"
+        },
+        class: {
+            name: 'SD21w2',
+            faculty: "KEA - Københavns Erhvervsakademi"
+        }
+    },
+    {
+        forename: 'Mads',
+        surname: 'Madsen',
+        email_address: 'mads@mail.com',
+        phone_number: '29292929',
+        gps_coordinates: {
+            longitude: '60.70392118',
+            latitude: '20.537521047'
+        },
+        network: {
+            ssid: "DTU NET",
+            ip_address: "193.29.109.198",
+            faculty: "DTU - Danmarks Tekniske Universitet"
+        },
+        class: {
+            name: 'DTU_Class_2',
+            faculty: "DTU - Danmarks Tekniske Universitet"
+        }
+    },
+    {
+        forename: 'Georg',
+        surname: 'Jensen',
+        email_address: 'georg@mail.com',
+        phone_number: '12121212',
+        gps_coordinates: {
+            longitude: '60.70392118',
+            latitude: '20.537521047'
+        },
+        network: {
+            ssid: "DTU NET",
+            ip_address: "193.29.109.198",
+            faculty: "DTU - Danmarks Tekniske Universitet"
+        },
+        class: {
+            name: 'DTU_Class_2',
+            faculty: "DTU - Danmarks Tekniske Universitet"
+        }
+    },
+    {
+        forename: 'Poul',
+        surname: 'Poulsen',
+        email_address: 'poul@mail.com',
+        phone_number: '13131313',
+        gps_coordinates: {
+            longitude: '65.70392118',
+            latitude: '16.537521047'
+        },
+        network: {
+            ssid: "CBS NET",
+            ip_address: "193.29.107.199",
+            faculty: "CBS - Copenhagen Business School"
+        },
+        class: {
+            name: 'CBS_Class_1',
+            faculty: "CBS - Copenhagen Business School"
+        }
+    },
+    {
+        forename: 'Jason',
+        surname: 'Derulo',
+        email_address: 'jason@mail.com',
+        phone_number: '23232323',
+        gps_coordinates: {
+            longitude: '65.70392118',
+            latitude: '16.537521047'
+        },
+        network: {
+            ssid: "CBS NET",
+            ip_address: "193.29.107.199",
+            faculty: "CBS - Copenhagen Business School"
+        },
+        class: {
+            name: 'CBS_Class_1',
+            faculty: "CBS - Copenhagen Business School"
+        }
+    },
+    {
+        forename: 'Fred',
+        surname: 'Jensen',
+        email_address: 'fred@mail.com',
+        phone_number: '15151515',
+        gps_coordinates: {
+            longitude: '65.70392118',
+            latitude: '16.537521047'
+        },
+        network: {
+            ssid: "CBS NET",
+            ip_address: "193.29.107.199",
+            faculty: "CBS - Copenhagen Business School"
+        },
+        class: {
+            name: 'CBS_Class_1',
+            faculty: "CBS - Copenhagen Business School"
+        }
+    },
+    {
+        forename: 'Soul',
+        surname: 'Soulsen',
+        email_address: 'soul@mail.com',
+        phone_number: '14141414',
+        gps_coordinates: {
+            longitude: '65.70392118',
+            latitude: '16.537521047'
+        },
+        network: {
+            ssid: "CBS NET",
+            ip_address: "193.29.107.199",
+            faculty: "CBS - Copenhagen Business School"
+        },
+        class: {
+            name: 'CBS_Class_2',
+            faculty: "CBS - Copenhagen Business School"
+        }
+    },
+    {
+        forename: 'Mason',
+        surname: 'Derulo',
+        email_address: 'mason@mail.com',
+        phone_number: '25252525',
+        gps_coordinates: {
+            longitude: '70.70392118',
+            latitude: '20.537521047'
+        },
+        network: {
+            ssid: "KU NET",
+            ip_address: "193.29.107.197",
+            faculty: "KU - Københavns Universitet"
+        },
+        class: {
+            name: 'KU_Class_1',
+            faculty: "KU - Københavns Universitet"
+        }
+    }
 ])
 
-db.student.insertMany([
-{
-	forename: 'Fred',
-	surname: 'Jensen',
-	email_address: 'fred@mail.com',
-	phone_number: '15151515',
-	network_id: 1
-},
-{
-	forename: 'Soul',
-	surname: 'Soulsen',
-	email_address: 'poul@mail.com',
-	phone_number: '14141414',
-	network_id: 1
-},
-{
-	forename: 'Mason',
-	surname: 'Derulo',
-	email_address: 'mason@mail.com',
-	phone_number: '25252525',
-	network_id: 1
-}
-])
 
-#Query all students
+//Query all students
 db.student.find()
 
-#Easy read
-db.student.find().pretty()
+//Similar to where clause sql
+db.student.find({'class.name': 'CBS_Class_1' })
 
-#Similar to where clause sql
-db.student.find({network_id: 1}).pretty()
-
-#Sort collection in acsending order
-db.student.find().sort({forename : 1}).pretty()
+//Sort collection in acsending order
+db.student.find().sort({forename : 1})
