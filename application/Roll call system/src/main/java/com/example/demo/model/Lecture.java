@@ -150,7 +150,7 @@ public class Lecture {
         this.length = length;
     }
 
-    @JsonProperty
+    @JsonIgnore
     public String getCode() {
         return code;
     }

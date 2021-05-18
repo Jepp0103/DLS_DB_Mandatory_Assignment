@@ -24,6 +24,9 @@ class studentHome extends Component {
             mylectures: [],
             attendingStudents: [],
             lectureParticipationRate: "",
+			classLoaded: false,
+            lecturesLoaded: false,
+
         }
     }
 
@@ -35,39 +38,40 @@ class studentHome extends Component {
     }
 
 
-    getClasses() {
+    getClasses() {		
         axios.get("http://localhost:4000/api/myclasses")
-            .then(result => {
-                console.log("classes", result.data)
-                    this.state.classes=result.data.name;
-                
-                this.setState({
-                    isLoaded: false,
+            .then(result => {	
+				this.state.classes=result.data;
+				
+				this.setState({
+                    classLoaded: true,
                 });
+             
             })
             .catch(error => {
+				console.log(error);
                 this.setState({
-                    isLoaded: false,
-                    error
+                    classLoaded: false,
                 });
             })
     }
 
-    getCurrentLectures() {
+    getCurrentLectures() {		
+
         axios.get("http://localhost:4000/api/currentlectures")
             .then(result => {
-                for (var i = 0; i < result.data.length; i++) {
-                    //lectures += '<li><Link to = "/' + result.data[i].id + '">Link</Link></li>';
-                }
+
               //  $("#currentLectureDiv").html(html);
-                this.state.currentLectures=result;
+                this.state.currentLectures=result.data;
+				console.log(this.state.currentLectures);
 				this.setState({
-                    isLoaded: true,
+                    lecturesLoaded: true,
                 });
             })
             .catch(error => {
+				console.log(error);
                 this.setState({
-                    isLoaded: false,
+                    lecturesLoaded: true,
                     error
                 });
             });
@@ -82,16 +86,10 @@ class studentHome extends Component {
                             ", lecture name: " + result.data[i].name +
                             ", course: " + result.data[i].course.name + "), ");
                     }
-                    $("#myLecturesUl").html(this.state.mylectures);
-                    this.setState({
-                        isLoaded: false,
-                    });
+                    $("#myLecturesUl").html(this.state.mylectures);            
                 })
                 .catch(error => {
-                    this.setState({
-                        isLoaded: false,
-                        error
-                    });
+					console.log(error);
                 });
         });
         $("#hideMyLecturesBtn").click(() => {
@@ -116,20 +114,16 @@ class studentHome extends Component {
                         //Displaying participation rate for a lecture
                         this.getLectureParticipationRate(lectureIdInput);
 
-                        this.setState({
-                            isLoaded: true,
-                        });
+                    
                     })
                     .catch(error => {
-                        this.setState({
-                            isLoaded: false,
-                            error
-                        });
+						console.log(error);
+
                     })
             }
         });
 
-        $("#hideStudentsBtn").click(() => {
+        $("#hideStudentsBtn").click(() => {alert();
             $("#attStudentsUL").empty();
             $("#lectureParticipationRateTag").empty();
         });
@@ -148,7 +142,7 @@ class studentHome extends Component {
             })
             .catch(error => {
                 this.setState({
-                    isLoaded: false,
+                    isLoaded: true,
                     error
                 });
             })
@@ -161,30 +155,30 @@ class studentHome extends Component {
     }
 
     render() {
-        const { error, isLoaded, classes } = this.state;
-		if (isLoaded){
+        const { error, isLoaded,lecturesLoaded,classLoaded } = this.state;
+		
+		if (lecturesLoaded && classLoaded){
         return (
             <div id="homeStudentRollCall" class="container">
-			<Router>
 
                 <h1>School roll call student</h1>
 				<div class="row">
 					<div id="classDiv" class="col3">
 						<b>My class:</b>
 						<p>
-							{this.state.classes}
+							{this.state.classes.name}
 						</p>
 					</div>
 					<div id="currentLectureDiv" class="col3">
 							<React.Fragment>
 								<b>Active lectures:</b><br/>
 										
-									{this.state.currentLectures.data.map(lecture => (
+									{this.state.currentLectures.map(lecture => (
 										<div>
 										<Link 
 										  to={{
 											pathname: `/currentlectures/${lecture.id}`, 
-											query:{id: `${lecture.id}`, name: `${lecture.name}`}
+											query:{id: `${lecture.id}`, name: `${lecture.name}`, myclass: `${lecture.classes}`}
 										  }}>
 										  {lecture.name}
 										</Link>
@@ -199,18 +193,18 @@ class studentHome extends Component {
 						<b>GPS:</b>
 					</div  >
 				</div>
-			
-				<Switch>
-					<Route exact path="/currentlectures/:id" component={MyLecture}/>
-				</Switch>
+				<Router>
+					<Switch>
+						<Route exact path="/currentlectures/:id" component={MyLecture}/>
+					</Switch>
+				</Router>
 				<a id="logout"
-                    href="#!"
-                    onClick={this.handleLogout}
-                    className="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                    <i className="ti-power-off mR-10"></i>
-                    <span>Logout</span>
-                </a>
-			</Router>
+					 href="#!"
+					onClick={this.handleLogout}
+					className="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+					<i className="ti-power-off mR-10"></i>
+					<span>Logout</span>
+				</a>
 
             </div >
 					/*<div id="attendingStudentsDiv" class="col3">

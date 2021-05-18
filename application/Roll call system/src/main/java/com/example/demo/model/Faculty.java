@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
@@ -18,8 +16,9 @@ public class Faculty {
     private int id;
     @Column(name="name")
     private String name;
+    @OneToMany(mappedBy="faculty",fetch = FetchType.LAZY)
+    private Set<Network> networks;
 
-    @JsonIgnore
     public int getId() {
         return id;
     }
@@ -28,12 +27,19 @@ public class Faculty {
         this.id = id;
     }
 
-    @JsonProperty
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Network> getNetworks() {
+        return networks;
+    }
+
+    public void setNetworks(Set<Network> networks) {
+        this.networks = networks;
     }
 }
