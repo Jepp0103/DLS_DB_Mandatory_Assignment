@@ -1,15 +1,20 @@
 //If db exists and is selected and needs to be dropped
 db.dropDatabase()
+use roll_call_mongo_db
+
 
 //Dropping tables
 db.student.drop()
+db.lecture.drop()
+db.teacher.drop()
 
-use roll_call_mongo_db
 
 //Create new table (collection)
 db.createCollection('student')
+db.createCollection('lecture')
+db.createCollection('teacher')
 
-//Insert many students
+//Students
 db.student.insertMany([
     {
         forename: 'Lars',
@@ -21,13 +26,13 @@ db.student.insertMany([
             latitude: '12.537521047'
         },
         network: {
-            ssid: "KEANET",
-            ip_address: "193.29.107.196",
-            faculty: "KEA - Københavns Erhvervsakademi"
+            ssid: 'KEANET',
+            ip_address: '193.29.107.196',
+            faculty: 'KEA - Københavns Erhvervsakademi'
         },
         class: {
             name: 'SD21w1',
-            faculty: "KEA - Københavns Erhvervsakademi"
+            faculty: 'KEA - Københavns Erhvervsakademi'
         }
     },
     {
@@ -40,13 +45,13 @@ db.student.insertMany([
             latitude: '12.537521047'
         },
         network: {
-            ssid: "KEANET",
-            ip_address: "193.29.107.196",
-            faculty: "KEA - Københavns Erhvervsakademi"
+            ssid: 'KEANET',
+            ip_address: '193.29.107.196',
+            faculty: 'KEA - Københavns Erhvervsakademi'
         },
         class: {
             name: 'SD21w2',
-            faculty: "KEA - Københavns Erhvervsakademi"
+            faculty: 'KEA - Københavns Erhvervsakademi'
         }
     },
     {
@@ -59,13 +64,13 @@ db.student.insertMany([
             latitude: '20.537521047'
         },
         network: {
-            ssid: "DTU NET",
-            ip_address: "193.29.109.198",
-            faculty: "DTU - Danmarks Tekniske Universitet"
+            ssid: 'DTU NET',
+            ip_address: '193.29.109.198',
+            faculty: 'DTU - Danmarks Tekniske Universitet'
         },
         class: {
             name: 'DTU_Class_2',
-            faculty: "DTU - Danmarks Tekniske Universitet"
+            faculty: 'DTU - Danmarks Tekniske Universitet'
         }
     },
     {
@@ -78,13 +83,13 @@ db.student.insertMany([
             latitude: '20.537521047'
         },
         network: {
-            ssid: "DTU NET",
-            ip_address: "193.29.109.198",
-            faculty: "DTU - Danmarks Tekniske Universitet"
+            ssid: 'DTU NET',
+            ip_address: '193.29.109.198',
+            faculty: 'DTU - Danmarks Tekniske Universitet'
         },
         class: {
             name: 'DTU_Class_2',
-            faculty: "DTU - Danmarks Tekniske Universitet"
+            faculty: 'DTU - Danmarks Tekniske Universitet'
         }
     },
     {
@@ -97,13 +102,13 @@ db.student.insertMany([
             latitude: '16.537521047'
         },
         network: {
-            ssid: "CBS NET",
-            ip_address: "193.29.107.199",
-            faculty: "CBS - Copenhagen Business School"
+            ssid: 'CBS NET',
+            ip_address: '193.29.107.199',
+            faculty: 'CBS - Copenhagen Business School'
         },
         class: {
             name: 'CBS_Class_1',
-            faculty: "CBS - Copenhagen Business School"
+            faculty: 'CBS - Copenhagen Business School'
         }
     },
     {
@@ -116,13 +121,13 @@ db.student.insertMany([
             latitude: '16.537521047'
         },
         network: {
-            ssid: "CBS NET",
-            ip_address: "193.29.107.199",
-            faculty: "CBS - Copenhagen Business School"
+            ssid: 'CBS NET',
+            ip_address: '193.29.107.199',
+            faculty: 'CBS - Copenhagen Business School'
         },
         class: {
             name: 'CBS_Class_1',
-            faculty: "CBS - Copenhagen Business School"
+            faculty: 'CBS - Copenhagen Business School'
         }
     },
     {
@@ -135,13 +140,13 @@ db.student.insertMany([
             latitude: '16.537521047'
         },
         network: {
-            ssid: "CBS NET",
-            ip_address: "193.29.107.199",
-            faculty: "CBS - Copenhagen Business School"
+            ssid: 'CBS NET',
+            ip_address: '193.29.107.199',
+            faculty: 'CBS - Copenhagen Business School'
         },
         class: {
             name: 'CBS_Class_1',
-            faculty: "CBS - Copenhagen Business School"
+            faculty: 'CBS - Copenhagen Business School'
         }
     },
     {
@@ -154,13 +159,13 @@ db.student.insertMany([
             latitude: '16.537521047'
         },
         network: {
-            ssid: "CBS NET",
-            ip_address: "193.29.107.199",
-            faculty: "CBS - Copenhagen Business School"
+            ssid: 'CBS NET',
+            ip_address: '193.29.107.199',
+            faculty: 'CBS - Copenhagen Business School'
         },
         class: {
             name: 'CBS_Class_2',
-            faculty: "CBS - Copenhagen Business School"
+            faculty: 'CBS - Copenhagen Business School'
         }
     },
     {
@@ -173,20 +178,220 @@ db.student.insertMany([
             latitude: '20.537521047'
         },
         network: {
-            ssid: "KU NET",
-            ip_address: "193.29.107.197",
-            faculty: "KU - Københavns Universitet"
+            ssid: 'KU NET',
+            ip_address: '193.29.107.197',
+            faculty: 'KU - Københavns Universitet'
         },
         class: {
             name: 'KU_Class_1',
-            faculty: "KU - Københavns Universitet"
+            faculty: 'KU - Københavns Universitet'
         }
     }
+])
+
+//Lectures
+db.lecture.insertMany([
+    {
+        name: 'DB Lecture 1',
+        date: '2021-03-15 08:15:00',
+        time_start: '08:15:00',
+        time_end: '13:30:00',
+        time_zone: 0,
+        length: 0,
+        code: "abcde",
+        course: {
+            name: 'Databases for developers',
+            ects: 10
+        },
+        classroom: {
+            campus: {
+                address: {
+                    street_name: 'Lygten',
+                    street_number: 37,
+                    registred_on: '2021-02-23 20:02:21.550',
+                    additional_details: 'Awesome campus',
+                    city: {
+                        zip_code: 2200,
+                        city: "Copenhagen N"
+                    }
+                },
+                faculty: 'KEA - Københavns Erhvervsakademi'
+            },
+            name: 'B234',
+            is_available: 0
+        },
+        class: {
+            name: 'SD21w2',
+            faculty: 'KEA - Københavns Erhvervsakademi'
+        }
+    },
+    {
+        name: 'DB Lecture 2',
+        date: '2021-04-15 08:15:00',
+        time_start: '08:15:00',
+        time_end: '13:30:00',
+        time_zone: 0,
+        length: 0,
+        code: 'asklll',
+        course: {
+            name: 'Databases for developers',
+            ects: 10
+        },
+        classroom: {
+            campus: {
+                address: {
+                    street_name: 'Lygten',
+                    street_number: 37,
+                    registred_on: '2021-02-23 20:02:21.550',
+                    additional_details: "Awesome campus",
+                    city: {
+                        zip_code: 2200,
+                        city: "Copenhagen N"
+                    }
+                },
+                faculty: 'KEA - Københavns Erhvervsakademi'
+            },
+            name: 'B234',
+            is_available: 0
+        },
+        class: {
+            name: 'SD21w2',
+            faculty: 'KEA - Københavns Erhvervsakademi'
+        }
+    },
+    {
+        name: 'DLS Lecture 1',
+        date: '2021-05-15 08:15:00',
+        time_start: '08:15:00',
+        time_end: '13:30:00',
+        time_zone: 0,
+        length: 0,
+        code: "wo0433",
+        course: {
+            name: 'Development of large systems',
+            ects: 10
+        },
+        classroom: {
+            campus: {
+                address: {
+                    street_name: 'Lygten',
+                    street_number: 37,
+                    registred_on: '2021-02-23 20:02:21.550',
+                    additional_details: "Awesome campus",
+                    city: {
+                        zip_code: 2200,
+                        city: "Copenhagen N"
+                    }
+                },
+                faculty: 'KEA - Københavns Erhvervsakademi'
+            },
+            name: 'B234',
+            is_available: 0
+        },
+        class: {
+            name: 'SD21w1',
+            faculty: 'KEA - Københavns Erhvervsakademi'
+        }
+    },
+    {
+        name: 'DLS Lecture 2',
+        date: '2021-05-16 08:15:00',
+        time_start: '08:15:00',
+        time_end: '13:30:00',
+        time_zone: 0,
+        length: 0,
+        code: "dsds4",
+        course: {
+            name: 'Development of large systems',
+            ects: 10
+        },
+        classroom: {
+            campus: {
+                address: {
+                    street_name: 'Lygten',
+                    street_number: 37,
+                    registred_on: '2021-02-23 20:02:21.550',
+                    additional_details: "Awesome campus",
+                    city: {
+                        zip_code: 2200,
+                        city: "Copenhagen N"
+                    }
+                },
+                faculty: 'KEA - Københavns Erhvervsakademi'
+            },
+            name: 'B234',
+            is_available: 0
+        },
+        class: {
+            name: 'SD21w1',
+            faculty: 'KEA - Københavns Erhvervsakademi'
+        }
+    },
+    {
+        name: 'Testing Lecture 1',
+        date: '2021-05-16 08:15:00',
+        time_start: '08:15:00',
+        time_end: '13:30:00',
+        time_zone: 0,
+        length: 0,
+        code: "wo0d33",
+        course: {
+            name: 'Testing',
+            ects: 10
+        },
+        classroom: {
+            campus: {
+                address: {
+                    street_name: 'Lygten',
+                    street_number: 37,
+                    registred_on: '2021-02-23 20:02:21.550',
+                    additional_details: "Awesome campus",
+                    city: {
+                        zip_code: 2200,
+                        city: "Copenhagen N"
+                    }
+                },
+                faculty: 'KEA - Københavns Erhvervsakademi'
+            },
+            name: 'B234',
+            is_available: 0
+        },
+        class: {
+            name: 'SD21w1',
+            faculty: 'KEA - Københavns Erhvervsakademi'
+        }
+    }
+])
+
+//Teachers
+db.teacher.insertMany([
+    {
+        forename: 'Tomas',
+        surname: 'Pesek',
+        email_address: 'tomas@mail.com',
+        phone_number: '30303030',
+        gps_coordinates: {
+            longitude: '50.70392118',
+            latitude: '25.537521047'
+        },
+    },
+    {
+        forename: 'Andrea',
+        surname: 'Corradini',
+        email_address: 'andrea@mail.com',
+        phone_number: '40404040',
+        gps_coordinates: {
+            longitude: '50.70392118',
+            latitude: '25.537521047'
+        },
+    },
 ])
 
 
 //Query all students
 db.student.find()
+db.lecture.find()
+db.teacher.find()
 
 //Similar to where clause sql
 db.student.find({'class.name': 'CBS_Class_1' })
