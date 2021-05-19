@@ -37,7 +37,6 @@ class studentHome extends Component {
         this.getAttendingStudents();
     }
 
-
     getClasses() {		
         axios.get("http://localhost:4000/api/myclasses")
             .then(result => {	
@@ -162,11 +161,16 @@ class studentHome extends Component {
             <div id="homeStudentRollCall" class="container">
 
                 <h1>School roll call student</h1>
+				<Router>
+
 				<div class="row">
 					<div id="classDiv" class="col3">
 						<b>My class:</b>
 						<p>
 							{this.state.classes.name}
+						</p>
+						<p>
+							{this.state.classes.faculty.name}
 						</p>
 					</div>
 					<div id="currentLectureDiv" class="col3">
@@ -178,7 +182,7 @@ class studentHome extends Component {
 										<Link 
 										  to={{
 											pathname: `/currentlectures/${lecture.id}`, 
-											query:{id: `${lecture.id}`, name: `${lecture.name}`, myclass: `${lecture.classes}`}
+											query:{id: `${lecture.id}`}
 										  }}>
 										  {lecture.name}
 										</Link>
@@ -193,7 +197,6 @@ class studentHome extends Component {
 						<b>GPS:</b>
 					</div  >
 				</div>
-				<Router>
 					<Switch>
 						<Route exact path="/currentlectures/:id" component={MyLecture}/>
 					</Switch>

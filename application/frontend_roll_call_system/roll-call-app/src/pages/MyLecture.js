@@ -1,34 +1,57 @@
 import axios from "axios";
 import React, { Component } from "react";
 import $ from "jquery";
-import {BrowserRouter as Router} from "react-router-dom";
+import {BrowserRouter as Router, useParams} from "react-router-dom";
 import studentHome from "../pages/studentHome.js";
-
+import publicIp from "public-ip";
+ 
 class MyLecture extends Component {
   constructor(props) {
     super(props);
    // console.dir(props);      
     this.state = {
-		fromIdeas: props.match.params.WORLD || 'unknown',
 		isLoaded: false,
 		lectureid: props.match.params.id,
 		classLoaded: false,
 		formLoaded: false,
+		latitude: null,
+		longitude: null,
+		ip:null,
 		currentLecture: ""
     }
 
   }
+
+
 	componentDidMount() {	
 		this.getClasses();
         this.getLecture();
 		this.beginRegistration();
+		this.setPosition();
+		this.setIp();
+		
+
 	}
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (this.props.match.params.id!== prevProps.match.params.id) {
+			
 			this.state.lectureid=this.props.match.params.id;
 			this.getLecture();
 		
 		}
+	}
+	 setPosition() {
+        window.navigator.geolocation.getCurrentPosition(
+            success => this.setState({ latitude: success.coords.latitude.toFixed(8), longitude: success.coords.longitude.toFixed(8) })
+        );
+		
+	}
+	setIp(){
+		const publicIp = require('public-ip');
+		(async () => {
+			this.setState({ip: await publicIp.v4()});
+
+		})();
 	}
 	getClasses() {		
         axios.get("http://localhost:4000/api/myclasses")
@@ -49,6 +72,7 @@ class MyLecture extends Component {
     }
 
    getLecture() {
+
 	   let data = { "lectureid": this.state.lectureid };
          axios.post("http://localhost:4000/api/getlecture", data)
             .then(result => {
@@ -72,10 +96,10 @@ class MyLecture extends Component {
                 "lectureid": this.state.currentLecture.id,
                 "code": $("#lectureRegCodeInput").val(),
 				"studentSSID": "KEANET",
-				"ipaddress": "193.29.107.196",
+				"ipaddress": this.state.ip,
 				"teachingnetworkid":this.state.classes.faculty.networks[0].id,
-				"latitude":55.70392118,
-				"longitude":12.53752105,
+				"latitude":this.state.latitude,
+				"longitude":this.state.longitude,
 				"teacherid":this.state.currentLecture.teachers[0].id,
 				"facultyid":1
 
@@ -106,8 +130,7 @@ class MyLecture extends Component {
             }
         });
     }
-  render() {
-    const { match, location} = this.props;
+  render() { 
 	let lechtml;
 	if(this.state.isLoaded && this.state.classLoaded){
 		lechtml=<div>
@@ -128,11 +151,22 @@ class MyLecture extends Component {
 				<div class="row">
 					<div class="col2">
 						<b>Teachers</b>
-						<p>{this.state.currentLecture.teachers[0].forename}</p>
+						<p>{this.state.currentLecture.teachers[0].forename+" "+this.state.currentLecture.teachers[0].surname}</p>
 					</div>	
-					<div class="col2">
-						<b>Time left:</b>
-						<p>placeholder</p>
+					<div class="col2 network" >
+						<div class="latitude">	
+							<b>Latitude</b>
+							<p>{this.state.latitude}</p>	
+						</div>	
+						<div class="longitude">	
+							<b>Longitude</b>
+							<p>{this.state.longitude}</p>
+						</div>	
+						<div class="ip">	
+							<b>IP</b>
+							<p>{this.state.ip}</p>
+						</div>	
+
 					</div>				
 				</div>
 			 </div>;
@@ -142,6 +176,8 @@ class MyLecture extends Component {
         {lechtml}
 		<div class="row">
 			<div class="col1 codeinput">
+				<b>Time left:</b>
+				<p>placeholder</p>
 				<div>
 					<input type="text" id="lectureRegCodeInput" placeholder="Code" />
 				</div>
