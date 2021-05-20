@@ -21,11 +21,13 @@ class studentHome extends Component {
             isLoaded: false,
             classes: "",
             currentLectures: [],
-            mylectures: [],
+            myLectures: [],
             attendingStudents: [],
+			myStats: null,
             lectureParticipationRate: "",
 			classLoaded: false,
             lecturesLoaded: false,
+			statsLoaded: false,
 
         }
     }
@@ -35,6 +37,7 @@ class studentHome extends Component {
         this.getMyLectures();
         this.getCurrentLectures();
         this.getAttendingStudents();
+		this.getMyStats();
     }
 
     getClasses() {		
@@ -81,7 +84,7 @@ class studentHome extends Component {
             axios.get("http://localhost:4000/api/mylectures")
                 .then(result => {
                     for (var i = 0; i < result.data.length; i++) {
-                        this.state.mylectures.push("(Lecture id: " + result.data[i].id +
+                        this.state.myLectures.push("(Lecture id: " + result.data[i].id +
                             ", lecture name: " + result.data[i].name +
                             ", course: " + result.data[i].course.name + "), ");
                     }
@@ -95,6 +98,22 @@ class studentHome extends Component {
             $("#myLecturesUl").empty();
             this.state.mylectures = [];
         });
+    }
+	getMyStats() {		
+        axios.get("http://localhost:4000/api/mystats")
+            .then(result => {
+                this.state.myStats=result.data;
+				console.log(this.state.myStats);
+				this.setState({
+                    statsLoaded: true,
+                });
+            })
+            .catch(error => {
+				console.log(error);
+                this.setState({
+                    statsLoaded: false,
+                });
+            });
     }
 
     getAttendingStudents() {
@@ -154,9 +173,9 @@ class studentHome extends Component {
     }
 
     render() {
-        const { error, isLoaded,lecturesLoaded,classLoaded } = this.state;
+        const { error, isLoaded,lecturesLoaded,classLoaded,statsLoaded } = this.state;
 		
-		if (lecturesLoaded && classLoaded){
+		if (lecturesLoaded && classLoaded && statsLoaded){
         return (
             <div id="homeStudentRollCall" class="container">
 
@@ -174,7 +193,6 @@ class studentHome extends Component {
 						</p>
 					</div>
 					<div id="currentLectureDiv" class="col3">
-							<React.Fragment>
 								<b>Active lectures:</b><br/>
 										
 									{this.state.currentLectures.map(lecture => (
@@ -191,7 +209,6 @@ class studentHome extends Component {
 									))}
 																	
 
-							</React.Fragment>
 					</div >
 					<div id="gpsDiv" class="col3">
 						<b>GPS:</b>
@@ -201,6 +218,23 @@ class studentHome extends Component {
 						<Route exact path="/currentlectures/:id" component={MyLecture}/>
 					</Switch>
 				</Router>
+				<div class="row">
+					<div class="col1">
+						<b>My stats:</b>
+						<div class="participationrate">
+							<p>You have participated in {this.state.myStats.participationrate}% of your assigned lectures</p>
+						</div>
+						<div class="courseparticipation">
+						{this.state.myStats.courseparticipationrates.map(course => (
+							<p> 
+								{course.name}:{course.participationrate}%	
+							</p>
+						))}
+						</div>
+	
+					</div>
+				</div>
+
 				<a id="logout"
 					 href="#!"
 					onClick={this.handleLogout}

@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class StudentService {
@@ -59,13 +57,13 @@ public class StudentService {
     }
     public StudentStats getStudentStats(int studentid, int classid){
         List<Course> mycourses = cr.getClassCourses(classid);
-        Map<String,Integer> participationrates= new HashMap<String,Integer>();
+        List<Course> participationrates= new ArrayList<Course>();
 
         for (Course course : mycourses)
         {
             Integer participationrate=sr.findSingleAttendenceRate(studentid,course.getId());
             if (participationrate!=null){
-                participationrates.put(course.getName(),participationrate);
+                participationrates.add(new Course(course.getName(),participationrate));
             }
         }
         Integer overallparticipationrate=sr.findSingleAttendenceRate(studentid);

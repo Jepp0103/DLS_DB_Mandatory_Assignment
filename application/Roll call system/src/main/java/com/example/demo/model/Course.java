@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
@@ -20,6 +17,15 @@ public class Course {
     private String name;
     @Column(name="ects")
     private int ects;
+    @Transient
+    private int participationrate;
+
+    public Course() {
+    }
+    public Course(String name, int participationrate) {
+        this.name = name;
+        this.participationrate = participationrate;
+    }
 
     public int getId() {
         return id;
@@ -45,5 +51,13 @@ public class Course {
 
     public void setEcts(int ects) {
         this.ects = ects;
+    }
+
+    public int getParticipationrate() {
+        return participationrate;
+    }
+
+    public void setParticipationrate(int participationrate) {
+        this.participationrate = participationrate;
     }
 }
