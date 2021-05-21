@@ -394,7 +394,7 @@ db.lecture.find()
 db.teacher.find()
 
 //Similar to where clause sql
-db.student.find({'class.name': 'CBS_Class_1' })
+db.student.find({ 'class.name': 'CBS_Class_1' })
 
 //Sort collection in acsending order
-db.student.find().sort({forename : 1})
+db.student.find().sort({ forename: 1 })
