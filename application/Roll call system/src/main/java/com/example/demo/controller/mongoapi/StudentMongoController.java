@@ -8,10 +8,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api")
 public class StudentMongoController {
     @Autowired
-    private StudentMongoRepository smr;
+    private StudentMongoRepository studentMongoRepository;
 
     @GetMapping("/studentsmongo")
     public Iterable<StudentMongo> getMongoStudents()  {
-        return smr.findAll();
+        return studentMongoRepository.findAll();
+    }
+
+    @PostMapping("/addmongostudent")
+    public StudentMongo addMongoStudent(@RequestBody StudentMongo studentMongo)  {
+        return studentMongoRepository.save(studentMongo);
     }
 }
