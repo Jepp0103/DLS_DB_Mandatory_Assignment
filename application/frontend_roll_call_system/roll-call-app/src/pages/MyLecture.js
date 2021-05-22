@@ -4,7 +4,8 @@ import $ from "jquery";
 import {BrowserRouter as Router, useParams} from "react-router-dom";
 import studentHome from "../pages/studentHome.js";
 import publicIp from "public-ip";
- 
+import Countdown, { zeroPad } from 'react-countdown';
+
 class MyLecture extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +18,8 @@ class MyLecture extends Component {
 		latitude: null,
 		longitude: null,
 		ip:null,
-		currentLecture: ""
+		currentLecture: "",
+		deadline:null
     }
 
   }
@@ -34,8 +36,7 @@ class MyLecture extends Component {
 	}
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (this.props.match.params.id!== prevProps.match.params.id) {
-			
-			this.state.lectureid=this.props.match.params.id;
+			this.setState({lectureid: this.props.match.params.id});
 			this.getLecture();
 		
 		}
@@ -56,10 +57,9 @@ class MyLecture extends Component {
 	getClasses() {		
         axios.get("http://localhost:4000/api/myclasses")
             .then(result => {	
-				this.state.classes=result.data;
-				console.log(this.state.classes);
 				this.setState({
                     classLoaded: true,
+					classes:result.data,
                 });
              
             })
@@ -72,15 +72,26 @@ class MyLecture extends Component {
     }
 
    getLecture() {
-
 	   let data = { "lectureid": this.state.lectureid };
          axios.post("http://localhost:4000/api/getlecture", data)
             .then(result => {
-                this.state.currentLecture = result.data;
-				
-				console.log(result.data.teachers[0].forename);
-                this.setState({
+				this.state.b=false;
+				const renderer = ({ hours, minutes, seconds, completed }) => {
+				  if (completed) {
+					  if (this.state.b==false){
+						this.state.b=true;
+						alert("Lecture ended");
+					  }
+					return <span>Deadline</span>;
+				  } else {
+					return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
+				  }
+				}; 	
+				this.setState({
                     isLoaded: true,
+					currentLecture : result.data,
+					deadline: Date.now() +900000,
+					renderer: renderer
                 });
             })
             .catch(error => {
@@ -133,7 +144,8 @@ class MyLecture extends Component {
   render() { 
 	let lechtml;
 	if(this.state.isLoaded && this.state.classLoaded){
-		lechtml=<div>
+		lechtml=
+			<div>
 				<div class="row">
 					<div class="col3">
 						<b>Course</b>
@@ -169,23 +181,28 @@ class MyLecture extends Component {
 
 					</div>				
 				</div>
-			 </div>;
+				<div class="row">
+					<div class="col1 codeinput">
+						<b>Time left:</b>
+						<p><Countdown
+								date={Date.parse(this.state.currentLecture.date)}
+								renderer={this.state.renderer}
+							/>
+						</p>
+						<div>
+							<input type="text" id="lectureRegCodeInput" placeholder="Code" />
+						</div>
+						<div>
+							<button class="regAttButton">Register attendance</button>
+						</div>	
+					</div>	
+				</div>
+			 </div>
+			 ;
 	}
     return (
 	<div class="container">	
         {lechtml}
-		<div class="row">
-			<div class="col1 codeinput">
-				<b>Time left:</b>
-				<p>placeholder</p>
-				<div>
-					<input type="text" id="lectureRegCodeInput" placeholder="Code" />
-				</div>
-				<div>
-					<button class="regAttButton">Register attendance</button>
-				</div>	
-			</div>	
-		</div>	
 	</div>	
 
 

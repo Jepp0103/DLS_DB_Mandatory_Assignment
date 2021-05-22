@@ -173,12 +173,11 @@ class studentHome extends Component {
     }
 
     render() {
+
         const { error, isLoaded,lecturesLoaded,classLoaded,statsLoaded } = this.state;
-		
 		if (lecturesLoaded && classLoaded && statsLoaded){
         return (
             <div id="homeStudentRollCall" class="container">
-
                 <h1>School roll call student</h1>
 				<Router>
 
