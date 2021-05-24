@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 CREATE SCHEMA IF NOT EXISTS `roll_call_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 SHOW WARNINGS;
 USE `roll_call_db` ;
-update mysql.user set host='%' where user= 'root';
+
 -- -----------------------------------------------------
 -- Table `roll_call_db`.`faculty`
 -- -----------------------------------------------------
@@ -215,6 +215,7 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`lecture` (
   `time_zone` INT NOT NULL,
   `length` INT NOT NULL,
   `code` VARCHAR(45) NULL,
+  `registration_deadline` DATETIME(3) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_lecture_course_idx` (`course_id` ASC) VISIBLE,
   INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC) VISIBLE,
@@ -486,10 +487,8 @@ BEGIN
 		JOIN lecture l on ar.lecture_id = l.id
         WHERE l.id = lecture_id_arg AND is_attending = 1);
     
-	SET amountOfTotalAttendances = (SELECT COUNT(*) FROM attendance_record ar
-		JOIN lecture l on ar.lecture_id = l.id
-        WHERE l.id = lecture_id_arg);
-    
+	SET amountOfTotalAttendances = (select count(*) from student where class_id IN (SELECT class_id FROM class_lectures where lecture_id=5));
+
 	SET lectureParticipationRate = amountOfParticipators/amountOfTotalAttendances*100;
                                         
 	RETURN (lectureParticipationRate);
@@ -606,91 +605,89 @@ END$$
 SHOW WARNINGS$$
 
 DELIMITER ;
+CREATE USER 'manager' IDENTIFIED BY 'password';
+
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE `roll_call_db`.`classroom` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`faculty` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`teacher` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`city` TO 'manager';
+GRANT SELECT, INSERT, DELETE, UPDATE ON TABLE `roll_call_db`.`class` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`teacher_lectures` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`lecture` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`class_lectures` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`address` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`network` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`campus` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`student` TO 'manager';
+SHOW WARNINGS;
+CREATE USER 'mainuser' IDENTIFIED BY 'password';
+
+GRANT SELECT ON TABLE `roll_call_db`.`address` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`class` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`class_lectures` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`classroom` TO 'mainuser';
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE `roll_call_db`.`attendance_record` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`campus` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`course` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`city` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`faculty` TO 'mainuser';
+GRANT SELECT, UPDATE ON TABLE `roll_call_db`.`lecture` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`network` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`student` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`teacher` TO 'mainuser';
+GRANT INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`gps_coordinates` TO 'mainuser';
+GRANT SELECT ON TABLE `roll_call_db`.`teacher_lectures` TO 'mainuser';
+SHOW WARNINGS;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- begin attached script 'security_setup.sql'
-CREATE TABLE `users` (
+CREATE TABLE `users` (
+  `username` varchar(50) NOT NULL,
+  `password` varchar(500) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `student_id` int unsigned DEFAULT NULL,
+  `teacher_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `teacher_id_UNIQUE` (`teacher_id`),
+  KEY `fk_individual_student` (`student_id`),
+  CONSTRAINT `fk_individual_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
+  CONSTRAINT `fk_individual_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `authorities` (
+  `username` varchar(50) NOT NULL,
+  `authority` varchar(50) NOT NULL,
+  KEY `fk_authorities_users` (`username`),
+  CONSTRAINT `fk_authorities_users` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-  `username` varchar(50) NOT NULL,
-
-  `password` varchar(500) NOT NULL,
-
-  `enabled` tinyint(1) NOT NULL,
-
-  `student_id` int unsigned DEFAULT NULL,
-
-  `teacher_id` int unsigned DEFAULT NULL,
-
-  PRIMARY KEY (`username`),
-
-  UNIQUE KEY `teacher_id_UNIQUE` (`teacher_id`),
-
-  KEY `fk_individual_student` (`student_id`),
-
-  CONSTRAINT `fk_individual_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
-
-  CONSTRAINT `fk_individual_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
-
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-CREATE TABLE `authorities` (
-
-  `username` varchar(50) NOT NULL,
-
-  `authority` varchar(50) NOT NULL,
-
-  KEY `fk_authorities_users` (`username`),
-
-  CONSTRAINT `fk_authorities_users` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-DROP TRIGGER IF EXISTS `roll_call_db`.`teacher_AFTER_INSERT`;
-
-
-
-DELIMITER $$
-
-CREATE TRIGGER `teacher_AFTER_INSERT` AFTER INSERT ON `teacher` FOR EACH ROW BEGIN
-
-INSERT INTO `roll_call_db`.`users` (`username`, `password`, `enabled`,`teacher_id`) VALUES (new.email_address, '$2a$10$hGko1F1s45iCEpzioDvQiuui6QabjjA4ob8y3AIvSk8Ocv5Jg.hWK.hWK', '1',NEW.id);
-
-INSERT INTO `roll_call_db`.`authorities` (`username`, `authority`) VALUES (new.email_address, 'ROLE_TEACHER');
-
-
-
-END$$
-
-DELIMITER ;
-
-
-
-DROP TRIGGER IF EXISTS `roll_call_db`.`student_AFTER_INSERT`;
-
-
-
-DELIMITER $$
-
-CREATE TRIGGER `student_AFTER_INSERT` AFTER INSERT ON `student` FOR EACH ROW BEGIN
-
-INSERT INTO `roll_call_db`.`users` (`username`, `password`, `enabled`,`student_id`) VALUES (new.email_address, '$2a$10$hGko1F1s45iCEpzioDvQiuui6QabjjA4ob8y3AIvSk8Ocv5Jg.hWK', '1',NEW.id);
-
-INSERT INTO `roll_call_db`.`authorities` (`username`, `authority`) VALUES (new.email_address, 'ROLE_STUDENT');
-
-
-
-END$$
-
-DELIMITER ;
-
-
-
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`users` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`authorities` TO 'manager';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`users` TO 'mainuser';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `roll_call_db`.`authorities` TO 'mainuser';
+
+DROP TRIGGER IF EXISTS `roll_call_db`.`teacher_AFTER_INSERT`;
+
+DELIMITER $$
+CREATE DEFINER=CURRENT_USER TRIGGER `teacher_AFTER_INSERT` AFTER INSERT ON `teacher` FOR EACH ROW BEGIN
+INSERT INTO `roll_call_db`.`users` (`username`, `password`, `enabled`,`teacher_id`) VALUES (new.email_address, '$2a$10$hGko1F1s45iCEpzioDvQiuui6QabjjA4ob8y3AIvSk8Ocv5Jg.hWK.hWK', '1',NEW.id);
+INSERT INTO `roll_call_db`.`authorities` (`username`, `authority`) VALUES (new.email_address, 'ROLE_TEACHER');
+
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `roll_call_db`.`student_AFTER_INSERT`;
+
+DELIMITER $$
+CREATE DEFINER=CURRENT_USER TRIGGER `student_AFTER_INSERT` AFTER INSERT ON `student` FOR EACH ROW BEGIN
+INSERT INTO `roll_call_db`.`users` (`username`, `password`, `enabled`,`student_id`) VALUES (new.email_address, '$2a$10$hGko1F1s45iCEpzioDvQiuui6QabjjA4ob8y3AIvSk8Ocv5Jg.hWK', '1',NEW.id);
+INSERT INTO `roll_call_db`.`authorities` (`username`, `authority`) VALUES (new.email_address, 'ROLE_STUDENT');
+
+END$$
+DELIMITER ;
+
 
 -- end attached script 'security_setup.sql'
 -- begin attached script 'test_data'
