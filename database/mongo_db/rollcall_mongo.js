@@ -14,9 +14,10 @@ db.createCollection('student')
 db.createCollection('lecture')
 db.createCollection('teacher')
 
-//Students
+//Query all collections
 db.student.insertMany([
     {
+        _id: 1,
         forename: 'Lars',
         surname: 'Larsen',
         email_address: 'lars@mail.com',
@@ -36,6 +37,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 2,
         forename: 'Carl',
         surname: 'Carlsen',
         email_address: 'carl@mail.com',
@@ -55,6 +57,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 3,
         forename: 'Mads',
         surname: 'Madsen',
         email_address: 'mads@mail.com',
@@ -74,6 +77,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 4,
         forename: 'Georg',
         surname: 'Jensen',
         email_address: 'georg@mail.com',
@@ -93,6 +97,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 5,
         forename: 'Poul',
         surname: 'Poulsen',
         email_address: 'poul@mail.com',
@@ -112,6 +117,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 6,
         forename: 'Jason',
         surname: 'Derulo',
         email_address: 'jason@mail.com',
@@ -131,6 +137,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 7,
         forename: 'Fred',
         surname: 'Jensen',
         email_address: 'fred@mail.com',
@@ -150,6 +157,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 8,
         forename: 'Soul',
         surname: 'Soulsen',
         email_address: 'soul@mail.com',
@@ -169,6 +177,7 @@ db.student.insertMany([
         }
     },
     {
+        _id: 9,
         forename: 'Mason',
         surname: 'Derulo',
         email_address: 'mason@mail.com',
@@ -192,6 +201,7 @@ db.student.insertMany([
 //Lectures
 db.lecture.insertMany([
     {
+        _id: 1,
         name: 'DB Lecture 1',
         date: '2021-03-15 08:15:00',
         time_start: '08:15:00',
@@ -223,9 +233,32 @@ db.lecture.insertMany([
         class: {
             name: 'SD21w2',
             faculty: 'KEA - Københavns Erhvervsakademi'
-        }
+        },
+        attendance_records: [
+            {
+                student: db.student.findOne( { _id: 1 }),
+                is_attending: true
+            },
+            {
+                student: db.student.findOne( { _id: 2 }),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne( { _id: 3 }),
+                is_attending: true
+            },
+            {
+                student: db.student.findOne( { _id: 4 }),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne( { _id: 5 }),
+                is_attending: true
+            }
+        ]
     },
     {
+        _id: 2,
         name: 'DB Lecture 2',
         date: '2021-04-15 08:15:00',
         time_start: '08:15:00',
@@ -257,9 +290,10 @@ db.lecture.insertMany([
         class: {
             name: 'SD21w2',
             faculty: 'KEA - Københavns Erhvervsakademi'
-        }
+        },
     },
     {
+        _id: 3,
         name: 'DLS Lecture 1',
         date: '2021-05-15 08:15:00',
         time_start: '08:15:00',
@@ -291,9 +325,10 @@ db.lecture.insertMany([
         class: {
             name: 'SD21w1',
             faculty: 'KEA - Københavns Erhvervsakademi'
-        }
+        },
     },
     {
+        _id: 4,
         name: 'DLS Lecture 2',
         date: '2021-05-16 08:15:00',
         time_start: '08:15:00',
@@ -328,6 +363,7 @@ db.lecture.insertMany([
         }
     },
     {
+        _id: 5,
         name: 'Testing Lecture 1',
         date: '2021-05-16 08:15:00',
         time_start: '08:15:00',
@@ -394,7 +430,16 @@ db.lecture.find()
 db.teacher.find()
 
 //Similar to where clause sql
-db.student.find({ 'class.name': 'CBS_Class_1' })
+db.student.find({'class.name': 'CBS_Class_1' })
 
 //Sort collection in acsending order
-db.student.find().sort({ forename: 1 })
+db.student.find().sort({forename : 1})
+
+db.lecture.aggregate([
+    {
+        $project: {
+            numberOfAttendanceRecords: { $cond: { if: { $isArray: "$attendance_records" }, then: { $size: "$attendance_records" }, else: "NA"} }
+        }
+    }
+] )
+
