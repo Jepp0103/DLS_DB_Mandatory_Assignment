@@ -17,6 +17,7 @@ function App() {
           <Route exact path="/teacherhome" component={teacherHome} />
           <Route exact path="/studenthome" component={studentHome} />
 		  <Route exact path="/currentlectures/:id" component={MyLecture} />
+		  <Route exact path="/teacherlecture/:id" component={teacherHome} />
         </BrowserRouter>
       </header>
     </div>

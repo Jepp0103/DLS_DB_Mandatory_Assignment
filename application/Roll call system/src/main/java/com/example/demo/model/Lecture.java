@@ -58,6 +58,9 @@ public class Lecture {
     private int length;
     @Column(name="code")
     private String code;
+    @Column(name="registration_deadline")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Europe/Berlin")
+    private LocalDateTime registrationdeadline;
 
     public int getId() {
         return id;
@@ -150,12 +153,21 @@ public class Lecture {
         this.length = length;
     }
 
-    @JsonIgnore
     public String getCode() {
+        return null;
+    }
+    public String getCode(boolean b) {
         return code;
     }
-
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public LocalDateTime getRegistrationdeadline() {
+        return registrationdeadline;
+    }
+
+    public void setRegistrationdeadline(LocalDateTime registrationdeadline) {
+        this.registrationdeadline = registrationdeadline;
     }
 }

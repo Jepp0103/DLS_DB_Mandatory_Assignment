@@ -36,7 +36,6 @@ class studentHome extends Component {
         this.getClasses();
         this.getMyLectures();
         this.getCurrentLectures();
-        this.getAttendingStudents();
 		this.getMyStats();
     }
 
@@ -114,37 +113,6 @@ class studentHome extends Component {
                     statsLoaded: false,
                 });
             });
-    }
-
-    getAttendingStudents() {
-        $("#getStudentsBtn").click(() => {
-            let lectureIdInput = { "lectureid": $("#lectureIdInput").val() };
-            if (lectureIdInput !== null) {
-                axios.post("http://localhost:4000/api/lectureattendence", lectureIdInput) //Have to change endpoint in the future
-                    .then(result => {
-                        this.state.attendingStudents = []; //Emptying array before inserting again
-                        for (var i = 0; i < result.data.length; i++) {
-                            this.state.attendingStudents.push(result.data[i].forename + " " + result.data[i].surname + ": " + result.data[i].is_attending + ", \n");
-                        }
-
-                        $("#attStudentsUL").html(this.state.attendingStudents);
-
-                        //Displaying participation rate for a lecture
-                        this.getLectureParticipationRate(lectureIdInput);
-
-                    
-                    })
-                    .catch(error => {
-						console.log(error);
-
-                    })
-            }
-        });
-
-        $("#hideStudentsBtn").click(() => {alert();
-            $("#attStudentsUL").empty();
-            $("#lectureParticipationRateTag").empty();
-        });
     }
 
     getLectureParticipationRate(lectureId) {

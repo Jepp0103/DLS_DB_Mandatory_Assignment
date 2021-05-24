@@ -34,10 +34,10 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Lecture l set l.code = :code where l.id = :lectureId")
-    void insertLectureCode(int lectureId, String code);
+    @Query("UPDATE Lecture l set l.code = :code,l.registrationdeadline = :deadline where l.id = :lectureId")
+    void insertLectureCode(int lectureId, String code,LocalDateTime deadline);
 
-    boolean existsByIdAndCode(int Id,String code);
+    boolean existsByIdAndCodeAndRegistrationdeadlineAfter(int Id,String code,LocalDateTime datetime);
 
     @Transactional
     @Modifying
