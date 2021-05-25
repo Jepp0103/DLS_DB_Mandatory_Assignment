@@ -1,15 +1,17 @@
 package com.example.demo.model;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class StudentStats {
     private int participationrate;
 
-    private Map<String,Integer> courseparticipationrate;
+    private List<Course> courseparticipationrates;
 
-    public StudentStats(Integer overallparticipationrate, Map<String, Integer> participationrates) {
+    public StudentStats(Integer overallparticipationrate, List<Course> participationrates) {
         this.participationrate=overallparticipationrate;
-        this.courseparticipationrate=participationrates;
+        this.courseparticipationrates=participationrates;
     }
 
     public int getParticipationrate() {
@@ -20,11 +22,11 @@ public class StudentStats {
         this.participationrate = participationrate;
     }
 
-    public Map<String, Integer> getCourseparticipationrate() {
-        return courseparticipationrate;
+    public List<Course> getCourseparticipationrates() {
+        return courseparticipationrates;
     }
 
-    public void setCourseparticipationrate(Map<String, Integer> courseparticipationrate) {
-        this.courseparticipationrate = courseparticipationrate;
+    public void setCourseparticipationrates(List<Course> courseparticipationrates) {
+        this.courseparticipationrates = courseparticipationrates;
     }
 }

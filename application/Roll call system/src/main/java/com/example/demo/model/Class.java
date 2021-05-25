@@ -16,10 +16,11 @@ public class Class {
     private int id;
     @Column(name="name")
     private String name;
-    @Column(name="faculty_id")
-    private int faculty_id;
     @OneToMany(mappedBy="myclass",fetch = FetchType.LAZY)
     private Set<Student> students;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty; //Currently some problems with this field when trying to access: api/lecturesAndRelatedCourses
 
 
     @JsonIgnore
@@ -31,7 +32,6 @@ public class Class {
         this.id = id;
     }
 
-    @JsonProperty
     public String getName() {
         return name;
     }
@@ -40,20 +40,19 @@ public class Class {
         this.name = name;
     }
 
-    @JsonIgnore
-    public int getFaculty_id() {
-        return faculty_id;
-    }
-
-    public void setFaculty_id(int faculty_id) {
-        this.faculty_id = faculty_id;
-    }
-
     public Set<Student> getStudents() {
         return students;
     }
 
     public void setStudents(Set<Student> students) {
         this.students = students;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 }

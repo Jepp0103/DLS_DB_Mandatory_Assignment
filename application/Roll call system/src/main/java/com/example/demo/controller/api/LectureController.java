@@ -86,12 +86,11 @@ public class LectureController {
     //Post mappings
     @PostMapping("/beginregistration")
     public ResponseEntity<?> beginRegistration(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
-        System.out.println(lecture.getId());
         String token = jtu.getCurrentToken(request);
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lecture.getId())){
-            ls.startRegistration(lecture.getId(),lecture.getCode());
+            ls.startRegistration(lecture.getId(),lecture.getCode(true),lecture.getRegistrationdeadline());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -107,10 +106,14 @@ public class LectureController {
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-
     @PostMapping("/addlecture")
     public Lecture addLecture(@RequestBody Lecture lecture)  {
         return lectureRepository.save(lecture);
+    }
+
+    @PostMapping("/getlecture")
+    public Lecture getLecture(@RequestBody Map<String, Integer> body) {
+        return lectureRepository.findById((int)body.get("lectureid"));
     }
 
 

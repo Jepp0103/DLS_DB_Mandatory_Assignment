@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class StudentService {
@@ -52,24 +50,20 @@ public class StudentService {
     }
 
     public boolean studentWithinRange(int student, int teacher, double latitude, double longitude) {
-        if (sr.studentWithinRange(student,teacher,latitude,longitude)=='y'){ //fifth parameter is irrelevant atm.
-            return true;
-        }
-        return false;
+        return sr.studentWithinRange(student,teacher,latitude,longitude)=='y';
     }
     public boolean correctNetwork(int studentId, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId) {
-        System.out.println(nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId));
         return nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId) == 'y';
     }
     public StudentStats getStudentStats(int studentid, int classid){
         List<Course> mycourses = cr.getClassCourses(classid);
-        Map<String,Integer> participationrates= new HashMap<String,Integer>();
+        List<Course> participationrates= new ArrayList<Course>();
 
         for (Course course : mycourses)
         {
             Integer participationrate=sr.findSingleAttendenceRate(studentid,course.getId());
             if (participationrate!=null){
-                participationrates.put(course.getName(),participationrate);
+                participationrates.add(new Course(course.getName(),participationrate));
             }
         }
         Integer overallparticipationrate=sr.findSingleAttendenceRate(studentid);

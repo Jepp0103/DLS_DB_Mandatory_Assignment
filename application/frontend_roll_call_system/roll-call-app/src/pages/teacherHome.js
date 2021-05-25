@@ -1,16 +1,25 @@
 import React, { Component } from "react";
-import styled from 'styled-components';
-import "./css/home.css";
+import "../css/teacherHome.css";
 import axios from "axios";
 import $ from "jquery";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams
+} from "react-router-dom";
+import MyLecture from "../pages/MyLecture.js";
 
 
-
-class home extends Component {
+class teacherHome extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoaded: false,
+	  classesLoaded: false,
+	  lecturesLoaded: false,
+	  currentLecturesLoaded: false,
       classes: [],
       currentLectures: [],
       mylectures: [],
@@ -24,16 +33,16 @@ class home extends Component {
     this.getMyLectures();
     this.getCurrentLectures();
     this.getAttendingStudents();
+    this.beginRegistration();
   }
 
   getClasses() {
     axios.get("http://localhost:4000/api/myclasses")
       .then(result => {
-        for (var i = 0; i < result.data.length; i++) {
-          this.state.classes.push(result.data[i].classname + ", ");
-        }
+        console.log("classes", result.data)
         this.setState({
-          isLoaded: false,
+		  classes:result.data,
+          classesLoaded: true,
         });
       })
       .catch(error => {
@@ -47,12 +56,9 @@ class home extends Component {
   getCurrentLectures() {
     axios.get("http://localhost:4000/api/currentlectures") //Have to change endpoint in the future
       .then(result => {
-        console.log("current lectures: ", result.data)
-        for (var i = 0; i < result.data.length; i++) {
-          this.state.currentLectures.push(result.data[i].name);
-        }
         this.setState({
-          isLoaded: true,
+		  currentLectures:result.data,
+          currentLecturesLoaded: true,
         });
       })
       .catch(error => {
@@ -67,16 +73,9 @@ class home extends Component {
     $("#getMyLecturesBtn").click(() => {
       axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
         .then(result => {
-          for (var i = 0; i < result.data.length; i++) {
-            this.state.mylectures.push("(Lecture id: " + result.data[i].id +
-              ", lecture name: " + result.data[i].name +
-              ", course: " + result.data[i].course.name + "), ");
-          }
-
-          $("#myLecturesUl").html(this.state.mylectures);
-
           this.setState({
-            isLoaded: false,
+			mylectures:result.data,
+            lecturesLoaded: true,
           });
         })
         .catch(error => {
@@ -95,7 +94,6 @@ class home extends Component {
   getAttendingStudents() {
     $("#getStudentsBtn").click(() => {
       let lectureIdInput = { "lectureid": $("#lectureIdInput").val() };
-      console.log("lectureidInput", lectureIdInput)
       if (lectureIdInput !== null) {
         axios.post("http://localhost:4000/api/lectureattendence", lectureIdInput) //Have to change endpoint in the future
           .then(result => {
@@ -121,13 +119,15 @@ class home extends Component {
           })
       }
     });
+
     $("#hideStudentsBtn").click(() => {
       $("#attStudentsUL").empty();
+      $("#lectureParticipationRateTag").empty();
     });
   }
 
   getLectureParticipationRate(lectureId) {
-    axios.post("http://localhost:4000/api/lectureparticipationrate", lectureId) //Have to change endpoint in the future
+    axios.post("http://localhost:4000/api/lectureparticipationrate", lectureId)
       .then(result => {
         console.log("lecture participation rate data: ", result.data)
         this.state.lectureParticipationRate = result.data
@@ -145,61 +145,83 @@ class home extends Component {
       })
   }
 
+  beginRegistration() {
+    $("#openAttButton").click(() => {
+
+      let registrationInput = {
+        "id": $("#lectureRegIdInput").val(),
+        "code": $("#lectureRegCodeInput").val(),
+      };
+      let isNum = /^\d+$/.test($("#lectureRegIdInput").val()); //Validating if lecture id input is a number
+      if ($("#lectureRegIdInput").val() != "" && isNum && $("#lectureRegCodeInput").val() != "") {
+        axios.post("http://localhost:4000/api/beginregistration", registrationInput)
+          .then(result => {
+            $("#lectureRegIdInput").val("");
+            $("#lectureRegCodeInput").val("");
+            alert("Register code for lecture succesfully added");
+            this.setState({
+              isLoaded: true,
+            });
+          })
+          .catch(error => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+          })
+      } else {
+        alert("Invalid input for lecture id or register code");
+      }
+    });
+  }
+
   handleLogout() {
     localStorage.clear();
     window.location.href = "/";
   }
 
-
-
   render() {
-    const { error, isLoaded, classes } = this.state;
+    const { error, isLoaded, classesLoaded, lecturesLoaded, currentLecturesLoaded, classes } = this.state;
+	let html;
+	if (classesLoaded && currentLecturesLoaded){	
     return (
-      <div id="homeStudentRollCall">
-        <h1>School roll call</h1>
-        <div id="classDiv">
-          <b>Current classes:</b>
-          <ul>
-            {this.state.classes}
-          </ul>
-        </div>
-        <div id="attendingStudentsDiv">
-          <b>Attending students for specific lecture:</b>
-          <input type="text" id="lectureIdInput" placeholder="Write id of lecture" />
-          <button id="getStudentsBtn">Get students</button>
-          <button id="hideStudentsBtn">Hide students</button>
-          <br></br>
-          <b id="lectureParticipationRateTag"></b>
-          <ul id="attStudentsUL">
-          </ul>
-        </div>
-        <div id="gpsDiv">
-          <b>GPS:</b>
-
-        </div  >
-        <div id="currentCourseDiv">
-          <b>Current course:</b>
-
-        </div>
-
-        <div id="myLecturesDiv">
-          <b>All my lectures:</b>
-          <button id="getMyLecturesBtn">Show my lectures</button>
-          <button id="hideMyLecturesBtn">Hide my lectures</button>
-          <br></br>
-          <ul id="myLecturesUl">
-          </ul>
-
-        </div>
-        <div id="currentLectureDiv">
-          <b>Active lectures:</b>
-          <ul>
-            {this.state.currentLectures}
-          </ul>
-        </div>
-        <div id="networkDiv">
-          <b>Network:</b>
-        </div>
+      <div id="homeTeacherRollCall" class="container">
+        <h1>School roll call teacher</h1>
+			<Router>
+				<div class="row">
+					<div class="col3">
+						<b>My classes</b>
+						{this.state.classes.map(classs => (
+							<p> 
+								{classs.classname}:{classs.coursename}	
+							</p>
+						))}
+					</div>
+					<div id="currentLectureDiv" class="col3">
+						<b>Active lectures:</b><br/>
+								
+							{this.state.currentLectures.map(lecture => (
+								<div>
+								<Link 
+								  to={{
+									pathname: `/teacherlecture/${lecture.id}`, 
+									query:{id: `${lecture.id}`}
+								  }}>
+								  {lecture.name}
+								</Link>
+								</div>
+								
+							))}												
+					</div >
+					<div class="col3"> 
+						<b>Date:</b>
+						<p></p>
+					</div>
+				</div>
+				<Switch>
+					<Route exact path="/teacherlecture/:id" component={MyLecture}/>
+				</Switch>
+			</Router>
         <a id="logout"
           href="#!"
           onClick={this.handleLogout}
@@ -209,8 +231,10 @@ class home extends Component {
         </a>
       </div >
     );
+	}
+	else{return null;}
   }
 }
 
 
-export default home;
+export default teacherHome;

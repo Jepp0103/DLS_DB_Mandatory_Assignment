@@ -1,0 +1,95 @@
+
+#homeStudentRollCall {
+    background-color: green;
+}
+
+#logout {
+    color: black;
+}
+
+#excStudentsDiv, #attendingStudentsDiv, #attStudentsUL {
+    overflow-y: auto;
+}
+.row {
+    height:285px; /*set height*/
+	border-radius: 10px;
+    width:100%;
+    margin-bottom:10px;
+    padding:10px;
+}
+* {
+    box-sizing: border-box;
+}
+.container {
+    width:100%;
+    max-width:800px;
+    border:2px solid black;
+    margin: 0 auto;
+    padding:10px;
+}
+.col1 {
+    border:2px solid brown;
+	border-radius: 10px;
+    width:100%;
+    height:100%;    
+}
+.col2 {
+    border:2px solid brown;
+	border-radius: 10px;
+    width:49%;
+    float:left;
+    height:100%;
+    margin-right:2%;    
+}
+.col2:last-child {margin-right:0;  }
+.col3 {
+    border:2px solid brown;
+	border-radius: 10px;
+    width:32%;
+    float:left;
+    height:100%;
+    margin-right:2%;    
+}
+.col3:last-child {margin-right:0;  }
+
+.codeinput{
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+#lectureRegCodeInput {
+    text-align: center;
+    padding: 16px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+.network{
+	padding-left: 10px;
+    padding-right: 10px;
+}
+.latitude{
+    float: left;
+}
+.longitude{
+	
+}
+.ip{
+	
+}
+.participationrate{
+	padding-left: 10px;
+	text-align:left;
+	width: 40%;
+	float: left;
+}
+.courseparticipation{
+	padding-left: 10px;
+	text-align:left;
+	float:right;
+	width: 40%;
+}
+

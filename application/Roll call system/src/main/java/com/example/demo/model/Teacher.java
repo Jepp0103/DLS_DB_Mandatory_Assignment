@@ -27,7 +27,13 @@ public class Teacher {
     @Column(name="phone_number")
     private String phone_number;
 
-    @JsonProperty
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getEmail_address() {
         return email_address;
     }

@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
+@Table(name="network")
 public class Network {
     @Id
     @Column(name="id")
@@ -20,8 +18,10 @@ public class Network {
     private String ssid;
     @Column(name="ip_address")
     private String ip_address;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "faculty_id", nullable = false)
+    private Faculty faculty;
 
-    @JsonIgnore
     public int getId() {
         return id;
     }

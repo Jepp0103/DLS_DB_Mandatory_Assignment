@@ -37,12 +37,17 @@ class login extends Component {
       }
     }
     console.log(config);
-    axios.get("http://localhost:4000/api/", config).then(res => {
-      if (res.data === "Home page") {
-        this.props.history.push("/home");
+    axios.get("http://localhost:4000/api/getrole", config).then(res => {
+      if (res.data === "teacher") {
+        localStorage.setItem("role", res.data);
+        this.props.history.push("/teacherhome");
+      } else if (res.data === "student") {
+        localStorage.setItem("role", res.data);
+        this.props.history.push("/studenthome");
       } else {
         alert("Authentication failure");
       }
+      console.log("localstorage", localStorage.getItem("role"));
     });
   }
 
@@ -59,7 +64,7 @@ class login extends Component {
 
               />
             </div>
-            <div  className="form-group">
+            <div className="form-group">
               <input ref="pass" type="password"
                 class="form-control"
                 placeholder="password"

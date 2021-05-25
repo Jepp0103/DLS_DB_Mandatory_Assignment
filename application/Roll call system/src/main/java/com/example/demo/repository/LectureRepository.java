@@ -17,6 +17,7 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     @Query(value = "SELECT c.name, c.id, l.id, l.name from lecture l JOIN course c ON l.course_id = c.id", nativeQuery = true)
     Iterable<Lecture> findLecturesAndRelatedCourses();
 
+    Lecture findById(int id);
     //Lecture participation rate function with parameters
     @Query(value = "SELECT name, getLectureParticipationRate(:lectureId) FROM lecture WHERE id = :lectureId", nativeQuery = true)
     String findLectureParticipationRate(int lectureId);
@@ -33,10 +34,10 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Lecture l set l.code = :code where l.id = :lectureId")
-    void insertLectureCode(int lectureId, String code);
+    @Query("UPDATE Lecture l set l.code = :code,l.registrationdeadline = :deadline where l.id = :lectureId")
+    void insertLectureCode(int lectureId, String code,LocalDateTime deadline);
 
-    boolean existsByIdAndCode(int Id,String code);
+    boolean existsByIdAndCodeAndRegistrationdeadlineAfter(int Id,String code,LocalDateTime datetime);
 
     @Transactional
     @Modifying
