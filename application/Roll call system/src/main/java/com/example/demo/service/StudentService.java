@@ -53,7 +53,7 @@ public class StudentService {
         return sr.studentWithinRange(student,teacher,latitude,longitude)=='y';
     }
     public boolean correctNetwork(int studentId, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId) {
-        return nr.registerStudentNetwork(studentId, studentSsid, ipAddress, studentFacultyId, teachingNetworkId) == 'y';
+        return nr.registerStudentNetwork(studentId, ipAddress, teachingNetworkId) == 'y';
     }
     public StudentStats getStudentStats(int studentid, int classid){
         List<Course> mycourses = cr.getClassCourses(classid);

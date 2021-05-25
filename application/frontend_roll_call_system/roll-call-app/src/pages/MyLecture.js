@@ -30,7 +30,6 @@ class MyLecture extends Component {
 		this.getClasses();
         this.getLecture();
 		this.setPosition();
-		this.setIp();
 		
 
 	}
@@ -48,11 +47,26 @@ class MyLecture extends Component {
 		
 	}
 	setIp(){
-		const publicIp = require('public-ip');
-		(async () => {
-			this.setState({ip: await publicIp.v4()});
+		if (localStorage.getItem("role")=="student"){
+			const publicIp = require('public-ip');
+			(async () => {
+				this.setState({ip: await publicIp.v4()});
 
-		})();
+			})();
+		}
+		else if(localStorage.getItem("role")=="teacher"){
+			let ips="";
+			this.state.currentLecture.classes.forEach(function(thisclass) {
+				thisclass.faculty.networks.forEach(function(network) {
+					if (!ips.includes(network.ip_address)){
+						ips+=network.ip_address+" "
+					}
+				});
+			});
+			this.setState({ip: ips});
+			
+		}
+		
 	}
 	getClasses() {		
         axios.get("http://localhost:4000/api/myclasses")
@@ -75,7 +89,7 @@ class MyLecture extends Component {
 	   let data = { "lectureid": this.state.lectureid };
          axios.post("http://localhost:4000/api/getlecture", data)
             .then(result => {
-				this.state.b=false;
+				this.state.b=false; 
 				const renderer = ({ hours, minutes, seconds, completed }) => {
 				  if (completed) {
 					  if (this.state.b==false){
@@ -92,6 +106,7 @@ class MyLecture extends Component {
 					deadline: result.data.registrationdeadline,
 					renderer: renderer
                 });
+				this.setIp();
             })
             .catch(error => {
                 this.setState({
@@ -104,13 +119,11 @@ class MyLecture extends Component {
 		let registrationInput = {
 			"lectureid": this.state.currentLecture.id,
 			"code": $("#lectureRegCodeInput").val(),
-			"studentSSID": "KEANET",
 			"ipaddress": this.state.ip,
 			"teachingnetworkid":this.state.classes.faculty.networks[0].id,
 			"latitude":this.state.latitude,
 			"longitude":this.state.longitude,
 			"teacherid":this.state.currentLecture.teachers[0].id,
-			"facultyid":1
 
 			
 		};
