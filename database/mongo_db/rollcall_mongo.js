@@ -438,8 +438,18 @@ db.student.find().sort({forename : 1})
 db.lecture.aggregate([
     {
         $project: {
-            numberOfAttendanceRecords: { $cond: { if: { $isArray: "$attendance_records" }, then: { $size: "$attendance_records" }, else: "NA"} }
+            numberOfAttendanceRecords: { $cond: { if: { $isArray: "$attendance_records" }, then:
+                        { $size:
+                                {
+                                    $filter: {
+                                        input: "$attendance_records",
+                                        as: "att_records",
+                                        cond: { $gte: [ "$$att_records.is_attending", true ] }
+                                    }
+                                }
+                        },
+                    else: "NA"}
+            }
         }
     }
 ] )
-
