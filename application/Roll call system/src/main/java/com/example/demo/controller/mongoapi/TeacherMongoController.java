@@ -1,11 +1,11 @@
 package com.example.demo.controller.mongoapi;
-import com.example.demo.model.Lecture;
 import com.example.demo.model.mongomodels.TeacherMongo;
 import com.example.demo.repository.mongorepository.TeacherMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "/api")
 public class TeacherMongoController {
     @Autowired

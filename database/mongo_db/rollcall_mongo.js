@@ -435,21 +435,3 @@ db.student.find({'class.name': 'CBS_Class_1' })
 //Sort collection in acsending order
 db.student.find().sort({forename : 1})
 
-db.lecture.aggregate([
-    {
-        $project: {
-            numberOfAttendanceRecords: { $cond: { if: { $isArray: "$attendance_records" }, then:
-                        { $size:
-                                {
-                                    $filter: {
-                                        input: "$attendance_records",
-                                        as: "att_records",
-                                        cond: { $gte: [ "$$att_records.is_attending", true ] }
-                                    }
-                                }
-                        },
-                    else: "NA"}
-            }
-        }
-    }
-] )
