@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface TeacherMongoRepository extends MongoRepository<TeacherMongo, String> {
-
+    @Override
     List<TeacherMongo> findAll();
 }

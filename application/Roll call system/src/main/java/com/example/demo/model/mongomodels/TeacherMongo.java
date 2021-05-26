@@ -9,18 +9,18 @@ import javax.persistence.Id;
 @Document(collection = "teacher")
 public class TeacherMongo {
     @Id
-    private String id;
+    private int id;
     private String forename;
     private String surname;
     private String email_address;
     private String phone_number;
     private GpsCoordinatesObject gps_coordinates;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

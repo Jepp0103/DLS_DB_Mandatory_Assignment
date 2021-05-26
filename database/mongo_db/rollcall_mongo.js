@@ -1,6 +1,7 @@
 //If db exists and is selected and needs to be dropped
 db.dropDatabase()
-use roll_call_mongo_db
+use
+roll_call_mongo_db
 
 
 //Dropping tables
@@ -228,7 +229,7 @@ db.lecture.insertMany([
                 faculty: 'KEA - Københavns Erhvervsakademi'
             },
             name: 'B234',
-            is_available: 0
+            is_available: false
         },
         class: {
             name: 'SD21w2',
@@ -236,23 +237,23 @@ db.lecture.insertMany([
         },
         attendance_records: [
             {
-                student: db.student.findOne( { _id: 1 }),
+                student: db.student.findOne({_id: 1}),
                 is_attending: true
             },
             {
-                student: db.student.findOne( { _id: 2 }),
+                student: db.student.findOne({_id: 2}),
                 is_attending: false
             },
             {
-                student: db.student.findOne( { _id: 3 }),
+                student: db.student.findOne({_id: 3}),
                 is_attending: true
             },
             {
-                student: db.student.findOne( { _id: 4 }),
+                student: db.student.findOne({_id: 4}),
                 is_attending: false
             },
             {
-                student: db.student.findOne( { _id: 5 }),
+                student: db.student.findOne({_id: 5}),
                 is_attending: true
             }
         ]
@@ -285,12 +286,34 @@ db.lecture.insertMany([
                 faculty: 'KEA - Københavns Erhvervsakademi'
             },
             name: 'B234',
-            is_available: 0
+            is_available: true
         },
         class: {
             name: 'SD21w2',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
+        attendance_records: [
+            {
+                student: db.student.findOne({_id: 1}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 2}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 3}),
+                is_attending: true
+            },
+            {
+                student: db.student.findOne({_id: 4}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 5}),
+                is_attending: true
+            }
+        ]
     },
     {
         _id: 3,
@@ -326,6 +349,28 @@ db.lecture.insertMany([
             name: 'SD21w1',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
+        attendance_records: [
+            {
+                student: db.student.findOne({_id: 1}),
+                is_attending: true
+            },
+            {
+                student: db.student.findOne({_id: 2}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 3}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 4}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 5}),
+                is_attending: false
+            }
+        ]
     },
     {
         _id: 4,
@@ -355,12 +400,34 @@ db.lecture.insertMany([
                 faculty: 'KEA - Københavns Erhvervsakademi'
             },
             name: 'B234',
-            is_available: 0
+            is_available: false
         },
         class: {
             name: 'SD21w1',
             faculty: 'KEA - Københavns Erhvervsakademi'
-        }
+        },
+        attendance_records: [
+            {
+                student: db.student.findOne({_id: 1}),
+                is_attending: true
+            },
+            {
+                student: db.student.findOne({_id: 2}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 3}),
+                is_attending: true
+            },
+            {
+                student: db.student.findOne({_id: 4}),
+                is_attending: false
+            },
+            {
+                student: db.student.findOne({_id: 5}),
+                is_attending: false
+            }
+        ]
     },
     {
         _id: 5,
@@ -390,7 +457,7 @@ db.lecture.insertMany([
                 faculty: 'KEA - Københavns Erhvervsakademi'
             },
             name: 'B234',
-            is_available: 0
+            is_available: true
         },
         class: {
             name: 'SD21w1',
@@ -402,6 +469,7 @@ db.lecture.insertMany([
 //Teachers
 db.teacher.insertMany([
     {
+        _id: 1,
         forename: 'Tomas',
         surname: 'Pesek',
         email_address: 'tomas@mail.com',
@@ -412,6 +480,7 @@ db.teacher.insertMany([
         },
     },
     {
+        _id: 2,
         forename: 'Andrea',
         surname: 'Corradini',
         email_address: 'andrea@mail.com',
@@ -430,8 +499,8 @@ db.lecture.find()
 db.teacher.find()
 
 //Similar to where clause sql
-db.student.find({'class.name': 'CBS_Class_1' })
+db.student.find({'class.name': 'CBS_Class_1'})
 
 //Sort collection in acsending order
-db.student.find().sort({forename : 1})
+db.student.find().sort({forename: 1})
 
