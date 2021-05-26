@@ -5,6 +5,7 @@ import com.example.demo.model.TeacherClassCourseResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
@@ -12,14 +13,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-public interface LectureRepository extends JpaRepository<Lecture,Integer> {
+public interface LectureRepository extends JpaRepository<Lecture,Integer>, RevisionRepository<Lecture, Integer, Integer> {
 
     @Query(value = "SELECT c.name, c.id, l.id, l.name from lecture l JOIN course c ON l.course_id = c.id", nativeQuery = true)
     Iterable<Lecture> findLecturesAndRelatedCourses();
 
     Lecture findById(int id);
     //Lecture participation rate function with parameters
-    @Query(value = "SELECT name, getLectureParticipationRate(:lectureId) FROM lecture WHERE id = :lectureId", nativeQuery = true)
+    @Query(value = "SELECT getLectureParticipationRate(:lectureId) FROM lecture WHERE id = :lectureId", nativeQuery = true)
     String findLectureParticipationRate(int lectureId);
 
     //Lecture participation rate function with arg 2 for testing

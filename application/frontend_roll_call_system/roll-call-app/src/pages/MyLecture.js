@@ -20,7 +20,10 @@ class MyLecture extends Component {
 		longitude: null,
 		ip:null,
 		currentLecture: "",
+		attendingStudents: [],
+		lectureParticipationRate: null, 
 		deadline:null
+		
     }
 
   }
@@ -89,14 +92,14 @@ class MyLecture extends Component {
 	   let data = { "lectureid": this.state.lectureid };
          axios.post("http://localhost:4000/api/getlecture", data)
             .then(result => {
-				this.state.b=false; 
+				console.log(result.data);
 				const renderer = ({ hours, minutes, seconds, completed }) => {
 				  if (completed) {
-					  if (this.state.b==false){
-						this.state.b=true;
-					  }
 					return <span>Registration ended</span>;
 				  } else {
+					 if( zeroPad(seconds) % 10 == 0 || (seconds  == 1 && minutes == 0)){
+						this.getAttendingStudents();
+					 }
 					return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
 				  }
 				};
@@ -107,6 +110,7 @@ class MyLecture extends Component {
 					renderer: renderer
                 });
 				this.setIp();
+				$("#teacherCodeInput").val(result.data.code);
             })
             .catch(error => {
                 this.setState({
@@ -151,6 +155,51 @@ class MyLecture extends Component {
 			alert("Invalid input for lecture id or register code");
 		}
 	}
+	  getAttendingStudents(e) {
+		  let lectureId = { "lectureid": this.state.currentLecture.id };
+		  if (lectureId !== null) {
+			axios.post("http://localhost:4000/api/lectureattendence", lectureId) //Have to change endpoint in the future
+			  .then(result => {
+				this.state.attendingStudents = []; //Emptying array before inserting again
+				for (var i = 0; i < result.data.length; i++) {
+				  this.state.attendingStudents=result.data;
+				}
+
+				this.getLectureParticipationRate(lectureId);
+
+				this.setState({
+				  isLoaded: true,
+				});
+			  })
+			  .catch(error => {
+				this.setState({
+				  isLoaded: false,
+				  error
+				});
+			  })
+		  }
+
+		$("#hideStudentsBtn").click(() => {
+		  $("#attStudentsUL").empty();
+		  $("#lectureParticipationRateTag").empty();
+		});
+	  }
+	getLectureParticipationRate(lectureId) {
+		axios.post("http://localhost:4000/api/lectureparticipationrate", lectureId)
+		  .then(result => {
+			console.log("lecture participation rate data: ", result.data)
+			this.state.lectureParticipationRate = result.data
+			this.setState({
+			  isLoaded: true,
+			});
+		  })
+		  .catch(error => {
+			this.setState({
+			  isLoaded: false,
+			  error
+			});
+		  })
+	}
 	beginRegistration(e) {
 		if ($("#teacherCodeInput").val()==""){
 			$("#teacherCodeInput").val(this.generateCode());
@@ -170,7 +219,6 @@ class MyLecture extends Component {
 			"code": $("#teacherCodeInput").val(),
 			"registrationdeadline": datetime
 		};
-		console.log(registrationInput);
 		let isNum = /^\d+$/.test(this.state.currentLecture.id); //Validating if lecture id input is a number
 		if (this.state.currentLecture.id != "" && isNum && $("#teacherCodeInput").val() != "") {
 			axios.post("http://localhost:4000/api/beginregistration", registrationInput)
@@ -204,6 +252,7 @@ class MyLecture extends Component {
   render() { 
 	let lechtml;
 	let codehtml;
+	let attendencehtml;
 	if(this.state.isLoaded && this.state.classLoaded){
 		lechtml=
 			<div>
@@ -289,13 +338,29 @@ class MyLecture extends Component {
 						</div>	
 					</div>	
 				</div>;
+				attendencehtml=
+				<div class="row attendence">
+					<div class="col1">
+						<b>Attendence rate: {this.state.lectureParticipationRate}</b>
+						<div>
+							<button onClick={this.getAttendingStudents.bind(this)}>View list</button>
+						</div>
+						<div id="attendingStudents">
+						{this.state.attendingStudents.map(attendee => (
+							<div>{attendee.forename} {attendee.surname} {attendee.is_attending}</div>
+						))}
+						</div>
+					</div>	
+				</div>;
 		}
+		
 				
 	}
     return (
 	<div class="container">	
         {lechtml}
 		{codehtml}
+		{attendencehtml}
 	</div>	
 
 
