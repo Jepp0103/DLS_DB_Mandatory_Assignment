@@ -8,20 +8,19 @@ import javax.persistence.Id;
 
 @Document(collection = "teacher")
 public class TeacherMongo {
-    @Id
-    private int id;
+    @Id private int _id;
     private String forename;
     private String surname;
     private String email_address;
     private String phone_number;
     private GpsCoordinatesObject gps_coordinates;
 
-    public int getId() {
-        return id;
+    public int get_id() {
+        return _id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
     public String getForename() {

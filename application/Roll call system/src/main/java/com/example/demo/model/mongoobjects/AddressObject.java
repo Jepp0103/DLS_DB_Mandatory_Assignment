@@ -5,11 +5,11 @@ import java.util.Date;
 public class AddressObject {
     private String street_name;
     private int street_number;
-    private Date registred_on;
+    private String registred_on;
     private String additional_details;
     private CityObject city;
 
-    public AddressObject(String street_name, int street_number, Date registred_on, String additional_details, CityObject city) {
+    public AddressObject(String street_name, int street_number, String registred_on, String additional_details, CityObject city) {
         this.street_name = street_name;
         this.street_number = street_number;
         this.registred_on = registred_on;
@@ -33,11 +33,11 @@ public class AddressObject {
         this.street_number = street_number;
     }
 
-    public Date getRegistred_on() {
+    public String getRegistred_on() {
         return registred_on;
     }
 
-    public void setRegistred_on(Date registred_on) {
+    public void setRegistred_on(String registred_on) {
         this.registred_on = registred_on;
     }
 

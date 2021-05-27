@@ -15,7 +15,7 @@ public class LectureMongo {
     @Id
     private int id;
     private String name;
-    private Date date;
+    private String date;
     private Time time_start;
     private Time time_end;
     private int time_zone;
@@ -42,11 +42,11 @@ public class LectureMongo {
         this.name = name;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

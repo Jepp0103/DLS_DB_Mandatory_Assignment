@@ -4,6 +4,8 @@ import com.example.demo.repository.mongorepository.StudentMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "/api")
@@ -14,6 +16,11 @@ public class StudentMongoController {
     @GetMapping("/studentsmongo")
     public Iterable<StudentMongo> getMongoStudents()  {
         return studentMongoRepository.findAll();
+    }
+
+    @PostMapping("/onemongostudent")
+    public StudentMongo getOneMongoStudent(@RequestBody Map<String, Integer> body)  {
+        return studentMongoRepository.findOneStudent(body.get("lectureId"));
     }
 
     @PostMapping("/addmongostudent")

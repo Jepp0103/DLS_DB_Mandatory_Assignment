@@ -20,4 +20,9 @@ public class LectureMongoController {
     public LectureMongo addMongoLecture(@RequestBody LectureMongo lectureMongo)  {
         return lectureMongoRepository.save(lectureMongo);
     }
+
+    @GetMapping("/getmongolectureparticipationrate")
+    public String getMongoLectureParticipationRate()  {
+        return lectureMongoRepository.findLectureMongoParticipationRate();
+    }
 }

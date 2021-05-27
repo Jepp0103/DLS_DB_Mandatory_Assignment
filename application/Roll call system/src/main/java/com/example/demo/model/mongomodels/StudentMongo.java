@@ -9,8 +9,7 @@ import javax.persistence.Id;
 
 @Document(collection = "student")
 public class StudentMongo {
-    @Id
-    private int id;
+    @Id private int _id;
     private String forename;
     private String surname;
     private String email_address;
@@ -19,12 +18,12 @@ public class StudentMongo {
     private NetworkObject network;
     private ClassObject class_info;
 
-    public int getId() {
-        return id;
+    public int get_id() {
+        return _id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
     public String getForename() {
