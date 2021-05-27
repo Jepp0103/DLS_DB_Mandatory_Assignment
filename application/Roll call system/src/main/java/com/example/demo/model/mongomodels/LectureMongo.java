@@ -1,13 +1,13 @@
 package com.example.demo.model.mongomodels;
+
 import com.example.demo.model.mongoobjects.ClassObject;
 import com.example.demo.model.mongoobjects.ClassRoomObject;
 import com.example.demo.model.mongoobjects.CourseObject;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.sql.Time;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Document(collection = "lecture")
@@ -15,7 +15,7 @@ public class LectureMongo {
     @Id
     private int id;
     private String name;
-    private LocalDateTime date;
+    private Date date;
     private Time time_start;
     private Time time_end;
     private int time_zone;
@@ -42,11 +42,11 @@ public class LectureMongo {
         this.name = name;
     }
 
-    public LocalDateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
