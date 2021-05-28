@@ -11,3 +11,8 @@
 #excStudentsDiv, #attendingStudentsDiv, #attStudentsUL {
     overflow-y: auto;
 }
+
+.attendence {
+	min-height:285px;
+	height:auto !important;
+}

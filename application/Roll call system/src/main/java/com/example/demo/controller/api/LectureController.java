@@ -90,7 +90,7 @@ public class LectureController {
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
         if (mylectures.stream().anyMatch(o -> o.getId()==lecture.getId())){
-            ls.startRegistration(lecture.getId(),lecture.getCode(true),lecture.getRegistrationdeadline());
+            ls.startRegistration(lecture);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);

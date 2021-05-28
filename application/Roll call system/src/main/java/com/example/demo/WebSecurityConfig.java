@@ -2,6 +2,11 @@ package com.example.demo;
 
 
 import com.example.demo.repository.UserRepository;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,11 +68,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .allowedMethods("HEAD", "GET", "PUT", "POST",
         "DELETE", "PATCH").allowedHeaders("*");
     }
-        @Override
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("My App").version("1.0.0"))
+                // Components section defines Security Scheme "mySecretHeader"
+                .components(new Components()
+                        .addSecuritySchemes("JWT", new SecurityScheme()
+                                .type(SecurityScheme.Type.APIKEY)
+                                .in(SecurityScheme.In.HEADER)
+                                .name("authorization")))
+                // AddSecurityItem section applies created scheme globally
+                .addSecurityItem(new SecurityRequirement().addList("JWT"));
+    }
+    @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable()
         .authorizeRequests()
-        .antMatchers("/api/authenticate","/api/resetpasswords").permitAll()
+        .antMatchers("/api/authenticate","/api/resetpasswords","/api-docs","/api-docs/*","/swagger-ui-custom.html","/swagger-ui/*").permitAll()
         .anyRequest().authenticated()
         .and()
         .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.model.Lecture;
 import com.example.demo.service.LectureService;
 import com.example.demo.service.StudentService;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,11 @@ class RollCallSystemApplicationTests {
     StudentService ss;
     @Test
     void correctCodeTest() {
-        ls.startRegistration(1,"asddsaa",null);
+        Lecture lecture = new Lecture();
+        lecture.setId(1);
+        lecture.setCode("asddsaa");
+        lecture.setRegistrationdeadline(null);
+        ls.startRegistration(lecture);
         assertTrue(ls.correctCode(1,"asddsaa"));
         assertFalse(ls.correctCode(1,"Wroooong"));
 

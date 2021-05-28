@@ -1,21 +1,30 @@
 package com.example.demo.service;
 
+import com.example.demo.JwtTokenUtil;
+import com.example.demo.model.Lecture;
 import com.example.demo.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Service
 public class LectureService {
-
+    @Autowired
+    JwtTokenUtil jtu;
     @Autowired
     private LectureRepository lr;
 
 
-    public void startRegistration(int lectureId, String code, LocalDateTime deadline) {
-        lr.insertLectureCode(lectureId,code,deadline);
+    public void startRegistration(Lecture updatedlecture) {
+        Lecture savedlecture=lr.findById(updatedlecture.getId());
+        savedlecture.setCode(updatedlecture.getCode());
+        savedlecture.setRegistrationdeadline(updatedlecture.getRegistrationdeadline());
+        lr.save(savedlecture);
     }
 
     public boolean correctCode(int lectureId, String code) {

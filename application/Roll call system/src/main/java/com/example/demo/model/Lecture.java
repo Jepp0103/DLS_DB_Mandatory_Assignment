@@ -1,11 +1,19 @@
 package com.example.demo.model;
 
+import com.example.demo.JwtTokenUtil;
+import com.example.demo.controller.JwtAuthenticationController;
+import com.example.demo.service.BeanUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.envers.Audited;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.*;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -45,6 +53,7 @@ public class Lecture {
 
     @Column(name="name")
     private String name;
+    @Audited
     @Column(name="date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
@@ -57,7 +66,9 @@ public class Lecture {
     @Column(name="length")
     private int length;
     @Column(name="code")
+    @Audited
     private String code;
+    @Audited
     @Column(name="registration_deadline")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Europe/Berlin")
     private LocalDateTime registrationdeadline;
@@ -154,11 +165,16 @@ public class Lecture {
     }
 
     public String getCode() {
+        JwtTokenUtil jtu = BeanUtil.getBean(JwtTokenUtil.class);
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                        .getRequest();
+        if (jtu.getTeacherIdFromToken(jtu.getCurrentToken(request))!=null) {
+            return code;
+        }
         return null;
     }
-    public String getCode(boolean b) {
-        return code;
-    }
+
     public void setCode(String code) {
         this.code = code;
     }
