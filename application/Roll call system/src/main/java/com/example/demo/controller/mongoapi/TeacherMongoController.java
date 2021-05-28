@@ -1,8 +1,11 @@
 package com.example.demo.controller.mongoapi;
+import com.example.demo.model.mongomodels.StudentMongo;
 import com.example.demo.model.mongomodels.TeacherMongo;
 import com.example.demo.repository.mongorepository.TeacherMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -20,4 +23,10 @@ public class TeacherMongoController {
     public TeacherMongo addMongoTeacher(@RequestBody TeacherMongo teacherMongo)  {
         return teacherMongoRepository.save(teacherMongo);
     }
+
+    @PostMapping("/onemongoteacher")
+    public TeacherMongo getOneMongoTeacher(@RequestBody Map<String, Integer> body)  {
+        return teacherMongoRepository.findOneTeacher(body.get("lectureId"));
+    }
+
 }

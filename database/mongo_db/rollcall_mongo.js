@@ -32,7 +32,7 @@ db.student.insertMany([
             ip_address: '193.29.107.196',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
-        class: {
+        classes: {
             name: 'SD21w1',
             faculty: 'KEA - Københavns Erhvervsakademi'
         }
@@ -52,7 +52,7 @@ db.student.insertMany([
             ip_address: '193.29.107.196',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
-        class: {
+        classes: {
             name: 'SD21w2',
             faculty: 'KEA - Københavns Erhvervsakademi'
         }
@@ -72,7 +72,7 @@ db.student.insertMany([
             ip_address: '193.29.109.198',
             faculty: 'DTU - Danmarks Tekniske Universitet'
         },
-        class: {
+        classes: {
             name: 'DTU_Class_2',
             faculty: 'DTU - Danmarks Tekniske Universitet'
         }
@@ -92,7 +92,7 @@ db.student.insertMany([
             ip_address: '193.29.109.198',
             faculty: 'DTU - Danmarks Tekniske Universitet'
         },
-        class: {
+        classes: {
             name: 'DTU_Class_2',
             faculty: 'DTU - Danmarks Tekniske Universitet'
         }
@@ -112,7 +112,7 @@ db.student.insertMany([
             ip_address: '193.29.107.199',
             faculty: 'CBS - Copenhagen Business School'
         },
-        class: {
+        classes: {
             name: 'CBS_Class_1',
             faculty: 'CBS - Copenhagen Business School'
         }
@@ -132,7 +132,7 @@ db.student.insertMany([
             ip_address: '193.29.107.199',
             faculty: 'CBS - Copenhagen Business School'
         },
-        class: {
+        classes: {
             name: 'CBS_Class_1',
             faculty: 'CBS - Copenhagen Business School'
         }
@@ -152,7 +152,7 @@ db.student.insertMany([
             ip_address: '193.29.107.199',
             faculty: 'CBS - Copenhagen Business School'
         },
-        class: {
+        classes: {
             name: 'CBS_Class_1',
             faculty: 'CBS - Copenhagen Business School'
         }
@@ -172,7 +172,7 @@ db.student.insertMany([
             ip_address: '193.29.107.199',
             faculty: 'CBS - Copenhagen Business School'
         },
-        class: {
+        classes: {
             name: 'CBS_Class_2',
             faculty: 'CBS - Copenhagen Business School'
         }
@@ -192,7 +192,7 @@ db.student.insertMany([
             ip_address: '193.29.107.197',
             faculty: 'KU - Københavns Universitet'
         },
-        class: {
+        classes: {
             name: 'KU_Class_1',
             faculty: 'KU - Københavns Universitet'
         }
@@ -231,7 +231,7 @@ db.lecture.insertMany([
             name: 'B234',
             is_available: false
         },
-        class: {
+        classes: {
             name: 'SD21w2',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
@@ -288,7 +288,7 @@ db.lecture.insertMany([
             name: 'B234',
             is_available: true
         },
-        class: {
+        classes: {
             name: 'SD21w2',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
@@ -345,7 +345,7 @@ db.lecture.insertMany([
             name: 'B234',
             is_available: 0
         },
-        class: {
+        classes: {
             name: 'SD21w1',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
@@ -402,7 +402,7 @@ db.lecture.insertMany([
             name: 'B234',
             is_available: false
         },
-        class: {
+        classes: {
             name: 'SD21w1',
             faculty: 'KEA - Københavns Erhvervsakademi'
         },
@@ -459,7 +459,7 @@ db.lecture.insertMany([
             name: 'B234',
             is_available: true
         },
-        class: {
+        classes: {
             name: 'SD21w1',
             faculty: 'KEA - Københavns Erhvervsakademi'
         }
@@ -499,7 +499,7 @@ db.lecture.find()
 db.teacher.find()
 
 //Similar to where clause sql
-db.student.find({'class.name': 'CBS_Class_1'})
+db.student.find({'classes.name': 'CBS_Class_1'})
 
 //Sort collection in acsending order
 db.student.find().sort({forename: 1})

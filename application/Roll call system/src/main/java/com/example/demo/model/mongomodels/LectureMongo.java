@@ -1,5 +1,6 @@
 package com.example.demo.model.mongomodels;
 
+import com.example.demo.model.mongoobjects.AttendanceRecordObject;
 import com.example.demo.model.mongoobjects.ClassObject;
 import com.example.demo.model.mongoobjects.ClassRoomObject;
 import com.example.demo.model.mongoobjects.CourseObject;
@@ -7,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.sql.Time;
-import java.util.Date;
 import java.util.List;
 
 @Document(collection = "lecture")
@@ -23,8 +23,8 @@ public class LectureMongo {
     private String code;
     private CourseObject course;
     private ClassRoomObject classroom;
-    private ClassObject _class; //Can't use class as variable name due to keyword reservation
-    private List attendance_records;
+    private ClassObject classes; //Can't use class as variable name due to keyword reservation
+    private List<AttendanceRecordObject> attendance_records;
 
     public int getId() {
         return id;
@@ -107,18 +107,18 @@ public class LectureMongo {
     }
 
     public ClassObject get_class() {
-        return _class;
+        return classes;
     }
 
-    public void set_class(ClassObject _class) {
-        this._class = _class;
+    public void set_class(ClassObject classes) {
+        this.classes = classes;
     }
 
-    public List getAttendance_records() {
+    public List<AttendanceRecordObject> getAttendance_records() {
         return attendance_records;
     }
 
-    public void setAttendance_records(List attendance_records) {
+    public void setAttendance_records(List<AttendanceRecordObject> attendance_records) {
         this.attendance_records = attendance_records;
     }
 

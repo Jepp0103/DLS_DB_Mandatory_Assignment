@@ -9,6 +9,4 @@ import java.util.List;
 public interface LectureMongoRepository extends MongoRepository<LectureMongo, String> {
     @Override
     List<LectureMongo> findAll();
-
 }
-//int lectureId
