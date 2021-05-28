@@ -20,7 +20,7 @@ public class StudentMongoController {
 
     @PostMapping("/onemongostudent")
     public StudentMongo getOneMongoStudent(@RequestBody Map<String, Integer> body)  {
-        return studentMongoRepository.findOneStudent(body.get("lectureId"));
+        return studentMongoRepository.findOneStudent(body.get("studentId"));
     }
 
     @PostMapping("/addmongostudent")

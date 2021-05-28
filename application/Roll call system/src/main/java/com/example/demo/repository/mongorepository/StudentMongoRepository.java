@@ -10,5 +10,5 @@ public interface StudentMongoRepository extends MongoRepository<StudentMongo, St
     List<StudentMongo> findAll();
 
     @Query("{'_id': ?0 }")
-    StudentMongo findOneStudent(int lectureId);
+    StudentMongo findOneStudent(int studentId);
 }

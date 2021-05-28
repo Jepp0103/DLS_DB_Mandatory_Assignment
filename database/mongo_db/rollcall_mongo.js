@@ -343,7 +343,7 @@ db.lecture.insertMany([
                 faculty: 'KEA - Københavns Erhvervsakademi'
             },
             name: 'B234',
-            is_available: 0
+            is_available: true
         },
         classes: {
             name: 'SD21w1',
@@ -493,7 +493,7 @@ db.teacher.insertMany([
 ])
 
 
-//Query all students
+//Query all collections
 db.student.find()
 db.lecture.find()
 db.teacher.find()

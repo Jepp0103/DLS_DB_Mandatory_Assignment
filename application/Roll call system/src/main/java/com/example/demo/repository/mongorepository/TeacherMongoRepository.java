@@ -1,6 +1,4 @@
 package com.example.demo.repository.mongorepository;
-
-import com.example.demo.model.mongomodels.StudentMongo;
 import com.example.demo.model.mongomodels.TeacherMongo;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -12,5 +10,5 @@ public interface TeacherMongoRepository extends MongoRepository<TeacherMongo, St
     List<TeacherMongo> findAll();
 
     @Query("{'_id': ?0 }")
-    TeacherMongo findOneTeacher(int lectureId);
+    TeacherMongo findOneTeacher(int teacherId);
 }

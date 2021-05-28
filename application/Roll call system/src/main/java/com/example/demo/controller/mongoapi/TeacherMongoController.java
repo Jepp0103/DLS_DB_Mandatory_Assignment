@@ -19,14 +19,13 @@ public class TeacherMongoController {
         return teacherMongoRepository.findAll();
     }
 
+    @PostMapping("/onemongoteacher")
+    public TeacherMongo getOneMongoTeacher(@RequestBody Map<String, Integer> body)  {
+        return teacherMongoRepository.findOneTeacher(body.get("teacherId"));
+    }
+
     @PostMapping("/addmongoteacher")
     public TeacherMongo addMongoTeacher(@RequestBody TeacherMongo teacherMongo)  {
         return teacherMongoRepository.save(teacherMongo);
     }
-
-    @PostMapping("/onemongoteacher")
-    public TeacherMongo getOneMongoTeacher(@RequestBody Map<String, Integer> body)  {
-        return teacherMongoRepository.findOneTeacher(body.get("lectureId"));
-    }
-
 }
