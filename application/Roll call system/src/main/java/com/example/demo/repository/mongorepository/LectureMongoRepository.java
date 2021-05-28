@@ -10,8 +10,5 @@ public interface LectureMongoRepository extends MongoRepository<LectureMongo, St
     @Override
     List<LectureMongo> findAll();
 
-    //Lecture participation rate function with parameters
-    @Query("{student: db.student.findOne({_id: 3})}")
-    String findLectureMongoParticipationRate();
 }
 //int lectureId
