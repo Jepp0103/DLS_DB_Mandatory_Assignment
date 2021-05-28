@@ -23,7 +23,6 @@ public class Class {
     private Faculty faculty; //Currently some problems with this field when trying to access: api/lecturesAndRelatedCourses
 
 
-    @JsonIgnore
     public int getId() {
         return id;
     }
