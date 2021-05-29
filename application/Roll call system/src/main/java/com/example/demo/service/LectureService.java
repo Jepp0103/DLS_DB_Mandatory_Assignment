@@ -1,16 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.JwtTokenUtil;
+import com.example.demo.model.Class;
 import com.example.demo.model.Lecture;
+import com.example.demo.model.TeacherClassCourseResponse;
 import com.example.demo.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Set;
 
 @Service
 public class LectureService {
@@ -31,5 +31,11 @@ public class LectureService {
        return lr.existsByIdAndCodeAndRegistrationdeadlineAfter(lectureId,code,LocalDateTime.now(ZoneId.of("Europe/Copenhagen")));
     }
 
-    public void endRegistration(int lectureId) {lr.removeLectureCodee(lectureId);}
+    public void endRegistration(int lectureId) {
+        Lecture savedlecture=lr.findById(lectureId);
+        savedlecture.setCode(null);
+        lr.save(savedlecture);
+
+    }
+
 }

@@ -3,10 +3,7 @@ package com.example.demo.model;
 import com.example.demo.JwtTokenUtil;
 import com.example.demo.controller.JwtAuthenticationController;
 import com.example.demo.service.BeanUtil;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.envers.Audited;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -21,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name="lecture")
 public class Lecture {

@@ -33,11 +33,11 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer>, Revis
 
     Set<Lecture> findLectureByTeachers_Id(int teacherid);
 
-    @Transactional
+/*    @Transactional
     @Modifying
     @Query("UPDATE Lecture l set l.code = :code,l.registrationdeadline = :deadline where l.id = :lectureId")
     void insertLectureCode(int lectureId, String code,LocalDateTime deadline);
-
+*/
     boolean existsByIdAndCodeAndRegistrationdeadlineAfter(int Id,String code,LocalDateTime datetime);
 
     @Transactional

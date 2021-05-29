@@ -221,7 +221,7 @@ class MyLecture extends Component {
 		};
 		let isNum = /^\d+$/.test(this.state.currentLecture.id); //Validating if lecture id input is a number
 		if (this.state.currentLecture.id != "" && isNum && $("#teacherCodeInput").val() != "") {
-			axios.post("http://localhost:4000/api/beginregistration", registrationInput)
+			axios.put("http://localhost:4000/api/beginregistration", registrationInput)
 			  .then(result => {
 				alert("Register code for lecture succesfully added");
 				this.setState({
