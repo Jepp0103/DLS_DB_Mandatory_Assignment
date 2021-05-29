@@ -3,6 +3,7 @@ import com.example.demo.JwtTokenUtil;
 import com.example.demo.model.RegisterAttendenceRequest;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentStats;
+import com.example.demo.model.Teacher;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,6 @@ public class StudentController {
         String token = jtu.getCurrentToken(request);
         Integer classid=jtu.getClassIdFromToken(token);
         Integer studentid=jtu.getStudentIdFromToken(token);
-        System.out.println(studentid);
         if (classid!=null && studentid!=null){
             return new ResponseEntity<>(ss.getStudentStats(studentid,classid), HttpStatus.OK);
         }
@@ -69,6 +69,19 @@ public class StudentController {
         if (classid != null && studentid != null) {
             boolean registrationsucces = ss.registerAttendence(studentid, payload.getTeacherid(), payload.getLatitude(), payload.getLongitude(), payload.getLectureid(), payload.getCode(), payload.getStudentSSID(), payload.getIpaddress(), payload.getFacultyid(), payload.getTeachingnetworkid());
             return ResponseEntity.ok(registrationsucces ? "Registration successful" : "Registration failed");
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+    @PostMapping("/addstudent")
+    public ResponseEntity<?> addStudent(@RequestBody Student student)  {
+        return ResponseEntity.ok(studentRepository.save(student));
+    }
+    @PutMapping("/updatestudent")
+    public ResponseEntity<?> updateStudent(@RequestBody Student student, HttpServletRequest request)  {
+        String token = jtu.getCurrentToken(request);
+        Integer studentid=jtu.getStudentIdFromToken(token);
+        if (studentid==student.getId()) {
+            return ResponseEntity.ok(ss.update(student));
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }

@@ -4,6 +4,7 @@ import com.example.demo.model.GpsCoordinates;
 import com.example.demo.model.Teacher;
 import com.example.demo.repository.GpsCoordinatesRepository;
 import com.example.demo.repository.TeacherRepository;
+import com.example.demo.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,11 @@ public class TeacherController {
     private GpsCoordinatesRepository gcr;
     @Autowired
     JwtTokenUtil jtu;
+    @Autowired
+    TeacherService ts;
 
     @GetMapping("/teachers")
     public ResponseEntity<List<Teacher>> teachers()  {
-        System.out.println(teacherRepository.findAll().size());
         return new ResponseEntity<>(teacherRepository.findAll(), HttpStatus.OK);
     }
     @PostMapping("/updateteachercoordinates")
@@ -37,4 +39,20 @@ public class TeacherController {
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
+    @PostMapping("/addteacher")
+    public ResponseEntity<?> addTeacher(@RequestBody Teacher teacher)  {
+        return ResponseEntity.ok(teacherRepository.save(teacher));
+    }
+    @PutMapping("/updateteacher")
+    public ResponseEntity<?> updateTeacher(@RequestBody Teacher teacher, HttpServletRequest request)  {
+        String token = jtu.getCurrentToken(request);
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        if (teacherid==teacher.getId()) {
+            return ResponseEntity.ok(ts.update(teacher));
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+
+
 }

@@ -93,13 +93,15 @@ class MyLecture extends Component {
          axios.post("http://localhost:4000/api/getlecture", data)
             .then(result => {
 				console.log(result.data);
+				var loaded=false;
 				const renderer = ({ hours, minutes, seconds, completed }) => {
 				  if (completed) {
 					return <span>Registration ended</span>;
 				  } else {
-					 if( zeroPad(seconds) % 10 == 0 || (seconds  == 1 && minutes == 0)){
+					 if(!loaded && (zeroPad(seconds) % 10 == 0 || (seconds  == 1 && minutes == 0))){
 						this.getAttendingStudents();
-					 }
+						loaded=true;
+					 }else if (seconds.toString()[1]=='9'){loaded=false;}
 					return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
 				  }
 				};

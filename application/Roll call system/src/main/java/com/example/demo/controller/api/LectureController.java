@@ -124,10 +124,20 @@ public class LectureController {
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
+    @PutMapping("/updatelecture")
+    public ResponseEntity<?> updateLecture(@RequestBody Lecture lecture, HttpServletRequest request){//should be a post
+        String token = jtu.getCurrentToken(request);
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        Set<Lecture> mylectures = lectureRepository.findLectureByTeachers_Id(teacherid);
+        if (mylectures.stream().anyMatch(o -> o.getId()==lecture.getId())){
+            return ResponseEntity.ok(ls.update(lecture));
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 
     @PostMapping("/getlecture")
     public Lecture getLecture(@RequestBody Map<String, Integer> body) {
-        return lectureRepository.findById((int)body.get("lectureid"));
+        return lectureRepository.findLectureById((int)body.get("lectureid"));
     }
 
 

@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student,Integer> {
+    public Student findStudentById(int id);
     @Query(
             value = "select email_address, getStudentLectureAttendanceRate(id,0) from student",
             nativeQuery = true)

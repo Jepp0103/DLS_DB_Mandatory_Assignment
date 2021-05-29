@@ -48,7 +48,7 @@ public class Lecture {
             joinColumns = @JoinColumn(name = "lecture_id"),
             inverseJoinColumns = @JoinColumn(name = "teacher_id"))
     Set<Teacher> teachers;
-
+    @Audited
     @Column(name="name")
     private String name;
     @Audited
