@@ -1,37 +1,34 @@
 package com.example.demo.model.mongomodels;
 
+import com.example.demo.model.mongoobjects.AttendanceRecordObject;
 import com.example.demo.model.mongoobjects.ClassObject;
 import com.example.demo.model.mongoobjects.ClassRoomObject;
 import com.example.demo.model.mongoobjects.CourseObject;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.persistence.Id;
-import java.sql.Time;
-import java.util.Date;
 import java.util.List;
 
 @Document(collection = "lecture")
 public class LectureMongo {
-    @Id
-    private int id;
+    @Id private int _id;
     private String name;
     private String date;
-    private Time time_start;
-    private Time time_end;
+    private String time_start;
+    private String time_end;
     private int time_zone;
     private int length;
     private String code;
     private CourseObject course;
     private ClassRoomObject classroom;
-    private ClassObject _class; //Can't use class as variable name due to keyword reservation
-    private List attendance_records;
+    private ClassObject classes;
+    private List<AttendanceRecordObject> attendance_records;
 
-    public int getId() {
-        return id;
+    public int get_id() {
+        return _id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
     public String getName() {
@@ -50,19 +47,19 @@ public class LectureMongo {
         this.date = date;
     }
 
-    public Time getTime_start() {
+    public String getTime_start() {
         return time_start;
     }
 
-    public void setTime_start(Time time_start) {
+    public void setTime_start(String time_start) {
         this.time_start = time_start;
     }
 
-    public Time getTime_end() {
+    public String getTime_end() {
         return time_end;
     }
 
-    public void setTime_end(Time time_end) {
+    public void setTime_end(String time_end) {
         this.time_end = time_end;
     }
 
@@ -106,21 +103,22 @@ public class LectureMongo {
         this.classroom = classroom;
     }
 
-    public ClassObject get_class() {
-        return _class;
+    public ClassObject getClasses() {
+        return classes;
     }
 
-    public void set_class(ClassObject _class) {
-        this._class = _class;
+    public void setClasses(ClassObject classes) {
+        this.classes = classes;
     }
 
-    public List getAttendance_records() {
+    public List<AttendanceRecordObject> getAttendance_records() {
         return attendance_records;
     }
 
-    public void setAttendance_records(List attendance_records) {
+    public void setAttendance_records(List<AttendanceRecordObject> attendance_records) {
         this.attendance_records = attendance_records;
     }
+
 
 }
 

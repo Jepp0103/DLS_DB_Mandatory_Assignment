@@ -1,7 +1,4 @@
 package com.example.demo.model.mongoobjects;
-
-import java.util.Date;
-
 public class AddressObject {
     private String street_name;
     private int street_number;

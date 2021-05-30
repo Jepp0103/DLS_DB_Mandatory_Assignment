@@ -1,5 +1,4 @@
 package com.example.demo.controller.mongoapi;
-import com.example.demo.model.mongomodels.StudentMongo;
 import com.example.demo.model.mongomodels.TeacherMongo;
 import com.example.demo.repository.mongorepository.TeacherMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
