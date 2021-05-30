@@ -32,24 +32,6 @@ public class StudentController {
         return studentRepository.findAll();
     }
 
-    @GetMapping("/attendencerate")
-    public Iterable<Object[]> getAttendenceRate(@RequestParam Map<String,String> params)  {
-        Iterable<Object[]> iter=null;
-
-        if (params.containsKey("student") && params.containsKey("course")){
-           // iter= studentRepository.findSingleAttendenceRate(Integer.parseInt(params.get("student")),Integer.parseInt(params.get("course")));
-        }else if (params.containsKey("student")){
-           // iter= studentRepository.findSingleAttendenceRate(Integer.parseInt(params.get("student")));
-        }else if(params.containsKey("class") && params.containsKey("course")){
-            iter= studentRepository.findAttendenceRate(Integer.parseInt(params.get("class")), Integer.parseInt(params.get("course")));
-        }else if(params.containsKey("class")){
-            iter= studentRepository.findAttendenceRate(Integer.parseInt(params.get("class")));
-        }else{
-            iter= studentRepository.findAttendenceRate();
-        }
-        //Above code should be in a service layer. Added here because lazyness
-        return iter;
-    }
     @GetMapping("/mystats")
     public ResponseEntity<StudentStats> getStudentStats(HttpServletRequest request)  {
         String token = jtu.getCurrentToken(request);

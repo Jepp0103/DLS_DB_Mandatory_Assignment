@@ -45,12 +45,13 @@ public class LectureController {
 
     @PostMapping("/lectureparticipationrate")
     //Lecture participation rate function with parameters - http://localhost:4000/api/lectureParticipationRate?lectureId={number}
-    public ResponseEntity<?> getLectureParticipationRate(@RequestBody Map<String, Integer> body) {
-        return ResponseEntity.ok(lectureRepository.findLectureParticipationRate(body.get("lectureid")));
+    public ResponseEntity<?> getLectureParticipationRate(@RequestBody Lecture lecture) {
+        return ResponseEntity.ok(lectureRepository.findLectureParticipationRate(lecture.getId()));
     }
     @PostMapping("/lectureattendence")
-    public ResponseEntity<?> getLectureAttendence(@RequestBody Map<String, Integer> body) {
-        return ResponseEntity.ok(lectureRepository.getLectureAttendence(body.get("lectureid")));
+    public ResponseEntity<?> getLectureAttendence(@RequestBody Lecture lecture) {
+        System.out.println(lecture.getId());
+        return ResponseEntity.ok(lectureRepository.getLectureAttendence(lecture.getId()));
     }
 
     @GetMapping("/lectureparticipationratearg2") //Lecture participation rate function with arg 2 for testing

@@ -15,7 +15,7 @@ class login extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    const endpoint = "http://localhost:4000/api/authenticate";
+    const endpoint = "http://localhost:8080/api/authenticate";
     const username = this.refs.username.value;
     const password = this.refs.pass.value;
 
@@ -37,7 +37,7 @@ class login extends Component {
       }
     }
     console.log(config);
-    axios.get("http://localhost:4000/api/getrole", config).then(res => {
+    axios.get("http://localhost:8080/api/getrole", config).then(res => {
       if (res.data === "teacher") {
         localStorage.setItem("role", res.data);
         this.props.history.push("/teacherhome");

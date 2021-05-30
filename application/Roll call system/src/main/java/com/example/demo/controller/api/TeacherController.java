@@ -1,6 +1,7 @@
 package com.example.demo.controller.api;
 import com.example.demo.JwtTokenUtil;
 import com.example.demo.model.GpsCoordinates;
+import com.example.demo.model.StudentStats;
 import com.example.demo.model.Teacher;
 import com.example.demo.repository.GpsCoordinatesRepository;
 import com.example.demo.repository.TeacherRepository;
@@ -36,6 +37,15 @@ public class TeacherController {
         if (teacherid!=null) {
             gcr.updateTeachersCoordinates(coordinats.getLatitude(), coordinats.getLongitude(), teacherRepository.getTeacherById(teacherid).getGps_coordinates_id());
             return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+    @GetMapping("/teacherstats")
+    public ResponseEntity<?> getTeacherstats(HttpServletRequest request)  {
+        String token = jtu.getCurrentToken(request);
+        Integer teacherid=jtu.getTeacherIdFromToken(token);
+        if (teacherid!=null){
+            return ResponseEntity.ok(ts.getTeacherStats(teacherid));
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
