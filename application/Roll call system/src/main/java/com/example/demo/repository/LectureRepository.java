@@ -18,7 +18,7 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer>, Revis
     @Query(value = "SELECT c.name, c.id, l.id, l.name from lecture l JOIN course c ON l.course_id = c.id", nativeQuery = true)
     Iterable<Lecture> findLecturesAndRelatedCourses();
 
-    Lecture findById(int id);
+    Lecture findLectureById(int id);
     //Lecture participation rate function with parameters
     @Query(value = "SELECT getLectureParticipationRate(:lectureId) FROM lecture WHERE id = :lectureId", nativeQuery = true)
     String findLectureParticipationRate(int lectureId);
@@ -33,11 +33,6 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer>, Revis
 
     Set<Lecture> findLectureByTeachers_Id(int teacherid);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Lecture l set l.code = :code,l.registrationdeadline = :deadline where l.id = :lectureId")
-    void insertLectureCode(int lectureId, String code,LocalDateTime deadline);
-
     boolean existsByIdAndCodeAndRegistrationdeadlineAfter(int Id,String code,LocalDateTime datetime);
 
     @Transactional
@@ -49,6 +44,7 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer>, Revis
 
     @Query(value = "SELECT forename, surname, (SELECT is_attending FROM attendance_record where attendance_record.student_id=student.id and attendance_record.lecture_id=class_lectures.lecture_id) as is_attending from student left join class_lectures on class_lectures.class_id=student.class_id where class_lectures.lecture_id=:lectureId", nativeQuery = true)
     Set<AttendenceResponse> getLectureAttendence(int lectureId);
+
 
     //Notation - @transactional @modifying - insert into m
 }

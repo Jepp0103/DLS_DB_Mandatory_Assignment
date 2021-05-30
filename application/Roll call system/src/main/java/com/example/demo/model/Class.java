@@ -9,7 +9,7 @@ import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
-@Table(name="class")
+@Table(name="iclass")
 public class Class {
     @Id
     @Column(name="id")

@@ -10,12 +10,23 @@ import javax.persistence.Entity;
 public class RevisionInfo extends DefaultRevisionEntity {
  
     private String author;
- 
+
+    private String method;
+
+
     public String getAuthor() {
         return author;
     }
  
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 }

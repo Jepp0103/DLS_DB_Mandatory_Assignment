@@ -20,6 +20,7 @@ class teacherHome extends Component {
 	  classesLoaded: false,
 	  lecturesLoaded: false,
 	  currentLecturesLoaded: false,
+	  teacherStats: null,
       classes: [],
       currentLectures: [],
       mylectures: [],
@@ -31,10 +32,11 @@ class teacherHome extends Component {
     this.getMyLectures();
     this.getCurrentLectures();
     this.beginRegistration();
+	this.getTeacherStats();
   }
 
   getClasses() {
-    axios.get("http://localhost:4000/api/myclasses")
+    axios.get("http://localhost:8080/api/myclasses")
       .then(result => {
         console.log("classes", result.data)
         this.setState({
@@ -51,7 +53,7 @@ class teacherHome extends Component {
   }
 
   getCurrentLectures() {
-    axios.get("http://localhost:4000/api/currentlectures") //Have to change endpoint in the future
+    axios.get("http://localhost:8080/api/currentlectures") //Have to change endpoint in the future
       .then(result => {
         this.setState({
 		  currentLectures:result.data,
@@ -68,7 +70,7 @@ class teacherHome extends Component {
 
   getMyLectures() {
     $("#getMyLecturesBtn").click(() => {
-      axios.get("http://localhost:4000/api/mylectures") //Have to change endpoint in the future
+      axios.get("http://localhost:8080/api/mylectures") //Have to change endpoint in the future
         .then(result => {
           this.setState({
 			mylectures:result.data,
@@ -87,7 +89,22 @@ class teacherHome extends Component {
       this.state.mylectures = [];
     });
   }
-
+  	getTeacherStats() {		
+        axios.get("http://localhost:8080/api/teacherstats")
+            .then(result => {
+                this.state.teacherStats=result.data;
+				console.log(this.state.teacherStats);
+				this.setState({
+                    statsLoaded: true,
+                });
+            })
+            .catch(error => {
+				console.log(error);
+                this.setState({
+                    statsLoaded: false,
+                });
+            });
+    }
 
   beginRegistration() {
     $("#openAttButton").click(() => {
@@ -98,7 +115,7 @@ class teacherHome extends Component {
       };
       let isNum = /^\d+$/.test($("#lectureRegIdInput").val()); //Validating if lecture id input is a number
       if ($("#lectureRegIdInput").val() != "" && isNum && $("#lectureRegCodeInput").val() != "") {
-        axios.post("http://localhost:4000/api/beginregistration", registrationInput)
+        axios.post("http://localhost:8080/api/beginregistration", registrationInput)
           .then(result => {
             $("#lectureRegIdInput").val("");
             $("#lectureRegCodeInput").val("");

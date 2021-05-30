@@ -3,6 +3,7 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,14 +17,18 @@ public class Teacher {
     @Id
     @Column(name="id")
     private int id;
+    @Audited
     @Column(name="email_address")
     private String email_address;
     @Column(name="gps_coordinates_id")
     private Integer gps_coordinates_id;
+    @Audited
     @Column(name="forename")
     private String forename;
+    @Audited
     @Column(name="surname")
     private String surname;
+    @Audited
     @Column(name="phone_number")
     private String phone_number;
 

@@ -35,12 +35,12 @@ public class ClassController {
     public ResponseEntity<?> getTeachersClasses(HttpServletRequest request)  {
         String token = jtu.getCurrentToken(request);
         Integer classid=jtu.getClassIdFromToken(token);
-        System.out.println(classid);
         if (classid!=null){
             return ResponseEntity.ok(classRepository.findById(classid));
         }
         Integer teacherid=jtu.getTeacherIdFromToken(token);
         if (teacherid!=null){
+            System.out.println(teacherid);
             return ResponseEntity.ok(classRepository.findTeacherClasses(teacherid));
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);

@@ -63,11 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*")
-        .allowedMethods("HEAD", "GET", "PUT", "POST",
-        "DELETE", "PATCH").allowedHeaders("*");
-    }
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

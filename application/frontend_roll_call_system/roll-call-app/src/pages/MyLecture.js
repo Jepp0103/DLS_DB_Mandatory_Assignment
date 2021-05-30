@@ -72,7 +72,7 @@ class MyLecture extends Component {
 		
 	}
 	getClasses() {		
-        axios.get("http://localhost:4000/api/myclasses")
+        axios.get("http://localhost:8080/api/myclasses")
             .then(result => {	
 				this.setState({
                     classLoaded: true,
@@ -90,16 +90,18 @@ class MyLecture extends Component {
 
    getLecture() {
 	   let data = { "lectureid": this.state.lectureid };
-         axios.post("http://localhost:4000/api/getlecture", data)
+         axios.post("http://localhost:8080/api/getlecture", data)
             .then(result => {
 				console.log(result.data);
+				var loaded=false;
 				const renderer = ({ hours, minutes, seconds, completed }) => {
 				  if (completed) {
 					return <span>Registration ended</span>;
 				  } else {
-					 if( zeroPad(seconds) % 10 == 0 || (seconds  == 1 && minutes == 0)){
+					 if(!loaded && (zeroPad(seconds) % 10 == 0 || (seconds  == 1 && minutes == 0))){
 						this.getAttendingStudents();
-					 }
+						loaded=true;
+					 }else if (seconds.toString()[1]=='9'){loaded=false;}
 					return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
 				  }
 				};
@@ -133,7 +135,7 @@ class MyLecture extends Component {
 		};
 		let isNum = /^\d+$/.test(this.state.currentLecture.id); //Validating if lecture id input is a number
 		if (this.state.currentLecture.id != "" && isNum && $("#lectureRegCodeInput").val() != "") {
-			axios.post("http://localhost:4000/api/registerattendence", registrationInput)
+			axios.post("http://localhost:8080/api/registerattendence", registrationInput)
 				.then(result => {
 					$("#lectureRegIdInput").val("");
 					if(result.data=="Registration successful"){
@@ -156,9 +158,9 @@ class MyLecture extends Component {
 		}
 	}
 	  getAttendingStudents(e) {
-		  let lectureId = { "lectureid": this.state.currentLecture.id };
+		  let lectureId = { "id": this.state.currentLecture.id };
 		  if (lectureId !== null) {
-			axios.post("http://localhost:4000/api/lectureattendence", lectureId) //Have to change endpoint in the future
+			axios.post("http://localhost:8080/api/lectureattendence", lectureId) //Have to change endpoint in the future
 			  .then(result => {
 				this.state.attendingStudents = []; //Emptying array before inserting again
 				for (var i = 0; i < result.data.length; i++) {
@@ -185,7 +187,7 @@ class MyLecture extends Component {
 		});
 	  }
 	getLectureParticipationRate(lectureId) {
-		axios.post("http://localhost:4000/api/lectureparticipationrate", lectureId)
+		axios.post("http://localhost:8080/api/lectureparticipationrate", lectureId)
 		  .then(result => {
 			console.log("lecture participation rate data: ", result.data)
 			this.state.lectureParticipationRate = result.data
@@ -221,7 +223,7 @@ class MyLecture extends Component {
 		};
 		let isNum = /^\d+$/.test(this.state.currentLecture.id); //Validating if lecture id input is a number
 		if (this.state.currentLecture.id != "" && isNum && $("#teacherCodeInput").val() != "") {
-			axios.post("http://localhost:4000/api/beginregistration", registrationInput)
+			axios.put("http://localhost:8080/api/beginregistration", registrationInput)
 			  .then(result => {
 				alert("Register code for lecture succesfully added");
 				this.setState({

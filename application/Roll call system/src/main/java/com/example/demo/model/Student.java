@@ -3,6 +3,7 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
@@ -13,23 +14,26 @@ public class Student {
     @Id
     @Column(name="id")
     private int id;
+    @Audited
     @Column(name="email_address")
     private String email_address;
     @Column(name="network_id")
     private Integer network_id;
     @Column(name="gps_coordinates_id")
     private Integer gps_coordinates_id;
+    @Audited
     @Column(name="forename")
     private String forename;
+    @Audited
     @Column(name="surname")
     private String surname;
+    @Audited
     @Column(name="phone_number")
     private String phone_number;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "class_id", nullable = false)
     private Class myclass;
 
-    @JsonIgnore
     public int getId() {
         return id;
     }

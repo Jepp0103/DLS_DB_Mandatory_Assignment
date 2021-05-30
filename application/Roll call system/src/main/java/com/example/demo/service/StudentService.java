@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Course;
+import com.example.demo.model.Student;
 import com.example.demo.model.StudentStats;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.NetworkRepository;
@@ -70,4 +71,12 @@ public class StudentService {
         return new StudentStats(overallparticipationrate,participationrates);
     }
 
+    public Student update(Student student) {
+        Student oldstudent = sr.findStudentById(student.getId());
+        if (student.getEmail_address()!=null) {oldstudent.setEmail_address(student.getEmail_address());};
+        if (student.getForename()!=null) {oldstudent.setForename(student.getForename());};
+        if (student.getSurname()!=null) {oldstudent.setSurname(student.getSurname());};
+        if (student.getPhone_number()!=null) {oldstudent.setPhone_number(student.getPhone_number());};
+        return sr.save(oldstudent);
+    }
 }

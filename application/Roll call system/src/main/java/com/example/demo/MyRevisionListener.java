@@ -16,7 +16,8 @@ public class MyRevisionListener implements RevisionListener {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                         .getRequest();
-
         rev.setAuthor(jtu.getUsernameFromToken(jtu.getCurrentToken(request)));
+        rev.setMethod(request.getMethod());
+
     }
 }
