@@ -5,10 +5,7 @@ public class CityObject {
     private int zip_code;
     private String city;
 
-    public CityObject(int zip_code, String city) {
-        this.zip_code = zip_code;
-        this.city = city;
-    }
+    public CityObject(){}
 
     public int getZip_code() {
         return zip_code;

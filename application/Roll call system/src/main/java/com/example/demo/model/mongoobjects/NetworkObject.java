@@ -5,12 +5,7 @@ public class NetworkObject {
     private String ip_address;
     private String faculty;
 
-
-    public NetworkObject(String ssid, String ip_address, String faculty) {
-        this.ssid = ssid;
-        this.ip_address = ip_address;
-        this.faculty = faculty;
-    }
+    public NetworkObject(){}
 
     public String getSsid() {
         return ssid;

@@ -4,10 +4,7 @@ import com.example.demo.model.mongomodels.StudentMongo;
 
 public class AttendanceRecordObject {
 
-    public AttendanceRecordObject(StudentMongo student, Boolean is_attending) {
-        this.student = student;
-        this.is_attending = is_attending;
-    }
+    AttendanceRecordObject(){}
 
     private StudentMongo student;
     private Boolean is_attending;

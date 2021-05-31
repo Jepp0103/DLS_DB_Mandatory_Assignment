@@ -5,11 +5,7 @@ public class ClassRoomObject {
     private String name;
     private Boolean is_available;
 
-    public ClassRoomObject(CampusObject campus, String name, Boolean is_available) {
-        this.campus = campus;
-        this.name = name;
-        this.is_available = is_available;
-    }
+    public ClassRoomObject(){}
 
     public CampusObject getCampus() {
         return campus;

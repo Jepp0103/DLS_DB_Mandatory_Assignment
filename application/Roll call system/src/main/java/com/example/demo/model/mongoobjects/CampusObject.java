@@ -5,10 +5,7 @@ public class CampusObject {
     private AddressObject address;
     private String faculty;
 
-    public CampusObject(AddressObject address, String faculty) {
-        this.address = address;
-        this.faculty = faculty;
-    }
+    public CampusObject(){}
 
     public AddressObject getAddress() {
         return address;

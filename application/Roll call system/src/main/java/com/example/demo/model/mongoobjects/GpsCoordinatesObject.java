@@ -4,10 +4,7 @@ public class GpsCoordinatesObject {
     private String longitude;
     private String latitude;
 
-    public GpsCoordinatesObject(String longitude, String latitude) {
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
+    public GpsCoordinatesObject(){}
 
     public String getLongitude() {
         return longitude;

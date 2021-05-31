@@ -4,10 +4,7 @@ public class CourseObject {
     private String name;
     private int ects;
 
-    public CourseObject(String name, int ects) {
-        this.name = name;
-        this.ects = ects;
-    }
+    public CourseObject(){}
 
     public String getName() {
         return name;

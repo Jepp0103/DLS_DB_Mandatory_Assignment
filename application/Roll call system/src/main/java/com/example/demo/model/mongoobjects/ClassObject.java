@@ -4,10 +4,7 @@ public class ClassObject {
     private String name;
     private String faculty;
 
-    public ClassObject(String name, String faculty) {
-        this.name = name;
-        this.faculty = faculty;
-    }
+    public ClassObject(){}
 
     public String getName() {
         return name;

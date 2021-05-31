@@ -6,13 +6,7 @@ public class AddressObject {
     private String additional_details;
     private CityObject city;
 
-    public AddressObject(String street_name, int street_number, String registred_on, String additional_details, CityObject city) {
-        this.street_name = street_name;
-        this.street_number = street_number;
-        this.registred_on = registred_on;
-        this.additional_details = additional_details;
-        this.city = city;
-    }
+    public AddressObject(){}
 
     public String getStreet_name() {
         return street_name;
