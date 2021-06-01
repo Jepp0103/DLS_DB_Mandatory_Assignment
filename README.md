@@ -2,7 +2,6 @@
 ## Members:
 - Immanuel Storm Lokzinsky
 - Jeppe Nannestad Dyekjær
-- Andrian Bogdanov Vangelov
 
 ## This repository has:
 - Database
