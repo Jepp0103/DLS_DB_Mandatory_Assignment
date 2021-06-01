@@ -58,11 +58,13 @@ Installation guide
 Teacher:
 <br/>
 Username: tomas@kea.dk
+<br/>
 Password: password
 <br/>
 Student:
 <br/>
 Username: jeppe@stud.kea.dk
+<br/>
 Password: password
 <br/>
 
