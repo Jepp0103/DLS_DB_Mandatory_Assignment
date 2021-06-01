@@ -69,6 +69,7 @@ Username: jeppe@stud.kea.dk
 <br/>
 Password: password
 <br/>
+<br/>
 
 3.  If a user signs in as a teacher the user will be redirected to the page /teacherhome where information about the teacher’s classes, active lectures and dates of the lectures are displayed. From there the teacher can click on the link texts of active lectures which then will display the lecture date, course, name, teachers and your coordinates.
 4.  In the lower bottom of the teacherlecture/?lectureId page, a teacher can start a lecture registration by setting a specific amount of minutes which is how much time students have to register themselves as attending the given lecture.The code can be inputted or it will be automatically generated. During/after the registration the teacher has an overview of the attendance rate of the lecture by clicking the “view list” button. It will then display the full list of expected students for a lecture and if they are attending (marked with 1 next to the name of each student), not attending (marked with 0 or nothing next to the name of each student) and a calculation of the overall percentage attendance rate of the lecture in the title “Attendance rate”. This list should be updated as the timer counts down.
