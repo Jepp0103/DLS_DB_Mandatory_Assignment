@@ -22,7 +22,7 @@ The folders are separated as:
 - Frontend - `application` directory has:
 	- the React project
 
-##Consumer Front-End + API - Java application
+## Consumer Front-End + API - Java application
 You can access the consumer frontend and backend applications on https://rollcallfrontend.azurewebsites.net/ and https://rollcallapp.azurewebsites.net/swagger-ui-custom.html respectively. You could also attempt to install everything locally. An installation guide is provided below.
 Installation guide
 Required software:
