@@ -33,19 +33,19 @@ Installation guide
 	- Node.js and NPM, get it here: https://nodejs.org/en/    
 
 - Docker/MySQL Setting up Docker and MySQL:
-	
+	<br/>
 	First step is to set up a local database. One way of doing it is by setting up a docker container with the MySQL image. Open a command line interface and confirm that docker is installed by entering “docker -v ”. Create a container by running the command “docker run -p 3307:3306 --name my-mysql -e MYSQL_ROOT_PASSWORD=root -d mysql/mysql-server:latest”. Now we need to interact with the container bash. Run “docker exec -it my-mysql /bin/bash”. Login using “root” as the username and password by running the command “mysql -uroot -p -A”. Run the following SQL statement: “update mysql.user set host=’%’ where user=’root’; ”. Follow this by running “flush privileges;”. This should allow us to access the database from outside the container.
 
 - MySQL Workbench: Setting Up the Database schema:
-	
+	<br/>
 	Now it’s time to open up “mysql workbench”. Click the + icon next to MySQL connections. The connection name can be whatever you like. Set hostname to localhost, port to 3307 and username to “root”. Click on “test connection” and enter “root” as the password. Click on the newly added connection and query tab will appear. Copy the contents of the roll_call_db_forward_engineered.sql file into the query tab and execute it by clicking on the lightning button. That’s it for the database setup.
 
 - Running the REST Api:
-	
+	<br/>
 	Next you need to run the spring application. To do this simply run the  “java -jar TARGET” command in a command line with TARGET being the “roll-call-system-demo.jar” file provided.
 	You should now be able to interact with the REST api using Postman. Look at “Description of important endpoints for references”.
 
 - Running the Frontend application: 
-	
+	<br/>
 	Simply navigate to application\frontend_roll_call_system\roll-call-app and run “npm start” on the command line. The application will run on localhost:3000.
 	If no lectures are displayed under “active lectures” after logging in, execute the following query on your database: “UPDATE `roll_call_db`.`lecture` SET `date` = NOW() + INTERVAL 3 HOUR WHERE (id>0);”.
