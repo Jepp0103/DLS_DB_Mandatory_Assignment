@@ -55,6 +55,7 @@ Installation guide
 
 1.  First the application needs to run. It can either be done on the localhost by running the spring backend and the react frontend at the same time or by accessing the azure application on https://rollcallfrontend.azurewebsites.net/ and https://rollcallapp.azurewebsites.net/swagger-ui-custom.html. For the local applications go to localhost:3000 and localhost:8080.
 2.  When the application runs, the first screen will be a sign in page where “Please login” is displayed. From the sign in page the user can either sign in as a teacher or a student. Below are two examples of credentials. A teacher and a student.
+<br/>
 Teacher:
 <br/>
 Username: tomas@kea.dk
