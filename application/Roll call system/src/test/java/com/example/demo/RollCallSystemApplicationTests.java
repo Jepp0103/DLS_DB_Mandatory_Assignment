@@ -14,7 +14,7 @@ class RollCallSystemApplicationTests {
     LectureService ls;
     @Autowired
     StudentService ss;
-    @Test
+   /* @Test
     void correctCodeTest() {
         Lecture lecture = new Lecture();
         lecture.setId(1);
@@ -30,6 +30,6 @@ class RollCallSystemApplicationTests {
         int Teachers[] = {1};
         assertTrue(ss.studentWithinRange(15,1,55.70392118,12.53752100));
         assertFalse(ss.studentWithinRange(15,1,55.60392118,12.53752100));
-    }
+    }*/
 
 }

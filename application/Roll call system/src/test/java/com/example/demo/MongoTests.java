@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class MongoTests {
-    @Autowired
+  /*  @Autowired
     MongoTestRepository mtr;
     StudentMongoRepository smr;
     TeacherMongoRepository tmr;
@@ -31,5 +31,5 @@ class MongoTests {
     void teacherTest() {
         System.out.println(tmr.findAll().get(0).getForename());
     }
-
+*/
 }

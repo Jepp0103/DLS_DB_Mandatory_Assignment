@@ -33,11 +33,10 @@ public class StudentService {
     }
 
     public boolean registerAttendence(int studentId,int teachers,double latitude, double longitude, int lectureId,String code, String studentSsid, String ipAddress, int studentFacultyId, int teachingNetworkId) {
-        boolean lecturebegun=true;
-        boolean withinrange=studentWithinRange(studentId,teachers,latitude,longitude);
         boolean correctcode=ls.correctCode(lectureId,code);
-        boolean correctnetwork=correctNetwork(studentId,studentSsid,ipAddress,studentFacultyId,teachingNetworkId);
-        if (correctcode && lecturebegun){
+        if (correctcode){
+            boolean withinrange=studentWithinRange(studentId,teachers,latitude,longitude);
+            boolean correctnetwork=correctNetwork(studentId,studentSsid,ipAddress,studentFacultyId,teachingNetworkId);
             if (withinrange || correctnetwork){
                 try {
                     sr.registerAttendence(studentId, lectureId);
