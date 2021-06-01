@@ -13,6 +13,10 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `roll_call_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 SHOW WARNINGS;
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+SHOW WARNINGS;
 USE `roll_call_db` ;
 
 -- -----------------------------------------------------
@@ -219,6 +223,8 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`lecture` (
   PRIMARY KEY (`id`),
   INDEX `fk_lecture_course_idx` (`course_id` ASC) VISIBLE,
   INDEX `fk_lecture_classroom1_idx` (`classroom_id` ASC) VISIBLE,
+  INDEX `index_date` (`date` ASC) VISIBLE,
+  INDEX `index_registration_deadline` (`registration_deadline` ASC) VISIBLE,
   CONSTRAINT `fk_lecture_course`
     FOREIGN KEY (`course_id`)
     REFERENCES `roll_call_db`.`course` (`id`)
@@ -322,6 +328,98 @@ CREATE TABLE IF NOT EXISTS `roll_call_db`.`class_lectures` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `roll_call_db`.`hibernate_sequence`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `roll_call_db`.`hibernate_sequence` (
+  `next_val` BIGINT(20) NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `roll_call_db`.`revisioninfo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `roll_call_db`.`revisioninfo` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `timestamp` BIGINT(20) NOT NULL,
+  `author` VARCHAR(255) NULL DEFAULT NULL,
+  `method` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `roll_call_db`.`lecture_aud`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `roll_call_db`.`lecture_aud` (
+  `id` INT(11) NOT NULL,
+  `REV` INT(11) NOT NULL,
+  `REVTYPE` TINYINT(4) NULL DEFAULT NULL,
+  `code` VARCHAR(255) NULL DEFAULT NULL,
+  `date` DATETIME NULL DEFAULT NULL,
+  `registration_deadline` DATETIME NULL DEFAULT NULL,
+  `name` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `REV`),
+  INDEX `FK9hfoqrfft4dti02rufmd8r1n2` (`REV` ASC) VISIBLE,
+  CONSTRAINT `FK9hfoqrfft4dti02rufmd8r1n2`
+    FOREIGN KEY (`REV`)
+    REFERENCES `roll_call_db`.`revisioninfo` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `roll_call_db`.`student_aud`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `roll_call_db`.`student_aud` (
+  `id` INT(11) NOT NULL,
+  `REV` INT(11) NOT NULL,
+  `REVTYPE` TINYINT(4) NULL DEFAULT NULL,
+  `email_address` VARCHAR(255) NULL DEFAULT NULL,
+  `forename` VARCHAR(255) NULL DEFAULT NULL,
+  `phone_number` VARCHAR(255) NULL DEFAULT NULL,
+  `surname` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `REV`),
+  INDEX `FKiqtnob8a65tk9nxc8kghcuecx` (`REV` ASC) VISIBLE,
+  CONSTRAINT `FKiqtnob8a65tk9nxc8kghcuecx`
+    FOREIGN KEY (`REV`)
+    REFERENCES `roll_call_db`.`revisioninfo` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `roll_call_db`.`teacher_aud`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `roll_call_db`.`teacher_aud` (
+  `id` INT(11) NOT NULL,
+  `REV` INT(11) NOT NULL,
+  `REVTYPE` TINYINT(4) NULL DEFAULT NULL,
+  `email_address` VARCHAR(255) NULL DEFAULT NULL,
+  `forename` VARCHAR(255) NULL DEFAULT NULL,
+  `phone_number` VARCHAR(255) NULL DEFAULT NULL,
+  `surname` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `REV`),
+  INDEX `FKir8qph9ut6d1nbckm5xkpfwf1` (`REV` ASC) VISIBLE,
+  CONSTRAINT `FKir8qph9ut6d1nbckm5xkpfwf1`
+    FOREIGN KEY (`REV`)
+    REFERENCES `roll_call_db`.`revisioninfo` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 SHOW WARNINGS;
 USE `roll_call_db` ;
@@ -704,15 +802,6 @@ INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES ('55.703
 INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES ('60.70392118', '22.537521047',7.55555);
 INSERT INTO `gps_coordinates` (`latitude`, `longitude`, `range`) VALUES ('34.70392118', '90.537521047',7.55555);
 
-#Test data for coordinates student views
-INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Karl@stud.kea.dk', 1, 1, 'Karl', 'Johnson', '11111121');
-INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Line@stud.kea.dk', 1, 2, 'Line', 'Sørensen', '11111123');
-INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Magnus@stud.kea.dk', 1, 2, 'Magnus', 'Andersen', '11111124');
-INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Martinj@stud.kea.dk', 2, 3, 'Martin', 'Jorgensen', '11111126');
-INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Cecilie@stud.kea.dk', 2, 2, 'Cecilie', 'Christensen', '11111128');
-INSERT INTO `student` (`email_address`, `class_id`,  `gps_coordinates_id`, `forename`, `surname`, `phone_number`) VALUES ('Ole@stud.kea.dk', 1, 3, 'Ole', 'Olsen', '11111129');
-
-
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Abul@stud.kea.dk', '1', 'Abul', 'Kasem Mohammed Omar Sharif', '11111111');
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Albert-Ioan@stud.kea.dk', '1', 'Albert-Ioan', 'Dánilá', '11111113');
 INSERT INTO `student` (`email_address`, `class_id`, `forename`, `surname`, `phone_number`) VALUES ('Anders@stud.kea.dk', '1', 'Anders', 'Genderskov Binder', '11111114');
@@ -940,4 +1029,6 @@ INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `re
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (45, 5, 1, '2021-03-19 08:25:00');
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (46, 5, 1, '2021-03-19 08:25:00');
 INSERT INTO `attendance_record` (`student_id`, `lecture_id`, `is_attending`, `registred_at`) VALUES (47, 5, 1, '2021-03-19 08:25:00');
+
+insert into hibernate_sequence (next_val) values(1)
 -- end attached script 'test_data'
