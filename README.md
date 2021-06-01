@@ -26,11 +26,11 @@ The folders are separated as:
 You can access the consumer frontend and backend applications on https://rollcallfrontend.azurewebsites.net/ and https://rollcallapp.azurewebsites.net/swagger-ui-custom.html respectively. You could also attempt to install everything locally. An installation guide is provided below.
 Installation guide
 Required software:
--Java Runtime Environment, get it here: https://www.java.com/en/download/manual.jsp
--Docker Desktop, get it here: https://www.docker.com/products/docker-desktop
--Postman, get it here: https://www.postman.com/downloads/
--MySQL workbench, get it here: https://dev.mysql.com/downloads/workbench/
--Node.js and NPM, get it here: https://nodejs.org/en/    
+- Java Runtime Environment, get it here: https://www.java.com/en/download/manual.jsp
+- Docker Desktop, get it here: https://www.docker.com/products/docker-desktop
+- Postman, get it here: https://www.postman.com/downloads/
+- MySQL workbench, get it here: https://dev.mysql.com/downloads/workbench/
+- Node.js and NPM, get it here: https://nodejs.org/en/    
 
 Docker/MySQL: Setting up Docker and MySQL
 First step is to set up a local database. One way of doing it is by setting up a docker container with the MySQL image. Open a command line interface and confirm that docker is installed by entering “docker -v ”. Create a container by running the command “docker run -p 3307:3306 --name my-mysql -e MYSQL_ROOT_PASSWORD=root -d mysql/mysql-server:latest”. Now we need to interact with the container bash. Run “docker exec -it my-mysql /bin/bash”. Login using “root” as the username and password by running the command “mysql -uroot -p -A”. Run the following SQL statement: “update mysql.user set host=’%’ where user=’root’; ”. Follow this by running “flush privileges;”. This should allow us to access the database from outside the container.
