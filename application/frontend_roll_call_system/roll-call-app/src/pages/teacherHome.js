@@ -36,7 +36,7 @@ class teacherHome extends Component {
   }
 
   getClasses() {
-    axios.get("http://localhost:8080/api/myclasses")
+    axios.get("https://rollcallapp.azurewebsites.net/api/myclasses")
       .then(result => {
         console.log("classes", result.data)
         this.setState({
@@ -53,7 +53,7 @@ class teacherHome extends Component {
   }
 
   getCurrentLectures() {
-    axios.get("http://localhost:8080/api/currentlectures") //Have to change endpoint in the future
+    axios.get("https://rollcallapp.azurewebsites.net/api/currentlectures") //Have to change endpoint in the future
       .then(result => {
         this.setState({
 		  currentLectures:result.data,
@@ -70,7 +70,7 @@ class teacherHome extends Component {
 
   getMyLectures() {
     $("#getMyLecturesBtn").click(() => {
-      axios.get("http://localhost:8080/api/mylectures") //Have to change endpoint in the future
+      axios.get("https://rollcallapp.azurewebsites.net/api/mylectures") //Have to change endpoint in the future
         .then(result => {
           this.setState({
 			mylectures:result.data,
@@ -90,7 +90,7 @@ class teacherHome extends Component {
     });
   }
   	getTeacherStats() {		
-        axios.get("http://localhost:8080/api/teacherstats")
+        axios.get("https://rollcallapp.azurewebsites.net/api/teacherstats")
             .then(result => {
                 this.state.teacherStats=result.data;
 				console.log(this.state.teacherStats);
@@ -115,7 +115,7 @@ class teacherHome extends Component {
       };
       let isNum = /^\d+$/.test($("#lectureRegIdInput").val()); //Validating if lecture id input is a number
       if ($("#lectureRegIdInput").val() != "" && isNum && $("#lectureRegCodeInput").val() != "") {
-        axios.post("http://localhost:8080/api/beginregistration", registrationInput)
+        axios.post("https://rollcallapp.azurewebsites.net/api/beginregistration", registrationInput)
           .then(result => {
             $("#lectureRegIdInput").val("");
             $("#lectureRegCodeInput").val("");

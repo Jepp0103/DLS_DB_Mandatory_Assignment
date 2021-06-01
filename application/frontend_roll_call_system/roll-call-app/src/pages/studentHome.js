@@ -40,7 +40,7 @@ class studentHome extends Component {
     }
 
     getClasses() {		
-        axios.get("http://localhost:8080/api/myclasses")
+        axios.get("https://rollcallapp.azurewebsites.net/api/myclasses")
             .then(result => {	
 				this.state.classes=result.data;
 				
@@ -59,7 +59,7 @@ class studentHome extends Component {
 
     getCurrentLectures() {		
 
-        axios.get("http://localhost:8080/api/currentlectures")
+        axios.get("https://rollcallapp.azurewebsites.net/api/currentlectures")
             .then(result => {
 
               //  $("#currentLectureDiv").html(html);
@@ -80,7 +80,7 @@ class studentHome extends Component {
 
     getMyLectures() {
         $("#getMyLecturesBtn").click(() => {
-            axios.get("http://localhost:8080/api/mylectures")
+            axios.get("https://rollcallapp.azurewebsites.net/api/mylectures")
                 .then(result => {
                     for (var i = 0; i < result.data.length; i++) {
                         this.state.myLectures.push("(Lecture id: " + result.data[i].id +
@@ -99,7 +99,7 @@ class studentHome extends Component {
         });
     }
 	getMyStats() {		
-        axios.get("http://localhost:8080/api/mystats")
+        axios.get("https://rollcallapp.azurewebsites.net/api/mystats")
             .then(result => {
                 this.state.myStats=result.data;
 				console.log(this.state.myStats);
@@ -116,7 +116,7 @@ class studentHome extends Component {
     }
 
     getLectureParticipationRate(lectureId) {
-        axios.post("http://localhost:8080/api/lectureparticipationrate", lectureId)
+        axios.post("https://rollcallapp.azurewebsites.net/api/lectureparticipationrate", lectureId)
             .then(result => {
                 console.log("lecture participation rate data: ", result.data)
                 this.state.lectureParticipationRate = result.data

@@ -1,0 +1,8 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/b33eb79c-5bec-478e-a50a-6b809b6d33a6/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/rollcallfrontend",
+    "appService.deploySubpath": "build",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
+}
