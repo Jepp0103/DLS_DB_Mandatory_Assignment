@@ -214,7 +214,7 @@ class MyLecture extends Component {
 		let minutes = newDate.getMinutes();
 		let seconds = newDate.getSeconds();
 		let year = newDate.getFullYear();
-		var datetime=`${year}-${month<10?`0${month}`:`${month}`}-${date} ${hours<10?`0${hours}`:`${hours}`}:${minutes<10?`0${minutes}`:`${minutes}`}:${seconds<10?`0${seconds}`:`${seconds}`}`;
+		var datetime=`${year}-${month<10?`0${month}`:`${month}`}-${date<10?`0${date}`:`${date}`} ${hours<10?`0${hours}`:`${hours}`}:${minutes<10?`0${minutes}`:`${minutes}`}:${seconds<10?`0${seconds}`:`${seconds}`}`;
 		
 		let registrationInput = {
 			"id": this.state.currentLecture.id,
@@ -230,6 +230,16 @@ class MyLecture extends Component {
 				  deadline:newDate,
 				  isLoaded: true,
 				});
+				let data = { "longitude": this.state.longitude,"latitude": this.state.latitude };
+				axios.post("http://localhost:8080/api/updateteachercoordinates", data)
+				.then(result => {
+					console.log("updated gps");
+				})
+				.catch(error => {
+					console.log(error);
+					this.setState({
+					});
+				})
 			  })
 			  .catch(error => {
 				this.setState({
