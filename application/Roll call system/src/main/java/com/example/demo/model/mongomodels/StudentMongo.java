@@ -16,7 +16,7 @@ public class StudentMongo {
     private String phone_number;
     private GpsCoordinatesObject gps_coordinates;
     private NetworkObject network;
-    private ClassObject class_info;
+    private ClassObject classes;
 
     public int get_id() {
         return _id;
@@ -74,11 +74,13 @@ public class StudentMongo {
         this.network = network;
     }
 
-    public ClassObject getClass_info() {
-        return class_info;
+    public ClassObject getClasses() {
+        return classes;
     }
 
-    public void setClass_info(ClassObject class_info) {
-        this.class_info = class_info;
+    public void setClasses(ClassObject classes) {
+        this.classes = classes;
     }
+
+
 }
