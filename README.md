@@ -2,7 +2,6 @@
 ## Members:
 - Immanuel Storm Lokzinsky
 - Jeppe Nannestad Dyekjær
-- Andrian Bogdanov Vangelov
 
 ## This repository has:
 - Database
@@ -55,17 +54,20 @@ Installation guide
 
 1.  First the application needs to run. It can either be done on the localhost by running the spring backend and the react frontend at the same time or by accessing the azure application on https://rollcallfrontend.azurewebsites.net/ and https://rollcallapp.azurewebsites.net/swagger-ui-custom.html. For the local applications go to localhost:3000 and localhost:8080.
 2.  When the application runs, the first screen will be a sign in page where “Please login” is displayed. From the sign in page the user can either sign in as a teacher or a student. Below are two examples of credentials. A teacher and a student.
+<br/>
 Teacher:
 <br/>
 Username: tomas@kea.dk
 <br/>
 Password: password
 <br/>
+<br/>
 Student:
 <br/>
 Username: jeppe@stud.kea.dk
 <br/>
 Password: password
+<br/>
 <br/>
 
 3.  If a user signs in as a teacher the user will be redirected to the page /teacherhome where information about the teacher’s classes, active lectures and dates of the lectures are displayed. From there the teacher can click on the link texts of active lectures which then will display the lecture date, course, name, teachers and your coordinates.
