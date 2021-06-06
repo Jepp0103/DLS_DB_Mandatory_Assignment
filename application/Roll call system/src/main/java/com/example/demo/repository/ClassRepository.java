@@ -14,7 +14,7 @@ public interface ClassRepository extends JpaRepository<Class,Integer> {
     Integer findAverageClassAttendanceRate(int courseId, int classId);
 
     @Query(
-            value = "select c.name classname,co.name coursename,c.id classid,co.id courseid from teacher_lectures tl left join lecture l on tl.lecture_id=l.id left join class_lectures cl on l.id= cl.lecture_id left join class c on cl.class_id=c.id left join course co on l.course_id=co.id where teacher_id=:teacherId group by c.id,co.id;",
+            value = "select * from class_course where teacherid=:teacherId",
             nativeQuery = true)
     public Set<TeacherClassCourseResponse> findTeacherClasses(int teacherId);
 
